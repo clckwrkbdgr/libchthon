@@ -1,7 +1,11 @@
 libchthon
 =========
 
-A compact C++ library for easy app development.
+A compact C++ library (primarily for roguelike development).
+
+This library was created during development of roguelike Temple of Trials and was separated at some point,
+when it became big and self-aware. Older history for all objects can be found in Temple of Trials repo:
+[https://github.com/umi0451/temple-of-trials](https://github.com/umi0451/temple-of-trials)
 
 Features roguelike game helper classes:
 
