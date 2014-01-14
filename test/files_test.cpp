@@ -1,7 +1,7 @@
-#include "../files.h"
-#include "../map.h"
-#include "../format.h"
-#include "../test.h"
+#include "../src/files.h"
+#include "../src/map.h"
+#include "../src/format.h"
+#include "../src/test.h"
 #include <sstream>
 
 using namespace Chthon::UnitTest;

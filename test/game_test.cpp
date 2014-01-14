@@ -1,9 +1,9 @@
 #include "mocks.h"
-#include "../game.h"
-#include "../monsters.h"
-#include "../cell.h"
-#include "../format.h"
-#include "../test.h"
+#include "../src/game.h"
+#include "../src/monsters.h"
+#include "../src/cell.h"
+#include "../src/format.h"
+#include "../src/test.h"
 
 using namespace Chthon::UnitTest;
 

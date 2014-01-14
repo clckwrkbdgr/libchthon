@@ -1,7 +1,7 @@
 #include "mocks.h"
-#include "../level.h"
-#include "../game.h"
-#include "../test.h"
+#include "../src/level.h"
+#include "../src/game.h"
+#include "../src/test.h"
 
 using namespace Chthon::UnitTest;
 

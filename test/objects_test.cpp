@@ -1,6 +1,6 @@
-#include "../objects.h"
-#include "../game.h"
-#include "../test.h"
+#include "../src/objects.h"
+#include "../src/game.h"
+#include "../src/test.h"
 
 using namespace Chthon::UnitTest;
 

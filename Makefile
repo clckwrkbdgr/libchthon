@@ -10,8 +10,8 @@ MAJOR_VERSION = $(shell git tag | tail -1 | sed 's/.*\([0-9]\+\)\.[0-9]\+\.[0-9]
 LIBNAME = lib$(CHTHON).so
 LIBRARY = $(LIBNAME).$(VERSION)
 LIBS = -lncurses
-SOURCES = $(wildcard libsrc/*.cpp)
-TEST_SOURCES = $(wildcard libsrc/test/*.cpp) $(SOURCES)
+SOURCES = $(wildcard src/*.cpp)
+TEST_SOURCES = $(wildcard test/*.cpp) $(SOURCES)
 OBJ = $(addprefix tmp/,$(SOURCES:.cpp=.o))
 TEST_OBJ = $(addprefix tmp/,$(TEST_SOURCES:.cpp=.o))
 WARNINGS = -Werror -Wall
@@ -31,7 +31,7 @@ install: lib
 	ln -s $(INSTALL_PREFIX_LIB)/$(LIBNAME).$(MAJOR_VERSION) $(INSTALL_PREFIX_LIB)/$(LIBNAME)
 	ldconfig
 	mkdir -p $(INSTALL_PREFIX_INCLUDE)/$(CHTHON).$(VERSION)
-	cp libsrc/*h $(INSTALL_PREFIX_INCLUDE)/$(CHTHON).$(VERSION)
+	cp src/*h $(INSTALL_PREFIX_INCLUDE)/$(CHTHON).$(VERSION)
 	rm -f $(INSTALL_PREFIX_INCLUDE)/$(CHTHON).$(MAJOR_VERSION)
 	rm -f $(INSTALL_PREFIX_INCLUDE)/$(CHTHON)
 	ln -s $(INSTALL_PREFIX_INCLUDE)/$(CHTHON).$(VERSION) $(INSTALL_PREFIX_INCLUDE)/$(CHTHON).$(MAJOR_VERSION)
@@ -55,8 +55,8 @@ clean:
 	$(RM) -rf tmp/* $(TEST_BIN) $(LIBRARY)
 
 $(shell mkdir -p tmp)
-$(shell mkdir -p tmp/libsrc)
-$(shell mkdir -p tmp/libsrc/test)
+$(shell mkdir -p tmp/src)
+$(shell mkdir -p tmp/test)
 -include $(OBJ:%.o=%.d)
 -include $(TEST_OBJ:%.o=%.d)
 

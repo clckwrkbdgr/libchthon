@@ -1,6 +1,6 @@
-#include "../map.h"
-#include "../point.h"
-#include "../test.h"
+#include "../src/map.h"
+#include "../src/point.h"
+#include "../src/test.h"
 
 using namespace Chthon::UnitTest;
 

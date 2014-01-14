@@ -1,6 +1,6 @@
-#include "../util.h"
-#include "../format.h"
-#include "../test.h"
+#include "../src/util.h"
+#include "../src/format.h"
+#include "../src/test.h"
 
 using namespace Chthon::UnitTest;
 

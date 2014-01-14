@@ -1,6 +1,6 @@
 #pragma once
-#include "../level.h"
-#include "../game.h"
+#include "../src/level.h"
+#include "../src/game.h"
 
 namespace Chthon {
 

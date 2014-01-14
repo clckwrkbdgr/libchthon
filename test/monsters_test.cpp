@@ -1,5 +1,5 @@
-#include "../monsters.h"
-#include "../test.h"
+#include "../src/monsters.h"
+#include "../src/test.h"
 
 using namespace Chthon::UnitTest;
 

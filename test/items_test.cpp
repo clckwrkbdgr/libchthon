@@ -1,5 +1,5 @@
-#include "../items.h"
-#include "../test.h"
+#include "../src/items.h"
+#include "../src/test.h"
 
 using namespace Chthon::UnitTest;
 

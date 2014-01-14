@@ -1,5 +1,5 @@
 #include "mocks.h"
-#include "../log.h"
+#include "../src/log.h"
 
 namespace Chthon {
 
