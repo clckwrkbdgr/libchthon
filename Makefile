@@ -11,7 +11,7 @@ LIBNAME = lib$(CHTHON).so
 LIBRARY = $(LIBNAME).$(VERSION)
 LIBS = -lncurses
 SOURCES = $(wildcard src/*.cpp)
-TEST_SOURCES = $(wildcard test/*.cpp) $(SOURCES)
+TEST_SOURCES = $(wildcard test/*.cpp)
 OBJ = $(addprefix tmp/,$(SOURCES:.cpp=.o))
 TEST_OBJ = $(addprefix tmp/,$(TEST_SOURCES:.cpp=.o))
 WARNINGS = -Werror -Wall
@@ -43,7 +43,7 @@ test: $(TEST_BIN)
 $(LIBRARY): $(OBJ)
 	$(CXX) -shared $(LIBS) -o $@ $^
 
-$(TEST_BIN): $(TEST_OBJ)
+$(TEST_BIN): $(OBJ) $(TEST_OBJ)
 	$(CXX) $(LIBS) -o $@ $^
 
 tmp/%.o: %.cpp
