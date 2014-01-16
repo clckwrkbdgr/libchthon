@@ -45,7 +45,7 @@ struct Object {
 	int up_destination, down_destination;
 	bool locked;
 	int lock_type;
-	Object(const Type * object_type = 0);
+	Object(const Type * object_type = nullptr);
 	Object(const Type * closed_object_type, const Type * opened_object_type);
 	bool valid() const;
 	bool open();

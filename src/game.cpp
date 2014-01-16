@@ -42,27 +42,27 @@ void Game::create_new_game()
 	go_to_level(1);
 }
 
-Level & Game::level()
+Level & Game::current_level()
 {
 	return levels[current_level_index];
 }
 
-const Level & Game::level() const
+const Level & Game::current_level() const
 {
 	return levels.find(current_level_index)->second;
 }
 
 void Game::go_to_level(int level_index)
 {
-	Monster player = level().get_player();
+	Monster player = current_level().get_player();
 
 	current_level_index = level_index;
 	if(levels.count(level_index) == 0) {
-		generate(level(), current_level_index);
+		generate(current_level(), current_level_index);
 	}
 	if(player.valid()) {
-		player.pos = level().get_player().pos;
-		level().get_player() = player;
+		player.pos = current_level().get_player().pos;
+		current_level().get_player() = player;
 	} else {
 		log("Player wasn't found on the level when travelling!");
 	}
@@ -140,27 +140,27 @@ Monster::Builder Game::add_monster(Level & level, const std::string & type_id)
 
 Item::Builder Game::add_item(const std::string & type_id)
 {
-	return add_item(level(), type_id);
+	return add_item(current_level(), type_id);
 }
 
 Item::Builder Game::add_item(const std::string & full_type_id, const std::string & empty_type_id)
 {
-	return add_item(level(), full_type_id, empty_type_id);
+	return add_item(current_level(), full_type_id, empty_type_id);
 }
 
 Object::Builder Game::add_object(const std::string & type_id)
 {
-	return add_object(level(), type_id);
+	return add_object(current_level(), type_id);
 }
 
 Object::Builder Game::add_object(const std::string & closed_type_id, const std::string & opened_type_id)
 {
-	return add_object(level(), closed_type_id, opened_type_id);
+	return add_object(current_level(), closed_type_id, opened_type_id);
 }
 
 Monster::Builder Game::add_monster(const std::string & type_id)
 {
-	return add_monster(level(), type_id);
+	return add_monster(current_level(), type_id);
 }
 
 
@@ -168,7 +168,7 @@ void Game::run()
 {
 	state = PLAYING;
 	while(state == PLAYING) {
-		foreach(Monster & monster, level().monsters) {
+		foreach(Monster & monster, current_level().monsters) {
 			if(monster.is_dead()) {
 				continue;
 			}
@@ -177,7 +177,7 @@ void Game::run()
 				log("No controller found for AI #{0}!", monster.type->ai);
 				continue;
 			}
-			level().invalidate_fov(monster);
+			current_level().invalidate_fov(monster);
 			Action * action = controller->act(monster, *this);
 			if(action) {
 				try {
@@ -186,7 +186,7 @@ void Game::run()
 					events.push_back(e);
 				}
 				delete action;
-				action = 0;
+				action = nullptr;
 			}
 			if(state == TURN_ENDED) {
 				break;
@@ -198,7 +198,7 @@ void Game::run()
 				break;
 			}
 		}
-		level().erase_dead_monsters();
+		current_level().erase_dead_monsters();
 		++turns;
 		if(state == TURN_ENDED) {
 			state = PLAYING;
@@ -223,18 +223,18 @@ void Game::event(const Info & event_actor, GameEvent::EventType event_type, int 
 
 void Game::process_environment(Monster & someone)
 {
-	if(level().cell_type_at(someone.pos).hurts) {
-		event(level().cell_type_at(someone.pos), GameEvent::HURTS, someone);
+	if(current_level().cell_type_at(someone.pos).hurts) {
+		event(current_level().cell_type_at(someone.pos), GameEvent::HURTS, someone);
 		hurt(someone, 1);
 	}
-	Object & object = find_at(level().objects, someone.pos);
+	Object & object = find_at(current_level().objects, someone.pos);
 	if(object.valid() && object.type->triggerable) {
 		if(object.items.empty()) {
 			event(object, GameEvent::TRAP_IS_OUT_OF_ITEMS);
 		} else {
 			event(someone, GameEvent::TRIGGERS, object);
 			object.items.back().pos = object.pos;
-			level().items.push_back(object.items.back());
+			current_level().items.push_back(object.items.back());
 			object.items.pop_back();
 			hurt(someone, 1);
 		}
@@ -253,8 +253,8 @@ void Game::die(Monster & someone)
 	Item item;
 	while((item = someone.inventory.take_first_item()).valid()) {
 		item.pos = someone.pos;
-		level().items.push_back(item);
-		event(someone, GameEvent::DROPS_AT, item, level().cell_type_at(someone.pos));
+		current_level().items.push_back(item);
+		event(someone, GameEvent::DROPS_AT, item, current_level().cell_type_at(someone.pos));
 	}
 	event(someone, GameEvent::DIED);
 	if(someone.type->faction == Monster::PLAYER) {

@@ -19,8 +19,8 @@ BasicAI * BasicAI::add(unsigned action)
 
 Action * BasicAI::act(Monster & monster, Game & game)
 {
-	const Monster & player = game.level().get_player();
-	bool sees_player = game.level().map.cell(player.pos).visible;
+	const Monster & player = game.current_level().get_player();
+	bool sees_player = game.current_level().map.cell(player.pos).visible;
 	int d = distance(monster.pos, player.pos);
 	Point shift = Point(
 			sign(player.pos.x - monster.pos.x),
@@ -47,6 +47,7 @@ Action * BasicAI::act(Monster & monster, Game & game)
 					return new Move(random_direction);
 				}
 				break;
+			default:
 			case WAIT: return new Wait();
 		};
 	}
@@ -74,7 +75,7 @@ Controller * ControllerFactory::get_controller(int ai) const
 		return result->second;
 	}
 	log("Unknown AI code: {0}", ai);
-	return 0;
+	return nullptr;
 }
 
 }

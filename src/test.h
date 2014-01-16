@@ -31,14 +31,14 @@ struct AssertException {
 const char * current_suite_name();
 #define SUITE(suite_name) \
 	namespace Suite_##suite_name { \
-		const char * current_suite_name() { return #suite_name; } \
+		static const char * current_suite_name() { return #suite_name; } \
 	} \
 	namespace Suite_##suite_name
 
 #define TEST(test_name) \
 	class Test_##test_name : public Test { \
 	public: \
-		Test_##test_name(const char * suite, const char * name) : Test(suite, name, __FILE__, __LINE__) {} \
+		Test_##test_name(const char * test_suite, const char * test_name) : Test(test_suite, test_name, __FILE__, __LINE__) {} \
 		virtual void run(); \
 	}; \
 	Test_##test_name test_##test_name(current_suite_name(), #test_name); \

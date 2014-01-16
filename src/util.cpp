@@ -3,7 +3,7 @@
 
 namespace Chthon {
 
-void delay(int msec)
+void delay(unsigned msec)
 {
 	usleep(msec * 1000);
 }

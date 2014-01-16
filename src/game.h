@@ -60,8 +60,8 @@ struct Game {
 	void run();
 	virtual void generate(Level & level, int level_index) = 0;
 
-	Level & level();
-	const Level & level() const;
+	Level & current_level();
+	const Level & current_level() const;
 	void go_to_level(int level);
 
 	void event(const GameEvent & e);

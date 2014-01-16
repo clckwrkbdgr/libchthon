@@ -5,7 +5,7 @@ namespace Chthon {
 
 template<class T>
 struct TypePtr {
-	explicit TypePtr(const T * type_pointer = 0)
+	explicit TypePtr(const T * type_pointer = nullptr)
 		: pointer(type_pointer) {}
 	bool valid() const
 	{
@@ -63,7 +63,7 @@ struct TypeRegistry {
 		if(has(id)) {
 			return &types.find(id)->second;
 		}
-		return 0;
+		return nullptr;
 	}
 	const ValueType * insert(const ValueType & type)
 	{

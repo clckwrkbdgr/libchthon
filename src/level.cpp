@@ -19,7 +19,7 @@ Level::~Level()
 {
 }
 
-Level::Level(int map_width, int map_height)
+Level::Level(unsigned map_width, unsigned map_height)
 	: map(map_width, map_height)
 {
 }
@@ -65,8 +65,8 @@ CompiledInfo Level::get_info(const Point & pos) const
 
 void Level::invalidate_fov(Monster & monster)
 {
-	for(unsigned x = 0; x < map.width; ++x) {
-		for(unsigned y = 0; y < map.height; ++y) {
+	for(int x = 0; x < int(map.width); ++x) {
+		for(int y = 0; y < int(map.height); ++y) {
 			map.cell(x, y).visible = false;
 		}
 	}
@@ -210,10 +210,10 @@ void DungeonBuilder::fill_room(Map<Cell> & map, const std::pair<Point, Point> & 
 	}
 }
 
-std::vector<Point> DungeonBuilder::random_positions(const std::pair<Point, Point> & room, int count)
+std::vector<Point> DungeonBuilder::random_positions(const std::pair<Point, Point> & room, unsigned count)
 {
 	std::vector<Point> result;
-	for(int i = 0; i < count; ++i) {
+	for(unsigned i = 0; i < count; ++i) {
 		int width = (room.second.x - room.first.x);
 		int height = (room.second.y - room.first.y);
 		int counter = width * height;
@@ -226,7 +226,7 @@ std::vector<Point> DungeonBuilder::random_positions(const std::pair<Point, Point
 			}
 		}
 	}
-	for(int i = result.size(); i < count; ++i) {
+	for(unsigned i = result.size(); i < count; ++i) {
 		result << room.first;
 	}
 	return result;
@@ -275,45 +275,45 @@ std::pair<Point, Point> DungeonBuilder::connect_rooms(Level & level, const std::
 
 std::vector<std::pair<Point, Point> > DungeonBuilder::shuffle_rooms(const std::vector<std::pair<Point, Point> > & rooms)
 {
-	static int a00[] = { 8, 1, 2, 7, 0, 3, 6, 5, 4, };
-	static int a01[] = { 6, 7, 8, 5, 0, 1, 4, 3, 2, };
-	static int a02[] = { 4, 5, 6, 3, 0, 7, 2, 1, 8, };
-	static int a03[] = { 2, 3, 4, 1, 0, 5, 8, 7, 6, };
-	static int a04[] = { 2, 1, 8, 3, 0, 7, 4, 5, 6, };
-	static int a05[] = { 8, 7, 6, 1, 0, 5, 2, 3, 4, };
-	static int a06[] = { 6, 5, 4, 7, 0, 3, 8, 1, 2, };
-	static int a07[] = { 4, 3, 2, 5, 0, 1, 6, 7, 8, };
-	static int a08[] = { 0, 1, 2, 5, 4, 3, 6, 7, 8, };
-	static int a09[] = { 0, 1, 2, 7, 6, 3, 8, 5, 4, };
-	static int a10[] = { 0, 1, 2, 7, 8, 3, 6, 5, 4, };
-	static int a11[] = { 0, 5, 6, 1, 4, 7, 2, 3, 8, };
-	static int a12[] = { 0, 7, 8, 1, 6, 5, 2, 3, 4, };
-	static int a13[] = { 0, 7, 6, 1, 8, 5, 2, 3, 4, };
-	static int a14[] = { 6, 7, 8, 5, 4, 3, 0, 1, 2, };
-	static int a15[] = { 8, 5, 4, 7, 6, 3, 0, 1, 2, };
-	static int a16[] = { 6, 5, 4, 7, 8, 3, 0, 1, 2, };
-	static int a17[] = { 2, 3, 8, 1, 4, 7, 0, 5, 6, };
-	static int a18[] = { 2, 3, 4, 1, 6, 5, 0, 7, 8, };
-	static int a19[] = { 2, 3, 4, 1, 8, 5, 0, 7, 6, };
-	static int a20[] = { 2, 1, 0, 3, 4, 5, 8, 7, 6, };
-	static int a21[] = { 2, 1, 0, 3, 6, 7, 4, 5, 8, };
-	static int a22[] = { 2, 1, 0, 3, 8, 7, 4, 5, 6, };
-	static int a23[] = { 6, 5, 0, 7, 4, 1, 8, 3, 2, };
-	static int a24[] = { 8, 7, 0, 5, 6, 1, 4, 3, 2, };
-	static int a25[] = { 6, 7, 0, 5, 8, 1, 4, 3, 2, };
-	static int a26[] = { 8, 7, 6, 3, 4, 5, 2, 1, 0, };
-	static int a27[] = { 4, 5, 8, 3, 6, 7, 2, 1, 0, };
-	static int a28[] = { 4, 5, 6, 3, 8, 7, 2, 1, 0, };
-	static int a29[] = { 8, 3, 2, 7, 4, 1, 6, 5, 0, };
-	static int a30[] = { 4, 3, 2, 5, 6, 1, 8, 7, 0, };
-	static int a31[] = { 4, 3, 2, 5, 8, 1, 6, 7, 0, };
-	static int * layouts[] = {
+	static unsigned a00[] = { 8, 1, 2, 7, 0, 3, 6, 5, 4, };
+	static unsigned a01[] = { 6, 7, 8, 5, 0, 1, 4, 3, 2, };
+	static unsigned a02[] = { 4, 5, 6, 3, 0, 7, 2, 1, 8, };
+	static unsigned a03[] = { 2, 3, 4, 1, 0, 5, 8, 7, 6, };
+	static unsigned a04[] = { 2, 1, 8, 3, 0, 7, 4, 5, 6, };
+	static unsigned a05[] = { 8, 7, 6, 1, 0, 5, 2, 3, 4, };
+	static unsigned a06[] = { 6, 5, 4, 7, 0, 3, 8, 1, 2, };
+	static unsigned a07[] = { 4, 3, 2, 5, 0, 1, 6, 7, 8, };
+	static unsigned a08[] = { 0, 1, 2, 5, 4, 3, 6, 7, 8, };
+	static unsigned a09[] = { 0, 1, 2, 7, 6, 3, 8, 5, 4, };
+	static unsigned a10[] = { 0, 1, 2, 7, 8, 3, 6, 5, 4, };
+	static unsigned a11[] = { 0, 5, 6, 1, 4, 7, 2, 3, 8, };
+	static unsigned a12[] = { 0, 7, 8, 1, 6, 5, 2, 3, 4, };
+	static unsigned a13[] = { 0, 7, 6, 1, 8, 5, 2, 3, 4, };
+	static unsigned a14[] = { 6, 7, 8, 5, 4, 3, 0, 1, 2, };
+	static unsigned a15[] = { 8, 5, 4, 7, 6, 3, 0, 1, 2, };
+	static unsigned a16[] = { 6, 5, 4, 7, 8, 3, 0, 1, 2, };
+	static unsigned a17[] = { 2, 3, 8, 1, 4, 7, 0, 5, 6, };
+	static unsigned a18[] = { 2, 3, 4, 1, 6, 5, 0, 7, 8, };
+	static unsigned a19[] = { 2, 3, 4, 1, 8, 5, 0, 7, 6, };
+	static unsigned a20[] = { 2, 1, 0, 3, 4, 5, 8, 7, 6, };
+	static unsigned a21[] = { 2, 1, 0, 3, 6, 7, 4, 5, 8, };
+	static unsigned a22[] = { 2, 1, 0, 3, 8, 7, 4, 5, 6, };
+	static unsigned a23[] = { 6, 5, 0, 7, 4, 1, 8, 3, 2, };
+	static unsigned a24[] = { 8, 7, 0, 5, 6, 1, 4, 3, 2, };
+	static unsigned a25[] = { 6, 7, 0, 5, 8, 1, 4, 3, 2, };
+	static unsigned a26[] = { 8, 7, 6, 3, 4, 5, 2, 1, 0, };
+	static unsigned a27[] = { 4, 5, 8, 3, 6, 7, 2, 1, 0, };
+	static unsigned a28[] = { 4, 5, 6, 3, 8, 7, 2, 1, 0, };
+	static unsigned a29[] = { 8, 3, 2, 7, 4, 1, 6, 5, 0, };
+	static unsigned a30[] = { 4, 3, 2, 5, 6, 1, 8, 7, 0, };
+	static unsigned a31[] = { 4, 3, 2, 5, 8, 1, 6, 7, 0, };
+	static unsigned * layouts[] = {
 		a00, a01, a02, a03, a04, a05, a06, a07,
 		a08, a09, a10, a11, a12, a13, a14, a15,
 		a16, a17, a18, a19, a20, a21, a22, a23,
 		a24, a25, a26, a27, a28, a29, a30, a31,
 	};
-	int * a = layouts[rand() % 32];
+	unsigned * a = layouts[rand() % 32];
 
 	std::vector<std::pair<Point, Point> > new_rooms(9);
 	for(unsigned i = 0; i < rooms.size(); ++i) {

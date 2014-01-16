@@ -46,7 +46,7 @@ const char * current_suite_name()
 static const char * current_filename = __FILE__;
 static int current_line = __LINE__;
 
-void catch_segfault(int sig)
+static void catch_segfault(int)
 {
 	printf("%s:%d: segmentation fault\n", current_filename, current_line);
 	exit(1);

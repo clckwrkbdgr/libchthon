@@ -16,7 +16,7 @@ SUITE(game) {
 TEST_FIXTURE(GameWithDummyOnTrap, should_trigger_trap_if_trap_is_set)
 {
 	game.process_environment(dummy());
-	ASSERT(game.level().objects.front().items.empty());
+	ASSERT(game.current_level().objects.front().items.empty());
 }
 
 TEST_FIXTURE(GameWithDummyOnTrap, should_hurt_monster_if_trap_is_set)
@@ -33,12 +33,12 @@ TEST_FIXTURE(GameWithDummyOnTrap, should_hurt_monster_if_trap_is_set)
 TEST_FIXTURE(GameWithDummyOnTrap, should_leave_bolt_if_trap_is_set)
 {
 	game.process_environment(dummy());
-	EQUAL(game.level().items.front().type->sprite, 1);
+	EQUAL(game.current_level().items.front().type->sprite, 1);
 }
 
 TEST_FIXTURE(GameWithDummyOnTrap, should_not_hurt_monster_if_trap_is_triggered_already)
 {
-	game.level().objects.front().items.clear();
+	game.current_level().objects.front().items.clear();
 	game.process_environment(dummy());
 	EQUAL(dummy().hp, 100);
 	TEST_CONTAINER(game.events, e) {
@@ -81,7 +81,7 @@ TEST_FIXTURE(GameWithDummy, should_decrease_poisoning_each_turn)
 TEST_FIXTURE(GameWithDummy, should_drop_loot_if_monster_is_dead)
 {
 	game.die(dummy());
-	EQUAL(game.level().items.front().pos, dummy().pos);
+	EQUAL(game.current_level().items.front().pos, dummy().pos);
 	TEST_CONTAINER(game.events, e) {
 		EQUAL(e.type, GameEvent::DROPS_AT);
 	} NEXT(e) {

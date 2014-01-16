@@ -65,7 +65,7 @@ bool Monster::heal_by(int hp_amount)
 Monster::Builder & Monster::Builder::pos(const Point & value) { result.pos = value; return *this; }
 Monster::Builder & Monster::Builder::hp(int value) { result.hp = (result.type->max_hp >= value) ? value : result.type->max_hp; return *this; }
 Monster::Builder & Monster::Builder::item(const Item & value) { result.inventory.insert(value); return *this; }
-Monster::Builder & Monster::Builder::wield(int value) { result.inventory.wield(value); return *this; }
-Monster::Builder & Monster::Builder::wear(int value) { result.inventory.wear(value); return *this; }
+Monster::Builder & Monster::Builder::wield(unsigned value) { result.inventory.wield(value); return *this; }
+Monster::Builder & Monster::Builder::wear(unsigned value) { result.inventory.wear(value); return *this; }
 
 }

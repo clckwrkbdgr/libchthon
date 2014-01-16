@@ -46,7 +46,7 @@ struct Item {
 
 	Point pos;
 	int key_type;
-	Item(const Type * item_type = 0);
+	Item(const Type * item_type = nullptr);
 	Item(const Type * full_item_type, const Type * empty_item_type);
 	bool valid() const;
 

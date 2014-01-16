@@ -14,14 +14,14 @@ std::string read_string(std::istream & in, char quote = '"');
 std::string escaped(const std::string & s, char quote = '"');
 
 #define FORWARD_DECLARE_SAVEFILE_STORE(Type) \
-	template<class Savefile> void store(Savefile &, Type &, const char * section = 0); \
-	template<class Savefile> void store(Savefile &, const Type &, const char * section = 0)
+	template<class Savefile> void store(Savefile &, Type &, const char * section = nullptr); \
+	template<class Savefile> void store(Savefile &, const Type &, const char * section = nullptr)
 
 #define SAVEFILE_STORE(Type, variable) \
 	template<class Savefile, class T> void store_ext_##variable(Savefile &, T &); \
-	template<class Savefile> void store(Savefile & savefile, Type & variable, const char * section = 0) \
+	template<class Savefile> void store(Savefile & savefile, Type & variable, const char * section = nullptr) \
 		{ store_ext_##variable(savefile, variable); if(section) { savefile.check(section); } } \
-	template<class Savefile> void store(Savefile & savefile, const Type & variable, const char * section = 0) \
+	template<class Savefile> void store(Savefile & savefile, const Type & variable, const char * section = nullptr) \
 		{ store_ext_##variable(savefile, variable); if(section) { savefile.check(section); } } \
 	template<class Savefile, class T> \
 	void store_ext_##variable(Savefile & savefile, T & variable)

@@ -102,7 +102,7 @@ unsigned Inventory::size() const
 
 bool Inventory::set_item(unsigned slot, const Item & item)
 {
-	if(slot < 0 || SLOT_COUNT <= slot) {
+	if(SLOT_COUNT <= slot) {
 		return false;
 	}
 	if(slot >= items.size()) {
@@ -114,7 +114,7 @@ bool Inventory::set_item(unsigned slot, const Item & item)
 
 Item Inventory::take_item(unsigned slot)
 {
-	if(slot < 0 || items.size() <= slot) {
+	if(items.size() <= slot) {
 		return Item();
 	}
 	if(wielded == slot) {
@@ -150,7 +150,7 @@ Item Inventory::take_worn_item()
 
 bool Inventory::wield(unsigned slot)
 {
-	if(slot < 0 || items.size() <= slot) {
+	if(items.size() <= slot) {
 		return false;
 	}
 	wielded = slot;
@@ -174,7 +174,7 @@ bool Inventory::wears(unsigned slot) const
 
 bool Inventory::wear(unsigned slot)
 {
-	if(slot < 0 || items.size() <= slot) {
+	if(items.size() <= slot) {
 		return false;
 	}
 	worn = slot;
@@ -188,7 +188,7 @@ void Inventory::take_off()
 
 bool Inventory::has_item(unsigned slot) const
 {
-	if(slot < 0 || items.size() <= slot) {
+	if(items.size() <= slot) {
 		return false;
 	}
 	return items[slot].valid();
@@ -196,19 +196,19 @@ bool Inventory::has_item(unsigned slot) const
 
 const Item & Inventory::get_item(unsigned slot) const
 {
-	if(slot < 0 || items.size() <= slot) {
-		static Item empty;
-		return empty;
+	if(items.size() <= slot) {
+		static Item none;
+		return none;
 	}
 	return items[slot];
 }
 
 Item & Inventory::get_item(unsigned slot)
 {
-	if(slot < 0 || items.size() <= slot) {
-		static Item empty;
-		empty = Item();
-		return empty;
+	if(items.size() <= slot) {
+		static Item none;
+		none = Item();
+		return none;
 	}
 	return items[slot];
 }
@@ -245,8 +245,8 @@ const Item & Inventory::quest_item() const
 			return item;
 		}
 	}
-	static Item empty;
-	return empty;
+	static Item none;
+	return none;
 }
 
 bool Inventory::has_key(int key_type) const

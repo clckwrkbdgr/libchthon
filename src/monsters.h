@@ -47,7 +47,7 @@ struct Monster {
 	Inventory inventory;
 	int poisoning;
 	std::list<Action*> plan;
-	Monster(const Type * monster_type = 0);
+	Monster(const Type * monster_type = nullptr);
 	~Monster();
 	bool valid() const;
 	bool is_dead() const { return hp <= 0; }
@@ -66,8 +66,8 @@ struct Monster::Builder {
 	Builder & pos(const Point & value);
 	Builder & hp(int value);
 	Builder & item(const Item & value);
-	Builder & wield(int value);
-	Builder & wear(int value);
+	Builder & wield(unsigned value);
+	Builder & wear(unsigned value);
 };
 
 }

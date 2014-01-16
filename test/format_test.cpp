@@ -10,9 +10,9 @@ SUITE(format) {
 
 TEST(should_convert_int_to_string)
 {
-	std::string result = to_string(int(1));
+	std::string result = to_string(1);
 	EQUAL(result, "1");
-	result = to_string(int(-1));
+	result = to_string(-1);
 	EQUAL(result, "-1");
 }
 
@@ -30,7 +30,7 @@ TEST(should_convert_unsigned_long_to_string)
 
 TEST(should_convert_char_to_string)
 {
-	std::string result = to_string(char('a'));
+	std::string result = to_string('a');
 	EQUAL(result, "a");
 }
 

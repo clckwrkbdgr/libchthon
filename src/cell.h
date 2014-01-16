@@ -34,7 +34,7 @@ struct Cell {
 	TypePtr<Type> type;
 	bool visible;
 	int seen_sprite;
-	explicit Cell(const CellType * cell_type = 0);
+	explicit Cell(const CellType * cell_type = nullptr);
 };
 
 }

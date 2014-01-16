@@ -23,7 +23,7 @@ Point operator/(const Point & a, int factor);
 std::string to_string(const Point & value);
 
 template<class T>
-const T & find_at(const std::vector<T> & container, const Point & pos, typename std::vector<T>::const_iterator * index = 0)
+const T & find_at(const std::vector<T> & container, const Point & pos, typename std::vector<T>::const_iterator * index = nullptr)
 {
 	typename std::vector<T>::const_iterator i;
     for(i = container.begin(); i != container.end(); ++i) {
@@ -39,7 +39,7 @@ const T & find_at(const std::vector<T> & container, const Point & pos, typename 
 }
 
 template<class T>
-T & find_at(std::vector<T> & container, const Point & pos, typename std::vector<T>::iterator * index = 0)
+T & find_at(std::vector<T> & container, const Point & pos, typename std::vector<T>::iterator * index = nullptr)
 {
 	typename std::vector<T>::iterator i;
     for(i = container.begin(); i != container.end(); ++i) {

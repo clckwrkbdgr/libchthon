@@ -91,7 +91,7 @@ TEST(should_insert_at_first_empty_slot)
 	ItemType type = ItemType::Builder("item").sprite(1);
 	ItemType type2 = ItemType::Builder("item2").sprite(2);
 	inventory.set_item(1, Item(&type));
-	int slot = inventory.insert(Item(&type2));
+	unsigned slot = inventory.insert(Item(&type2));
 	EQUAL(slot, 0);
 	EQUAL(inventory.get_item(0).type->sprite, 2);
 }
@@ -101,10 +101,10 @@ TEST(should_not_insert_when_there_is_no_place)
 	Inventory inventory;
 	ItemType type = ItemType::Builder("item").sprite(1);
 	ItemType type2 = ItemType::Builder("item2").sprite(2);
-	for(int i = 0; i < 26; ++i) {
+	for(unsigned i = 0; i < 26; ++i) {
 		inventory.set_item(i, Item(&type));
 	}
-	int slot = inventory.insert(Item(&type2));
+	unsigned slot = inventory.insert(Item(&type2));
 	EQUAL(slot, Inventory::NOTHING);
 }
 

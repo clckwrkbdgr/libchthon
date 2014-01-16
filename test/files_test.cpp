@@ -122,7 +122,7 @@ TEST(writer_should_write_int_and_a_space)
 {
 	std::ostringstream out;
 	Writer writer(out);
-	writer.store(int(-1));
+	writer.store(-1);
 	EQUAL(out.str(), "-1 ");
 }
 

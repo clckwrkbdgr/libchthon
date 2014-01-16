@@ -27,9 +27,9 @@ public:
 
 class SlotAction : public Action {
 public:
-	int slot;
+	unsigned slot;
 
-	SlotAction(int action_slot) : slot(action_slot) {}
+	SlotAction(unsigned action_slot) : slot(action_slot) {}
 	virtual ~SlotAction() {}
 };
 
@@ -41,37 +41,37 @@ public:
 
 class Move : public DirectedAction {
 public:
-	Move(const Point & shift) : DirectedAction(shift) {}
+	Move(const Point & action_shift) : DirectedAction(action_shift) {}
 	virtual void commit(Monster & someone, Game & game);
 };
 
 class Open : public DirectedAction {
 public:
-	Open(const Point & shift) : DirectedAction(shift) {}
+	Open(const Point & direction) : DirectedAction(direction) {}
 	virtual void commit(Monster & someone, Game & game);
 };
 
 class Close : public DirectedAction {
 public:
-	Close(const Point & shift) : DirectedAction(shift) {}
+	Close(const Point & direction) : DirectedAction(direction) {}
 	virtual void commit(Monster & someone, Game & game);
 };
 
 class Swing : public DirectedAction {
 public:
-	Swing(const Point & shift) : DirectedAction(shift) {}
+	Swing(const Point & direction) : DirectedAction(direction) {}
 	virtual void commit(Monster & someone, Game & game);
 };
 
 class Fire : public DirectedAction {
 public:
-	Fire(const Point & shift) : DirectedAction(shift) {}
+	Fire(const Point & direction) : DirectedAction(direction) {}
 	virtual void commit(Monster & someone, Game & game);
 };
 
 class Drink : public DirectedAction {
 public:
-	Drink(const Point & shift) : DirectedAction(shift) {}
+	Drink(const Point & direction) : DirectedAction(direction) {}
 	virtual void commit(Monster & someone, Game & game);
 };
 
@@ -82,13 +82,13 @@ public:
 
 class Drop : public SlotAction {
 public:
-	Drop(int slot) : SlotAction(slot) {}
+	Drop(unsigned action_slot) : SlotAction(action_slot) {}
 	virtual void commit(Monster & someone, Game & game);
 };
 
 class Wield : public SlotAction {
 public:
-	Wield(int slot) : SlotAction(slot) {}
+	Wield(unsigned action_slot) : SlotAction(action_slot) {}
 	virtual void commit(Monster & someone, Game & game);
 };
 
@@ -99,7 +99,7 @@ public:
 
 class Wear : public SlotAction {
 public:
-	Wear(int slot) : SlotAction(slot) {}
+	Wear(unsigned action_slot) : SlotAction(action_slot) {}
 	virtual void commit(Monster & someone, Game & game);
 };
 
@@ -110,7 +110,7 @@ public:
 
 class Eat : public SlotAction {
 public:
-	Eat(int slot) : SlotAction(slot) {}
+	Eat(unsigned action_slot) : SlotAction(action_slot) {}
 	virtual void commit(Monster & someone, Game & game);
 };
 
@@ -126,7 +126,7 @@ public:
 
 class Put : public DirectedAction {
 public:
-	Put(const Point & shift) : DirectedAction(shift) {}
+	Put(const Point & direction) : DirectedAction(direction) {}
 	virtual void commit(Monster & someone, Game & game);
 };
 

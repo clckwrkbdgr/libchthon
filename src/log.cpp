@@ -6,12 +6,12 @@ namespace Chthon {
 
 std::string now()
 {
-	time_t t = time(0);
+	time_t t = time(nullptr);
 	std::string s = ctime(&t);
 	return s.replace(s.find('\n'), 1, " ");
 }
 
-void log_control(std::ostream * out_stream, const std::string & message)
+static void log_control(std::ostream * out_stream, const std::string & message)
 {
 	static std::ostream * out = &std::clog;
 	if(out_stream) {
@@ -29,7 +29,7 @@ void direct_log(std::ostream * out_stream)
 
 void log(const std::string & message)
 {
-	log_control(0, message);
+	log_control(nullptr, message);
 }
 
 }

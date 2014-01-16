@@ -24,7 +24,7 @@ struct Level {
 
 	Level();
 	~Level();
-	Level(int map_width, int map_height);
+	Level(unsigned map_width, unsigned map_height);
 
 	const CellType & cell_type_at(const Point & pos) const;
 	CompiledInfo get_info(int x, int y) const;
@@ -38,7 +38,7 @@ struct Level {
 
 struct DungeonBuilder {
 	static void fill_room(Map<Cell> & map, const std::pair<Point, Point> & room, const CellType * type);
-	static std::vector<Point> random_positions(const std::pair<Point, Point> & room, int count);
+	static std::vector<Point> random_positions(const std::pair<Point, Point> & room, unsigned count);
 	static std::pair<Point, Point> connect_rooms(Level & level, const std::pair<Point, Point> & a, const std::pair<Point, Point> & b, const CellType * type);
 	static std::vector<std::pair<Point, Point> > shuffle_rooms(const std::vector<std::pair<Point, Point> > & rooms);
 	static void pop_player_front(std::vector<Monster> & monsters);

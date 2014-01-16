@@ -59,6 +59,7 @@ TEST(should_iterate_for_each_char_in_string)
 			case 0: EQUAL(ch, 'r'); break;
 			case 1: EQUAL(ch, 'u'); break;
 			case 2: EQUAL(ch, 'n'); break;
+			default: FAIL("Unknown switch case");
 		}
 		++j;
 	}

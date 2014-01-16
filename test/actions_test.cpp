@@ -61,8 +61,8 @@ TEST_FIXTURE(GameWithDummyWieldingAndWearing, should_remove_item_from_inventory_
 TEST_FIXTURE(GameWithDummyWieldingAndWearing, should_place_item_on_the_floor_when_dropped)
 {
 	Drop(0).commit(dummy(), game);
-	EQUAL(game.level().items.size(), 1);
-	EQUAL(game.level().items[0].type->name, "spear");
+	EQUAL(game.current_level().items.size(), 1);
+	EQUAL(game.current_level().items[0].type->name, "spear");
 }
 
 }
@@ -90,7 +90,7 @@ TEST_FIXTURE(GameWithDummyWieldingAndWearing, should_remove_grabbed_item_from_ma
 {
 	game.add_item("item").pos(Point(1, 2));
 	Grab().commit(dummy(), game);
-	ASSERT(game.level().items.empty());
+	ASSERT(game.current_level().items.empty());
 }
 
 TEST_FIXTURE(GameWithDummyWieldingAndWearing, should_notify_if_quest_item)

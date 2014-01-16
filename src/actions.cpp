@@ -30,19 +30,19 @@ void Drop::commit(Monster & someone, Game & game)
 	}
 	Item item = someone.inventory.take_item(slot);
 	item.pos = someone.pos;
-	game.level().items.push_back(item);
-	game.event(someone, GameEvent::DROPS_AT, item, game.level().cell_type_at(someone.pos));
+	game.current_level().items.push_back(item);
+	game.event(someone, GameEvent::DROPS_AT, item, game.current_level().cell_type_at(someone.pos));
 }
 
 void Grab::commit(Monster & someone, Game & game)
 {
 	std::vector<Item>::iterator item_index;
-	Item item = find_at(game.level().items, someone.pos, &item_index);
+	Item item = find_at(game.current_level().items, someone.pos, &item_index);
 	assert(item.valid(), Exception::NOTHING_TO_GRAB, someone);
 	unsigned slot = someone.inventory.insert(item);
 	assert(slot != Inventory::NOTHING, Exception::NO_SPACE_LEFT, someone);
-	game.level().items.erase(item_index);
-	game.event(someone, GameEvent::PICKS_UP_FROM, item, game.level().cell_type_at(someone.pos));
+	game.current_level().items.erase(item_index);
+	game.event(someone, GameEvent::PICKS_UP_FROM, item, game.current_level().cell_type_at(someone.pos));
 	if(item.type->quest) {
 		game.event(someone, GameEvent::PICKED_UP_A_QUEST_ITEM);
 	}
@@ -133,7 +133,7 @@ void Eat::commit(Monster & someone, Game & game)
 
 void GoUp::commit(Monster & someone, Game & game)
 {
-    Object & object = find_at(game.level().objects, someone.pos);
+    Object & object = find_at(game.current_level().objects, someone.pos);
 	assert(object.valid() && object.type->transporting && object.up_destination, Exception::CANNOT_GO_UP, someone);
 	if(object.is_exit_up()) {
 		const Item & quest_item = someone.inventory.quest_item();
@@ -152,7 +152,7 @@ void GoUp::commit(Monster & someone, Game & game)
 
 void GoDown::commit(Monster & someone, Game & game)
 {
-    Object & object = find_at(game.level().objects, someone.pos);
+    Object & object = find_at(game.current_level().objects, someone.pos);
 	assert(object.valid() && object.type->transporting && object.down_destination, Exception::CANNOT_GO_DOWN, someone);
 	if(object.is_exit_down()) {
 		const Item & quest_item = someone.inventory.quest_item();
