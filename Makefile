@@ -23,7 +23,7 @@ all: lib
 
 lib: $(LIBRARY)
 
-docs:
+docs: Doxyfile $(SOURCES)
 	doxygen
 
 install: lib docs
