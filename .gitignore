@@ -17,5 +17,6 @@
 *.swp
 
 # Build and run
+docs/
 tmp/
 chthon_test

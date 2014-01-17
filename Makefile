@@ -3,6 +3,7 @@ CHTHON = chthon
 INSTALL_PREFIX = /usr/local
 INSTALL_PREFIX_LIB = $(INSTALL_PREFIX)/lib
 INSTALL_PREFIX_INCLUDE = $(INSTALL_PREFIX)/include
+INSTALL_PREFIX_DOCS = $(INSTALL_PREFIX)/share/doc
 
 TEST_BIN = chthon_test
 VERSION = $(shell git tag | tail -1 | sed 's/.*\([0-9]\+\.[0-9]\+\.[0-9]\+\)/\1/')
@@ -22,7 +23,11 @@ all: lib
 
 lib: $(LIBRARY)
 
-install: lib
+docs:
+	doxygen
+
+install: lib docs
+	@echo Installing lib...
 	cp $(LIBRARY) $(INSTALL_PREFIX_LIB)
 	chmod 0755 $(INSTALL_PREFIX_LIB)/$(LIBRARY)
 	rm -f $(INSTALL_PREFIX_LIB)/$(LIBNAME).$(MAJOR_VERSION)
@@ -30,12 +35,20 @@ install: lib
 	ln -s $(INSTALL_PREFIX_LIB)/$(LIBRARY) $(INSTALL_PREFIX_LIB)/$(LIBNAME).$(MAJOR_VERSION)
 	ln -s $(INSTALL_PREFIX_LIB)/$(LIBNAME).$(MAJOR_VERSION) $(INSTALL_PREFIX_LIB)/$(LIBNAME)
 	ldconfig
+	@echo Installing includes...
 	mkdir -p $(INSTALL_PREFIX_INCLUDE)/$(CHTHON).$(VERSION)
 	cp src/*h $(INSTALL_PREFIX_INCLUDE)/$(CHTHON).$(VERSION)
 	rm -f $(INSTALL_PREFIX_INCLUDE)/$(CHTHON).$(MAJOR_VERSION)
 	rm -f $(INSTALL_PREFIX_INCLUDE)/$(CHTHON)
 	ln -s $(INSTALL_PREFIX_INCLUDE)/$(CHTHON).$(VERSION) $(INSTALL_PREFIX_INCLUDE)/$(CHTHON).$(MAJOR_VERSION)
 	ln -s $(INSTALL_PREFIX_INCLUDE)/$(CHTHON).$(MAJOR_VERSION) $(INSTALL_PREFIX_INCLUDE)/$(CHTHON)
+	@echo Installing docs...
+	mkdir -p $(INSTALL_PREFIX_DOCS)/$(CHTHON).$(VERSION)/
+	cp -R docs/html $(INSTALL_PREFIX_DOCS)/$(CHTHON).$(VERSION)
+	rm -f $(INSTALL_PREFIX_DOCS)/$(CHTHON).$(MAJOR_VERSION)
+	rm -f $(INSTALL_PREFIX_DOCS)/$(CHTHON)
+	ln -s $(INSTALL_PREFIX_DOCS)/$(CHTHON).$(VERSION) $(INSTALL_PREFIX_DOCS)/$(CHTHON).$(MAJOR_VERSION)
+	ln -s $(INSTALL_PREFIX_DOCS)/$(CHTHON).$(MAJOR_VERSION) $(INSTALL_PREFIX_DOCS)/$(CHTHON)
 
 test: $(TEST_BIN)
 	./$(TEST_BIN) $(TESTS)
@@ -53,7 +66,7 @@ tmp/%.o: %.cpp
 .PHONY: clean Makefile
 
 clean:
-	$(RM) -rf tmp/* $(TEST_BIN) $(LIBRARY)
+	$(RM) -rf tmp/* $(TEST_BIN) $(LIBRARY) docs/
 
 $(shell mkdir -p tmp)
 $(shell mkdir -p tmp/src)
