@@ -65,7 +65,7 @@ MAX_INITIALIZER_LINES  = 30
 SHOW_USED_FILES        = YES
 SHOW_FILES             = NO
 SHOW_NAMESPACES        = YES
-FILE_VERSION_FILTER    =
+FILE_VERSION_FILTER    = version
 LAYOUT_FILE            =
 
 QUIET                  = NO

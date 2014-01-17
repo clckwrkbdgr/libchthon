@@ -6,8 +6,8 @@ INSTALL_PREFIX_INCLUDE = $(INSTALL_PREFIX)/include
 INSTALL_PREFIX_DOCS = $(INSTALL_PREFIX)/share/doc
 
 TEST_BIN = chthon_test
-VERSION = $(shell git tag | tail -1 | sed 's/.*\([0-9]\+\.[0-9]\+\.[0-9]\+\)/\1/')
-MAJOR_VERSION = $(shell git tag | tail -1 | sed 's/.*\([0-9]\+\)\.[0-9]\+\.[0-9]\+/\1/')
+VERSION = $(shell version)
+MAJOR_VERSION = $(shell version major)
 LIBNAME = lib$(CHTHON).so
 LIBRARY = $(LIBNAME).$(VERSION)
 LIBS = -lncurses
