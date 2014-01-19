@@ -19,14 +19,14 @@ TEST_OBJ = $(addprefix tmp/,$(TEST_SOURCES:.cpp=.o))
 WARNINGS = -pedantic -Werror -Wall -Wextra -Wformat=2 -Wmissing-include-dirs -Wswitch-default -Wswitch-enum -Wuninitialized -Wunused -Wfloat-equal -Wundef -Wno-endif-labels -Wshadow -Wcast-qual -Wcast-align -Wconversion -Wsign-conversion -Wlogical-op -Wmissing-declarations -Wno-multichar -Wredundant-decls -Wunreachable-code -Winline -Winvalid-pch -Wvla -Wdouble-promotion -Wzero-as-null-pointer-constant -Wuseless-cast -Wvarargs -Wsuggest-attribute=pure -Wsuggest-attribute=const -Wsuggest-attribute=noreturn -Wsuggest-attribute=format
 CXXFLAGS = -MD -MP -std=c++0x $(WARNINGS)
 
-all: lib
+all: lib docs
 
 lib: $(LIBRARY)
 
 docs: Doxyfile $(SOURCES)
 	doxygen
 
-install: lib docs
+install: all
 	@echo Installing lib...
 	cp $(LIBRARY) $(INSTALL_PREFIX_LIB)
 	chmod 0755 $(INSTALL_PREFIX_LIB)/$(LIBRARY)
