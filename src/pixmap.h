@@ -4,6 +4,8 @@
 #include <string>
 #include <memory>
 
+namespace Chthon {
+
 struct XPMData {
 	unsigned color_count;
 	unsigned row_count;
@@ -23,6 +25,7 @@ public:
 		Color(uint8_t c_r, uint8_t c_g, uint8_t c_b);
 		uint32_t argb() const;
 		bool operator==(const Color & other) const;
+		bool operator!=(const Color & other) const;
 		static Color from_argb(uint32_t color);
 		static Color from_rgb(uint32_t color);
 	};
@@ -62,3 +65,5 @@ private:
 	void load_from_xpm_data(const std::string & xpm_data);
 	void load_from_xpm_lines(const std::vector<std::string> & xpm_lines);
 };
+
+}

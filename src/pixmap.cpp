@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <map>
 
+namespace Chthon {
+
 Pixmap::Color::Color()
 	: transparent(true), r(0), g(0), b(0)
 {
@@ -38,6 +40,11 @@ Pixmap::Color Pixmap::Color::from_rgb(uint32_t color)
 bool Pixmap::Color::operator==(const Color & other) const
 {
 	return (transparent == other.transparent) || (r == other.r && g == other.g && b == other.b);
+}
+
+bool Pixmap::Color::operator!=(const Color & other) const
+{
+	return !(operator ==(other));
 }
 
 		
@@ -477,4 +484,6 @@ std::string Pixmap::save() const
 		}
 	}
 	return result;
+}
+
 }
