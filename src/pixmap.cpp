@@ -335,19 +335,23 @@ void Pixmap::load_from_xpm_lines(const std::vector<std::string> & xpm_lines)
 		if(color_names.count(color_name) > 0) {
 			throw Exception("Color <" + color_name + "> was found more than once.");
 		}
-		value = value.substr(1);
-		bool is_zero = true;
-		for(std::string::const_iterator it = value.begin(); it != value.end(); ++it) {
-			if(*it != '0') {
-				is_zero = false;
-				break;
+		if(value == "None") {
+			color_names[color_name] = add_color(Color());
+		} else {
+			std::string number_value = value.substr(1);
+			bool is_zero = true;
+			for(std::string::const_iterator it = number_value.begin(); it != number_value.end(); ++it) {
+				if(*it != '0') {
+					is_zero = false;
+					break;
+				}
 			}
+			unsigned color_value = strtoul(number_value.c_str(), nullptr, 16);
+			if(color_value == 0 && !is_zero) {
+				throw Exception("Color value <" + value + "> is invalid.");
+			}
+			color_names[color_name] = add_color(Color::from_rgb(color_value));
 		}
-		unsigned color_value = strtoul(value.c_str(), nullptr, 16);
-		if(color_value == 0 && !is_zero) {
-			throw Exception("Color value is invalid.");
-		}
-		color_names[color_name] = add_color(Color::from_rgb(color_value));
 		xpm.colors.push_back(color_name);
 		++xpm.color_count;
 		++line;

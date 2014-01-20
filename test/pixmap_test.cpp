@@ -247,6 +247,21 @@ TEST(should_load_pixmap_from_text_lines)
 	EQUAL(pixmap.pixel(2, 1), 0u);
 }
 
+TEST(should_recognize_none_color)
+{
+	static const char * xpm[] = {
+	"3 2 2 1",
+	". c None",
+	"# c #00ff00",
+	"#.#",
+	".#."
+	};
+	std::vector<std::string> xpm_lines(xpm, xpm + size_of_array(xpm));
+	Pixmap pixmap(xpm_lines);
+	EQUAL(pixmap.color_count(), 2u);
+	EQUAL(pixmap.color(0), Pixmap::Color());
+}
+
 TEST(should_load_pixmap_from_xpm_file)
 {
 	static const char * xpm_data = 
@@ -397,7 +412,7 @@ TEST(should_throw_exception_when_colour_value_is_invalid_in_xpm)
 	};
 	std::vector<std::string> xpm_lines(xpm, xpm + size_of_array(xpm));
 	CATCH(Pixmap(xpm_lines), Pixmap::Exception, e) {
-		EQUAL(e.what, "Color value is invalid.");
+		EQUAL(e.what, "Color value <invalid> is invalid.");
 	}
 }
 
