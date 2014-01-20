@@ -8,12 +8,10 @@
 #define decltype __typeof__
 #endif
 
-namespace Chthon { /** @defgroup Utils Global utilities */
+namespace Chthon { /// @defgroup Utils Global utilities
 /// @{
 
-/** Delays execution for specified amount of time.
- * @param msec delay time.
- */
+/// Delays execution for specified amount of time.
 void delay(unsigned msec);
 
 /** Generic function for determination of sign of value.
@@ -28,7 +26,7 @@ int sign(T value)
 }
 
 /// @cond INTERNAL
-// Structure for `foreach` internal implementation needs.
+/// Structure for `foreach` internal implementation needs.
 template<class T>
 struct ForeachIterator {
 	T iterator;
@@ -42,6 +40,8 @@ struct ForeachIterator {
 };
 #define FOREACH_PP_CAT(a, b) FOREACH_PP_CAT_I(a, b)
 #define FOREACH_PP_CAT_I(a, b) a ## b
+/// Generates unique vartiable name using format: base_LINE__
+/// It is needed by `foreach` macro because of shadowing loop variables in nested loops.
 #define UNIQUE_NAME(base) FOREACH_PP_CAT(base, __LINE__)
 /// @endcond
 
@@ -65,9 +65,6 @@ struct ForeachIterator {
             for(expression = *UNIQUE_NAME(it).iterator; !UNIQUE_NAME(it).is_done(); UNIQUE_NAME(it).mark_done())
 
 /** Generic append operator for vector
- * @param out vector to be appended.
- * @param t value to be pushed back.
- * @return modified `out` vector.
  *
  * Example of use:
  * @code{.cpp}
@@ -82,15 +79,10 @@ std::vector<T> & operator<<(std::vector<T> & out, const T & t)
 	out.push_back(t);
 	return out;
 }
-/** Overloaded append operator for vector of string and C-strings.
- * @param out vector to be appended.
- * @param t C-string (null-terminated).
- * @return modified `out` vector.
- */
+/// Overloaded append operator for vector of string and C-strings.
 std::vector<std::string> & operator<<(std::vector<std::string> & out, const char * t);
 
 /** Determines size of a static allocated array.
- * @return size of array.
  *
  * Example of use:
  * @code{.cpp}
