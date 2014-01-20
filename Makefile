@@ -11,6 +11,7 @@ MAJOR_VERSION = $(shell ./version major)
 LIBNAME = lib$(CHTHON).so
 LIBRARY = $(LIBNAME).$(VERSION)
 LIBS = -lncurses
+HEADERS = $(wildcard src/*.h)
 SOURCES = $(wildcard src/*.cpp)
 TEST_SOURCES = $(wildcard test/*.cpp)
 OBJ = $(addprefix tmp/,$(SOURCES:.cpp=.o))
@@ -23,7 +24,7 @@ all: lib docs
 
 lib: $(LIBRARY)
 
-docs: Doxyfile $(SOURCES)
+docs: Doxyfile $(HEADERS) $(SOURCES)
 	doxygen
 
 install: all
