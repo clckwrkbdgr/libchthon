@@ -214,10 +214,12 @@ bool Pixmap::is_transparent_color(unsigned index) const
 	return false;
 }
 
+/// @cond INTERNAL
 XPMData::XPMData()
 	: color_count(0), row_count(0)
 {
 }
+/// @endcond
 
 void Pixmap::load_from_xpm_data(const std::string & xpm_data)
 {

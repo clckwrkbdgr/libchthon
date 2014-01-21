@@ -10,7 +10,8 @@ namespace Chthon {
 
 namespace UnitTest {
 
-std::list<Test*> & all_tests()
+/// @cond INTERNAL
+static std::list<Test*> & all_tests()
 {
 	static std::list<Test*> tests;
 	return tests;
@@ -51,6 +52,7 @@ static void catch_segfault(int)
 	printf("%s:%d: segmentation fault\n", current_filename, current_line);
 	exit(1);
 }
+/// @endcond
 
 int run_all_tests(int argc, char ** argv)
 {
@@ -61,6 +63,9 @@ int run_all_tests(int argc, char ** argv)
 	int passed_tests = 0;
 	for(std::list<Test*>::iterator it = all_tests().begin(); it != all_tests().end(); ++it) {
 		Test * test = *it;
+		/** If command-line parameters are being supplied, they're treated as test or suite names to run.
+		 * In that case only the specified test cases or test suites are executed.
+		 */
 		if(tests_specified && !test->specified(argc, argv)) {
 			continue;
 		}
@@ -70,6 +75,8 @@ int run_all_tests(int argc, char ** argv)
 		bool ok = true;
 		std::string exception_text;
 		std::string test_name = test->suite;
+		/// Test name is printed with its suite name, e.g. "test_suite :: test_name".
+		/// If test is outside any suite, it has no suite name.
 		test_name += std::string(test_name.empty() ? "" : " :: ") + test->name;
 		try {
 			test->run();
@@ -83,6 +90,8 @@ int run_all_tests(int argc, char ** argv)
 			ok = false;
 			exception_text = format("{0}:{1}: unknown exception", test->filename, test->line);
 		}
+		/// Each test result is printed either with `[ OK ]` sign or with '[FAIL]' sign.
+		/// Each test failure message is prepended with file name and line number.
 		if(ok) {
 			std::cout << "[ OK ] " << test_name << std::endl;
 			++passed_tests;
@@ -99,6 +108,7 @@ int run_all_tests(int argc, char ** argv)
 	} else {
 		std::cout << failed_tests << ((failed_tests % 10 == 1) ? " test" : " tests") << " failed!" << std::endl;
 	}
+	/// @return count of failed tests.
 	return failed_tests;
 }
 
