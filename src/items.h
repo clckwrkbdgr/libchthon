@@ -5,7 +5,8 @@
 #include "util.h"
 #include <string>
 
-namespace Chthon {
+namespace Chthon { /// @defgroup Items
+/// @{
 
 struct ItemType {
 	std::string id;
@@ -109,4 +110,5 @@ struct Inventory {
 	bool has_key(int key_type) const;
 };
 
+/// @}
 }

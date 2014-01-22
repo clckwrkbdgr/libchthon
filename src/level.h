@@ -7,7 +7,8 @@
 #include <vector>
 #include <list>
 
-namespace Chthon {
+namespace Chthon { /// @defgroup Level Level and dungeon bulder
+/// @{
 
 class Monster;
 class Item;
@@ -44,4 +45,5 @@ struct DungeonBuilder {
 	static void pop_player_front(std::vector<Monster> & monsters);
 };
 
+/// @}
 }

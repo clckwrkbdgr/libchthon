@@ -3,7 +3,8 @@
 #include "util.h"
 #include <string>
 
-namespace Chthon {
+namespace Chthon { /// @defgroup Cell Map cell
+/// @{
 
 struct CellType {
 	std::string id;
@@ -37,4 +38,5 @@ struct Cell {
 	explicit Cell(const CellType * cell_type = nullptr);
 };
 
+/// @}
 }

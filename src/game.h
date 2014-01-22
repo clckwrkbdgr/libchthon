@@ -8,7 +8,8 @@
 #include <map>
 #include <list>
 
-namespace Chthon {
+namespace Chthon { /// @defgroup Game Game
+/// @{
 
 struct GameEvent {
 	enum EventType {
@@ -96,4 +97,5 @@ struct Game {
 	void hit(Item & item, Monster & other, int damage);
 };
 
+/// @}
 }

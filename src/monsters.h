@@ -2,7 +2,8 @@
 #include "items.h"
 #include <list>
 
-namespace Chthon {
+namespace Chthon { /// @defgroup Monster
+/// @{
 
 class Action;
 
@@ -70,4 +71,5 @@ struct Monster::Builder {
 	Builder & wear(unsigned value);
 };
 
+/// @}
 }

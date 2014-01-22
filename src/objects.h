@@ -2,7 +2,8 @@
 #include "util.h"
 #include "items.h"
 
-namespace Chthon {
+namespace Chthon { /// @defgroup Object
+/// @{
 
 struct ObjectType {
 	std::string id;
@@ -72,4 +73,5 @@ struct Object::Builder {
 	Builder & lock_type(int value);
 };
 
+/// @}
 }
