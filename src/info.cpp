@@ -65,6 +65,7 @@ Info CompiledInfo::compiled() const
 	result.passable = true;
 	result.transparent = true;
 	foreach(const Info & info, all_info) {
+		/// Type id, sprite and name is taken from the last one (i.e. the top one) value.
 		if(result.id.empty()) {
 			result.id = info.id;
 		}
@@ -74,7 +75,9 @@ Info CompiledInfo::compiled() const
 		if(result.name.empty()) {
 			result.name = info.name;
 		}
+		/// Total info is impassable if at least one object is impassable.
 		result.passable = result.passable && info.passable;
+		/// Total info is opaque if at least one object is opaque.
 		result.transparent = result.transparent && info.transparent;
 	}
 	return result.valid() ? result : Info();
