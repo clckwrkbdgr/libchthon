@@ -62,7 +62,7 @@ public:
 	struct Exception {
 		std::string message;
 		/// Constructs exception instance with given text.
-		Exception(const std::string text) : message(text) {}
+		Exception(const std::string & text) : message(text) {}
 	};
 	/// Constructs Reader using specified in_stream.
 	Reader(std::istream & in_stream);
@@ -101,7 +101,7 @@ public:
 	struct Exception {
 		std::string message;
 		/// Constructs exception instance with given text.
-		Exception(const std::string text) : message(text) {}
+		Exception(const std::string & text) : message(text) {}
 	};
 	/// Constructs Writer using specified out_stream.
 	Writer(std::ostream & out_stream);

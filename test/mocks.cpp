@@ -11,10 +11,10 @@ void DummyDungeon::generate(Level & /*level*/, int /*level_index*/) {}
 void DummyDungeon::create_types(Game & /*game*/) {}
 
 TestDungeon::TestDungeon(const Point & player_pos1, const Point & player_pos2)
-	: generated(false), pos1(player_pos1), pos2(player_pos2)
+	: generated(false), pos1(player_pos1), pos2(player_pos2),
+	player_one(MonsterType::Builder("player_one").sprite(1).faction(Monster::PLAYER)),
+	player_two(MonsterType::Builder("player_two").sprite(2).faction(Monster::PLAYER))
 {
-	player_one = MonsterType::Builder("player_one").sprite(1).faction(Monster::PLAYER);
-	player_two = MonsterType::Builder("player_two").sprite(2).faction(Monster::PLAYER);
 }
 void TestDungeon::create_types(Game &) { }
 void TestDungeon::generate(Level & level, int level_index)

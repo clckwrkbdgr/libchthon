@@ -51,6 +51,9 @@ install: all
 	ln -s $(INSTALL_PREFIX_DOCS)/$(CHTHON).$(VERSION) $(INSTALL_PREFIX_DOCS)/$(CHTHON).$(MAJOR_VERSION)
 	ln -s $(INSTALL_PREFIX_DOCS)/$(CHTHON).$(MAJOR_VERSION) $(INSTALL_PREFIX_DOCS)/$(CHTHON)
 
+check:
+	cppcheck --enable=all --template='{file}:{line}: {severity}: {message} ({id})' .
+
 test: $(TEST_BIN)
 	./$(TEST_BIN) $(TESTS)
 
@@ -64,7 +67,7 @@ tmp/%.o: %.cpp
 	@echo Compiling $<...
 	@$(CXX) $(CXXFLAGS) -c -fpic $< -o $@
 
-.PHONY: clean Makefile
+.PHONY: clean Makefile check
 
 clean:
 	$(RM) -rf tmp/* $(TEST_BIN) $(LIBRARY) docs/
