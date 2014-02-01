@@ -1,4 +1,5 @@
 #include "pixmap.h"
+#include "log.h"
 #include <sstream>
 #include <iomanip>
 #include <algorithm>
@@ -221,6 +222,12 @@ XPMData::XPMData()
 }
 /// @endcond
 
+/// @cond INTERNAL
+namespace Global {
+#include "x11_colors.cpp"
+}
+/// @endcond
+
 void Pixmap::load_from_xpm_data(const std::string & xpm_data)
 {
 	std::vector<std::string> lines;
@@ -302,7 +309,7 @@ void Pixmap::load_from_xpm_lines(const std::vector<std::string> & xpm_lines)
 		bool last_was_space = true;
 		for(unsigned i = cpp; i < line->size(); ++i) {
 			const char & ch = (*line)[i];
-			if(ch == ' ') {
+			if(color_parts.size() < 2 && ch == ' ') {
 				if(!last_was_space) {
 					color_interspaces.push_back("");
 				}
@@ -314,6 +321,13 @@ void Pixmap::load_from_xpm_lines(const std::vector<std::string> & xpm_lines)
 				}
 				color_parts.back() += ch;
 				last_was_space = false;
+			}
+		}
+		if(!color_parts.empty() && !color_parts.back().empty() && color_parts.back()[0] != ' ') {
+			color_interspaces.push_back("");
+			while(color_parts.back().back() == ' ') {
+				color_parts.back().erase(color_parts.back().size() - 1, 1);
+				color_interspaces.back() += ' ';
 			}
 		}
 		if(color_parts.size() < 1) {
@@ -337,9 +351,9 @@ void Pixmap::load_from_xpm_lines(const std::vector<std::string> & xpm_lines)
 		if(color_names.count(color_name) > 0) {
 			throw Exception("Color <" + color_name + "> was found more than once.");
 		}
-		if(value == "None") {
-			color_names[color_name] = add_color(Color());
-		} else {
+		if(Global::x11_colors.count(value) > 0) {
+			color_names[color_name] = add_color(Color::from_rgb(Global::x11_colors.at(value)));
+		} else if(value[0] == '#') {
 			std::string number_value = value.substr(1);
 			bool is_zero = true;
 			for(std::string::const_iterator it = number_value.begin(); it != number_value.end(); ++it) {
@@ -353,6 +367,8 @@ void Pixmap::load_from_xpm_lines(const std::vector<std::string> & xpm_lines)
 				throw Exception("Color value <" + value + "> is invalid.");
 			}
 			color_names[color_name] = add_color(Color::from_rgb(color_value));
+		} else {
+			throw Exception("Color value <" + value + "> is invalid.");
 		}
 		xpm.colors.push_back(color_name);
 		++xpm.color_count;

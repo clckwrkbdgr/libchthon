@@ -262,6 +262,36 @@ TEST(should_recognize_none_color)
 	EQUAL(pixmap.color(0), Pixmap::Color());
 }
 
+TEST(should_recognize_x11_color_names)
+{
+	static const char * xpm[] = {
+	"3 2 2 1",
+	". c navy",
+	"# c #00ff00",
+	"#.#",
+	".#."
+	};
+	std::vector<std::string> xpm_lines(xpm, xpm + size_of_array(xpm));
+	Pixmap pixmap(xpm_lines);
+	EQUAL(pixmap.color_count(), 2u);
+	EQUAL(pixmap.color(0), Pixmap::Color(0, 0, 0x80));
+}
+
+TEST(should_recognize_x11_color_names_with_spaces)
+{
+	static const char * xpm[] = {
+	"3 2 2 1",
+	". c light green",
+	"# c #00ff00",
+	"#.#",
+	".#."
+	};
+	std::vector<std::string> xpm_lines(xpm, xpm + size_of_array(xpm));
+	Pixmap pixmap(xpm_lines);
+	EQUAL(pixmap.color_count(), 2u);
+	EQUAL(pixmap.color(0), Pixmap::Color(0x90, 0xee, 0x90));
+}
+
 TEST(should_load_pixmap_from_xpm_file)
 {
 	static const char * xpm_data = 
