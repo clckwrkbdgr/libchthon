@@ -40,7 +40,12 @@ Pixmap::Color Pixmap::Color::from_rgb(uint32_t color)
 
 bool Pixmap::Color::operator==(const Color & other) const
 {
-	return (transparent == other.transparent) || (r == other.r && g == other.g && b == other.b);
+	if(transparent == other.transparent) {
+		return true;
+	} else if(transparent || other.transparent) {
+		return false;
+	}
+	return (r == other.r && g == other.g && b == other.b);
 }
 
 bool Pixmap::Color::operator!=(const Color & other) const
@@ -352,7 +357,7 @@ void Pixmap::load_from_xpm_lines(const std::vector<std::string> & xpm_lines)
 			throw Exception("Color <" + color_name + "> was found more than once.");
 		}
 		if(Global::x11_colors.count(value) > 0) {
-			color_names[color_name] = add_color(Color::from_rgb(Global::x11_colors.at(value)));
+			color_names[color_name] = add_color(Color::from_argb(Global::x11_colors.at(value)));
 		} else if(value[0] == '#') {
 			std::string number_value = value.substr(1);
 			bool is_zero = true;
