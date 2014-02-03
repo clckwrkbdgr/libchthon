@@ -546,6 +546,26 @@ TEST(should_save_pixmap_exactly_when_intact)
 	EQUAL(save_data, std::string(xpm_data));
 }
 
+TEST(should_save_none_color)
+{
+	static const char * xpm_data = 
+		"/* XPM */\n"
+		"static char * xpm[] = {\n"
+		"/* Values */\n"
+		"\"3 2 2 1\",\n"
+		"/* Colors */\n"
+		"\". c None\" /* transparent */,\n"
+		"\"# c #00ff00\",\n"
+		"/* Pixels */\n"
+		"\"#.#\",\n"
+		"\".#.\"\n"
+		"};\n"
+		;
+	Pixmap pixmap(xpm_data);
+	std::string save_data = pixmap.save();
+	EQUAL(save_data, std::string(xpm_data));
+}
+
 TEST(should_keep_format_of_values_when_saving_xpm)
 {
 	static const char * xpm_data = 

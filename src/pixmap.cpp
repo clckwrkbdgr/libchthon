@@ -458,9 +458,15 @@ std::string Pixmap::save() const
 			color_interspace.first = " ";
 			color_interspace.second.first = " ";
 		}
-		std::ostringstream color_value;
-		color_value << std::hex << std::setw(6) << std::setfill('0') << (current_color->argb() & 0xffffff);
-		result += std::string("\"") + color_key + color_interspace.first + "c" + color_interspace.second.first + "#" + color_value.str() + color_interspace.second.second + '"';
+		result += std::string("\"") + color_key + color_interspace.first + "c" + color_interspace.second.first;
+		if(current_color->transparent) {
+			result += "None";
+		} else {
+			std::ostringstream color_value;
+			color_value << std::hex << std::setw(6) << std::setfill('0') << (current_color->argb() & 0xffffff);
+			result += "#" + color_value.str();
+		}
+		result += color_interspace.second.second + '"';
 
 		bool print_original_interspace = (current_color_index < xpm.color_count - 1) || (current_color_index == color_count() - 1);
 		if(print_original_interspace) {
