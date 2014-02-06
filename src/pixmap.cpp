@@ -268,7 +268,7 @@ void Pixmap::load_from_xpm_lines(const std::vector<std::string> & xpm_lines)
 	bool last_was_space_in_value = true;
 	for(unsigned i = 0; i < line->size(); ++i) {
 		const char & ch = (*line)[i];
-		if(ch == ' ') {
+		if(isspace(ch)) {
 			if(!last_was_space_in_value) {
 				xpm.values_interspaces.push_back("");
 			}
@@ -303,7 +303,7 @@ void Pixmap::load_from_xpm_lines(const std::vector<std::string> & xpm_lines)
 			throw Exception("Color lines are missing or not enough");
 		}
 
-		if(line->size() <= cpp || (*line)[cpp] != ' ') {
+		if(line->size() <= cpp || !isspace((*line)[cpp])) {
 			throw Exception("Color char should be followed by space in color table.");
 		}
 		std::string color_name = line->substr(0, cpp);
@@ -314,7 +314,7 @@ void Pixmap::load_from_xpm_lines(const std::vector<std::string> & xpm_lines)
 		bool last_was_space = true;
 		for(unsigned i = cpp; i < line->size(); ++i) {
 			const char & ch = (*line)[i];
-			if(color_parts.size() < 2 && ch == ' ') {
+			if(color_parts.size() < 2 && isspace(ch)) {
 				if(!last_was_space) {
 					color_interspaces.push_back("");
 				}
@@ -328,11 +328,11 @@ void Pixmap::load_from_xpm_lines(const std::vector<std::string> & xpm_lines)
 				last_was_space = false;
 			}
 		}
-		if(!color_parts.empty() && !color_parts.back().empty() && color_parts.back()[0] != ' ') {
+		if(!color_parts.empty() && !color_parts.back().empty() && !isspace(color_parts.back()[0])) {
 			color_interspaces.push_back("");
-			while(color_parts.back().back() == ' ') {
+			while(isspace(color_parts.back().back())) {
+				color_interspaces.back() += color_parts.back().back();
 				color_parts.back().erase(color_parts.back().size() - 1, 1);
-				color_interspaces.back() += ' ';
 			}
 		}
 		if(color_parts.size() < 1) {

@@ -298,7 +298,7 @@ TEST(should_load_pixmap_from_xpm_file)
 		"static char * xpm[] = {\n"
 		"\"3 2 2 1\",\n"
 		"\". c #ff0000\",\n"
-		"\"# c #00ff00\",\n"
+		"\"#	c #00ff00\",\n"
 		"\"#.#\",\n"
 		"\".#.\"\n"
 		"};\n"
