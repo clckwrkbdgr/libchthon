@@ -70,7 +70,7 @@ tmp/%.o: %.cpp
 .PHONY: clean Makefile check
 
 clean:
-	$(RM) -rf tmp/* $(TEST_BIN) $(LIBRARY) docs/
+	$(RM) -rf tmp/* $(TEST_BIN) $(LIBNAME)* docs/
 
 $(shell mkdir -p tmp)
 $(shell mkdir -p tmp/src)

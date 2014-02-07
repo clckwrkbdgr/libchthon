@@ -7,6 +7,21 @@ namespace Chthon {
 
 SUITE(util) {
 
+TEST(bound_should_return_min_when_value_is_lesser_than_min)
+{
+	EQUAL(bound(0, -1, 10), 0);
+}
+
+TEST(bound_should_return_max_when_value_is_greater_than_max)
+{
+	EQUAL(bound(0, 11, 10), 10);
+}
+
+TEST(bound_should_return_value_when_value_is_inside_the_interval)
+{
+	EQUAL(bound(0, 5, 10), 5);
+}
+
 TEST(should_return_sign_of_positive_number)
 {
 	int result = sign(10);

@@ -25,6 +25,12 @@ int sign(T value)
 	return (T() < value) - (value < T());
 }
 
+template<typename T>
+const T & bound(const T & min, const T & value, const T & max)
+{
+	return std::max(min, std::min(value, max));
+}
+
 /// @cond INTERNAL
 /// Structure for `foreach` internal implementation needs.
 template<class T>
