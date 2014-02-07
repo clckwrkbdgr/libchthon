@@ -4,14 +4,12 @@
 #include "../src/cell.h"
 #include "../src/format.h"
 #include "../src/test.h"
-
-using namespace Chthon::UnitTest;
-
-namespace Chthon {
-
-using namespace GameMocks;
+using Chthon::GameEvent;
 
 SUITE(game) {
+using GameMocks::GameWithDummyOnTrap;
+using GameMocks::GameWithDummy;
+using GameMocks::GameWithDummyAndKiller;
 
 TEST_FIXTURE(GameWithDummyOnTrap, should_trigger_trap_if_trap_is_set)
 {
@@ -92,7 +90,7 @@ TEST_FIXTURE(GameWithDummy, should_drop_loot_if_monster_is_dead)
 TEST_FIXTURE(GameWithDummy, should_end_game_if_player_is_dead)
 {
 	game.die(player());
-	EQUAL(game.state, Game::PLAYER_DIED);
+	EQUAL(game.state, Chthon::Game::PLAYER_DIED);
 }
 
 
@@ -201,8 +199,6 @@ TEST_FIXTURE(GameWithDummyAndKiller, should_die_if_hit_was_too_much)
 	} NEXT(e) {
 		EQUAL(e.type, GameEvent::DIED);
 	} DONE(e);
-}
-
 }
 
 }

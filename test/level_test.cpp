@@ -2,14 +2,10 @@
 #include "../src/level.h"
 #include "../src/game.h"
 #include "../src/test.h"
-
-using namespace Chthon::UnitTest;
-
-namespace Chthon {
-
-using namespace GameMocks;
+using Chthon::Point;
 
 SUITE(dungeon) {
+using GameMocks::GameWithLevels;
 
 TEST_FIXTURE(GameWithLevels, should_save_current_level_as_visited)
 {
@@ -43,6 +39,9 @@ TEST_FIXTURE(GameWithLevels, should_generated_newly_visited_level)
 }
 
 SUITE(level) {
+using GameMocks::Game2x2;
+using GameMocks::LevelWithPath;
+using GameMocks::LevelForSeeing;
 
 TEST_FIXTURE(Game2x2, impassable_cells_should_be_impassable)
 {
@@ -144,15 +143,15 @@ TEST_FIXTURE(Game2x2, objects_should_be_below_everything)
 TEST_FIXTURE(Game2x2, should_get_player_from_monsters)
 {
 	game.add_monster("monster");
-	Monster & monster = game.current_level().get_player();
-	EQUAL(monster.type->faction, Monster::PLAYER);
+	Chthon::Monster & monster = game.current_level().get_player();
+	EQUAL(monster.type->faction, Chthon::Monster::PLAYER);
 }
 
 TEST_FIXTURE(Game2x2, should_get_player_from_const_monsters)
 {
 	game.add_monster("monster");
-	const Monster & monster = static_cast<const Game &>(game).current_level().get_player();
-	EQUAL(monster.type->faction, Monster::PLAYER);
+	const Chthon::Monster & monster = static_cast<const Chthon::Game &>(game).current_level().get_player();
+	EQUAL(monster.type->faction, Chthon::Monster::PLAYER);
 }
 
 
@@ -224,8 +223,8 @@ TEST_FIXTURE(LevelForSeeing, should_not_see_through_opaque_cells)
 
 TEST(should_erase_dead_monsters)
 {
-	DummyDungeon game;
-	game.current_level() = Level(2, 2);
+	GameMocks::DummyDungeon game;
+	game.current_level() = Chthon::Level(2, 2);
 	game.add_monster_type("dead").max_hp(100).sprite(1);
 	game.add_monster_type("alive").max_hp(100).sprite(2);
 	game.add_monster("dead").pos(Point(1, 1)).hp(0);
@@ -233,8 +232,6 @@ TEST(should_erase_dead_monsters)
 	game.current_level().erase_dead_monsters();
 	EQUAL(game.current_level().monsters.size(), (unsigned)1);
 	EQUAL(game.current_level().monsters[0].type->sprite, 2);
-}
-
 }
 
 }

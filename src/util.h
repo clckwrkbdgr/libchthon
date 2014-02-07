@@ -66,9 +66,22 @@ struct ForeachIterator {
  * @endcode
  */
 #define foreach(expression, container) \
-	if(ForeachIterator<decltype(container.begin())> UNIQUE_NAME(it) = container.begin()) \
+	if(Chthon::ForeachIterator<decltype(container.begin())> UNIQUE_NAME(it) = container.begin()) \
         for(; UNIQUE_NAME(it).iterator != container.end() && !UNIQUE_NAME(it).brk; ++UNIQUE_NAME(it).iterator, UNIQUE_NAME(it).reset_done()) \
             for(expression = *UNIQUE_NAME(it).iterator; !UNIQUE_NAME(it).is_done(); UNIQUE_NAME(it).mark_done())
+
+/** Determines size of a static allocated array.
+ *
+ * Example of use:
+ * @code{.cpp}
+ * int a[] = {1, 2, 3};
+ * // size_of_array(a) == 3;
+ * @endcode
+ */
+template<class T, size_t N>
+size_t size_of_array(T (&)[N]) { return N; }
+
+}
 
 /** Generic append operator for vector
  *
@@ -88,16 +101,4 @@ std::vector<T> & operator<<(std::vector<T> & out, const T & t)
 /// Overloaded append operator for vector of string and C-strings.
 std::vector<std::string> & operator<<(std::vector<std::string> & out, const char * t);
 
-/** Determines size of a static allocated array.
- *
- * Example of use:
- * @code{.cpp}
- * int a[] = {1, 2, 3};
- * // size_of_array(a) == 3;
- * @endcode
- */
-template<class T, size_t N>
-size_t size_of_array(T (&)[N]) { return N; }
-
 /// @}
-}

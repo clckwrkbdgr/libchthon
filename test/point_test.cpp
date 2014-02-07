@@ -1,10 +1,7 @@
 #include "../src/point.h"
 #include "../src/util.h"
 #include "../src/test.h"
-
-using namespace Chthon::UnitTest;
-
-namespace Chthon {
+using Chthon::Point;
 
 SUITE(point) {
 
@@ -154,8 +151,6 @@ TEST(should_return_one_for_close_point)
 	Point a(1, 3), b(2, 4);
 	int d = distance(a, b);
 	EQUAL(d, 1);
-}
-
 }
 
 }

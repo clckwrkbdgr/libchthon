@@ -3,13 +3,10 @@
 #include "../src/test.h"
 #include <sstream>
 #include <iomanip>
-using namespace Chthon::UnitTest;
-using Chthon::Pixmap;
-using Chthon::size_of_array;
 
 namespace Chthon {
 
-static std::string to_string(const Pixmap::Color & color)
+static std::string to_string(const Chthon::Pixmap::Color & color)
 {
 	if(color.transparent) {
 		return "None";
@@ -23,6 +20,7 @@ static std::string to_string(const Pixmap::Color & color)
 }
 
 SUITE(pixmap) {
+using Chthon::Pixmap;
 
 TEST(should_construct_color_from_argb)
 {
@@ -222,6 +220,8 @@ TEST(should_consider_default_color_transparent)
 }
 
 SUITE(load_xpm) {
+using Chthon::Pixmap;
+using Chthon::size_of_array;
 
 TEST(should_load_pixmap_from_text_lines)
 {
@@ -525,6 +525,8 @@ TEST(shoudl_throw_exception_when_pixel_is_invalid_in_xpm)
 }
 
 SUITE(save_xpm) {
+using Chthon::Pixmap;
+using Chthon::size_of_array;
 
 TEST(should_save_pixmap_exactly_when_intact)
 {

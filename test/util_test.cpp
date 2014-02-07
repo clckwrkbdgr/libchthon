@@ -1,42 +1,38 @@
 #include "../src/util.h"
 #include "../src/test.h"
 
-using namespace Chthon::UnitTest;
-
-namespace Chthon {
-
 SUITE(util) {
 
 TEST(bound_should_return_min_when_value_is_lesser_than_min)
 {
-	EQUAL(bound(0, -1, 10), 0);
+	EQUAL(Chthon::bound(0, -1, 10), 0);
 }
 
 TEST(bound_should_return_max_when_value_is_greater_than_max)
 {
-	EQUAL(bound(0, 11, 10), 10);
+	EQUAL(Chthon::bound(0, 11, 10), 10);
 }
 
 TEST(bound_should_return_value_when_value_is_inside_the_interval)
 {
-	EQUAL(bound(0, 5, 10), 5);
+	EQUAL(Chthon::bound(0, 5, 10), 5);
 }
 
 TEST(should_return_sign_of_positive_number)
 {
-	int result = sign(10);
+	int result = Chthon::sign(10);
 	EQUAL(result, 1);
 }
 
 TEST(should_return_sign_of_negative_number)
 {
-	int result = sign(-10);
+	int result = Chthon::sign(-10);
 	EQUAL(result, -1);
 }
 
 TEST(should_return_sign_of_zero)
 {
-	int result = sign(0);
+	int result = Chthon::sign(0);
 	EQUAL(result, 0);
 }
 
@@ -103,8 +99,6 @@ TEST(should_push_back_c_string_to_vector)
 	stringlist << "hello";
 	EQUAL(stringlist.size(), (unsigned)1);
 	EQUAL(stringlist[0], "hello");
-}
-
 }
 
 }

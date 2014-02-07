@@ -1,9 +1,8 @@
 #include "../src/items.h"
 #include "../src/test.h"
-
-using namespace Chthon::UnitTest;
-
-namespace Chthon {
+using Chthon::ItemType;
+using Chthon::Item;
+using Chthon::Inventory;
 
 SUITE(inventory) {
 
@@ -144,8 +143,6 @@ TEST(should_get_quest_items_when_carrying_one)
 	const Item & item = inventory.quest_item();
 	ASSERT(item.valid());
 	ASSERT(item.type->quest);
-}
-
 }
 
 }

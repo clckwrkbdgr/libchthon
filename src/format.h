@@ -67,6 +67,18 @@ template<class T0, class T1, class T2>
  * @param t1 value to replace `{1}` placeholder.
  * @param t2 value to replace `{2}` placeholder.
  * @param t3 value to replace `{3}` placeholder.
+ * @return formatted string.
+ */
+template<class T0, class T1, class T2, class T3>
+	std::string format(std::string s, const T0 & t0, const T1 & t1, const T2 & t2, const T3 & t3)
+	{ subs_arg(s, 0, t0); subs_arg(s, 1, t1); subs_arg(s, 2, t2); subs_arg(s, 3, t3); return s; }
+/** Formats string using placeholder substitution.
+ * @see format().
+ * @param s original string with placeholders.
+ * @param t0 value to replace `{0}` placeholder.
+ * @param t1 value to replace `{1}` placeholder.
+ * @param t2 value to replace `{2}` placeholder.
+ * @param t3 value to replace `{3}` placeholder.
  * @param t4 value to replace `{4}` placeholder.
  * @return formatted string.
  */

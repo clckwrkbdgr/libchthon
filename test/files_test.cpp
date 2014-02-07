@@ -4,11 +4,9 @@
 #include "../src/test.h"
 #include <sstream>
 
-using namespace Chthon::UnitTest;
-
-namespace Chthon {
-
 SUITE(files) {
+using Chthon::Reader;
+using Chthon::Writer;
 
 TEST(reader_should_skip_newline)
 {
@@ -200,4 +198,3 @@ TEST(should_throw_exception_when_cannot_read_user_defined_type)
 
 }
 
-}

@@ -3,10 +3,11 @@
 #include <list>
 #include <iostream>
 
-namespace Chthon {
-
-namespace UnitTest { /// @defgroup UnitTest Unit testing
+namespace Chthon { /// @defgroup UnitTest Unit testing
 /// @{
+
+/// Runs all tests.
+int run_all_tests(int argc, char ** argv);
 
 /// @cond INTERNAL
 struct Test {
@@ -27,9 +28,6 @@ struct AssertException {
 	AssertException(const char * ex_filename, int ex_linenumber, const std::string & message);
 };
 /// @endcond
-
-/// Runs all tests.
-int run_all_tests(int argc, char ** argv);
 
 /// @cond INTERNAL
 const char * current_suite_name();
@@ -58,7 +56,7 @@ const char * current_suite_name();
  * Also segfault is catched, but the whole flow is interrupted in that case.
  */
 #define TEST(test_name) \
-	class Test_##test_name : public Test { \
+	class Test_##test_name : public Chthon::Test { \
 	public: \
 		Test_##test_name(const char * test_suite, const char * test_name) : Test(test_suite, test_name, __FILE__, __LINE__) {} \
 		virtual void run(); \
@@ -83,6 +81,7 @@ const char * current_suite_name();
  * @endcode
  */
 #define TEST_FIXTURE(fixture_name, test_name) \
+	inline void test_class_existence_##test_name(const fixture_name &) {} \
 	class Fixture_##fixture_name##test_name : public fixture_name { \
 	public: \
 		void run(); \
@@ -99,7 +98,7 @@ template<class A, class B>
 void test_equal(const A & a, const B & b, const char * a_string, const char * b_string, const char * file, int line)
 {
 	if(a != b) {
-		throw AssertException(file, line, std::string(a_string) + " (" + to_string(a) + ") != "  + b_string + " (" + to_string(b) + ")");
+		throw AssertException(file, line, Chthon::format("{0} ({1}) != {2} ({3})", a_string, a, b_string, b));
 	}
 }
 /// @endcond
@@ -110,20 +109,20 @@ void test_equal(const A & a, const B & b, const char * a_string, const char * b_
  * This is a test assert and should be using in TEST() case only, as it throws specific Exception.
  */
 #define EQUAL(a, b) \
-	test_equal(a, b, #a, #b, __FILE__, __LINE__)
+	Chthon::test_equal(a, b, #a, #b, __FILE__, __LINE__)
 
 /** Uncoditionally fails with specified error message and breaks test execution.
  * This is a test assert and should be using in TEST() case only, as it throws specific Exception.
  */
 #define FAIL(message) \
-	throw AssertException(__FILE__, __LINE__, message)
+	throw Chthon::AssertException(__FILE__, __LINE__, message)
 
 /** Simple assert check. Treats expression as a boolean and checks its value after evaluation.
  * If value is false, it fails and breaks test execution.
  * This is a test assert and should be using in TEST() case only, as it throws specific Exception.
  */
 #define ASSERT(expression) \
-	do { if(!(expression)) { throw AssertException(__FILE__, __LINE__, "failed assertion: " #expression ); } } while(0)
+	do { if(!(expression)) { throw Chthon::AssertException(__FILE__, __LINE__, "failed assertion: " #expression ); } } while(0)
 
 /** Checks whether exception throws specified exception of exception_class.
  * When exception is thrown, it is accesible as exception_variable.
@@ -140,7 +139,7 @@ void test_equal(const A & a, const B & b, const char * a_string, const char * b_
 #define CATCH(expression, exception_class, exception_variable) \
 	try { \
 		do { (expression); } while(0); \
-		throw AssertException(__FILE__, __LINE__, "expected exception " #exception_class " was not thrown"); \
+		throw Chthon::AssertException(__FILE__, __LINE__, "expected exception " #exception_class " was not thrown"); \
 	} catch(const exception_class & exception_variable)
 
 /// @cond INTERNAL
@@ -201,7 +200,7 @@ private:
  * @endcode
  */
 #define TEST_CONTAINER(container, var) \
-	TestContainer<decltype(container)> test_c_##var(__FILE__, __LINE__, container, #container); \
+	Chthon::TestContainer<decltype(container)> test_c_##var(__FILE__, __LINE__, container, #container); \
 	for(; !test_c_##var.done(); ) \
 	for(decltype(test_c_##var.value()) & var = test_c_##var.value(); !test_c_##var.done(); test_c_##var.mark_done())
 
@@ -224,6 +223,4 @@ private:
 	test_c_##var.check_at_end(__FILE__, __LINE__)
 
 /// @}
-}
-
 }

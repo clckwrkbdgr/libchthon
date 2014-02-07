@@ -8,8 +8,6 @@
 
 namespace Chthon {
 
-namespace UnitTest {
-
 /// @cond INTERNAL
 static std::list<Test*> & all_tests()
 {
@@ -43,7 +41,6 @@ const char * current_suite_name()
 	return "";
 }
 
-
 static const char * current_filename = __FILE__;
 static int current_line = __LINE__;
 
@@ -52,6 +49,7 @@ static void catch_segfault(int)
 	printf("%s:%d: segmentation fault\n", current_filename, current_line);
 	exit(1);
 }
+
 /// @endcond
 
 int run_all_tests(int argc, char ** argv)
@@ -110,8 +108,6 @@ int run_all_tests(int argc, char ** argv)
 	}
 	/// @return count of failed tests.
 	return failed_tests;
-}
-
 }
 
 }

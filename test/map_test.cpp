@@ -1,24 +1,21 @@
 #include "../src/map.h"
 #include "../src/point.h"
 #include "../src/test.h"
-
-using namespace Chthon::UnitTest;
-
-namespace Chthon {
+using Chthon::Map;
 
 SUITE(map) {
 
 TEST(point_inside_map_should_be_valid)
 {
 	Map<int> map(3, 3);
-	Point point(1, 1);
+	Chthon::Point point(1, 1);
 	ASSERT(map.valid(point));
 }
 
 TEST(point_outside_map_should_be_invalid)
 {
 	Map<int> map(3, 3);
-	Point point(-1, 1);
+	Chthon::Point point(-1, 1);
 	ASSERT(!map.valid(point));
 }
 
@@ -41,8 +38,6 @@ TEST(should_fill_map_with_multi_values)
 	EQUAL(map.cell(1, 0), 2);
 	EQUAL(map.cell(0, 1), 3);
 	EQUAL(map.cell(1, 1), 4);
-}
-
 }
 
 }

@@ -2,19 +2,22 @@
 #include "../src/actions.h"
 #include "../src/game.h"
 #include "../src/test.h"
-
-using namespace Chthon::UnitTest;
+using Chthon::Point;
+using Chthon::GameEvent;
+using Chthon::Action;
 
 namespace Chthon {
 
-static std::string to_string(const TypePtr<ItemType> & type)
+static std::string to_string(const Chthon::TypePtr<Chthon::ItemType> & type)
 {
 	return type->id;
 }
 
-using namespace GameMocks;
+}
 
 SUITE(move) {
+using GameMocks::GameWithDummyAndObjects;
+using Chthon::Move;
 
 TEST_FIXTURE(GameWithDummyAndObjects, should_move_when_cell_is_empty)
 {
@@ -76,6 +79,8 @@ TEST_FIXTURE(GameWithDummyAndObjects, should_not_move_into_closed_object)
 }
 
 SUITE(drink) {
+using GameMocks::GameWithDummyAndObjects;
+using Chthon::Drink;
 
 TEST_FIXTURE(GameWithDummyAndObjects, should_not_drink_monsters)
 {
@@ -125,6 +130,8 @@ TEST_FIXTURE(GameWithDummyAndObjects, should_heal_from_fountains)
 }
 
 SUITE(open) {
+using GameMocks::GameWithDummyAndObjects;
+using Chthon::Open;
 
 TEST_FIXTURE(GameWithDummyAndObjects, should_not_open_already_opened_doors)
 {
@@ -160,7 +167,7 @@ TEST_FIXTURE(GameWithDummyAndObjects, should_not_open_locked_doors_without_a_key
 TEST_FIXTURE(GameWithDummyAndObjects, should_open_locked_doors_with_a_key)
 {
 	game.add_object("closed_door", "opened_door").pos(Point(1, 0)).opened(false).locked(true).lock_type(1);
-	dummy().inventory.set_item(1, Item::Builder(game.item_type("key")).key_type(1));
+	dummy().inventory.set_item(1, Chthon::Item::Builder(game.item_type("key")).key_type(1));
 	Open(Point(0, -1)).commit(dummy(), game);
 	ASSERT(!game.current_level().objects[0].locked);
 	ASSERT(game.current_level().objects[0].opened());
@@ -180,7 +187,7 @@ TEST_FIXTURE(GameWithDummyAndObjects, should_not_open_empty_cell)
 
 TEST_FIXTURE(GameWithDummyAndObjects, should_open_containers_and_drop_items)
 {
-	Item item(game.item_type("key"));
+	Chthon::Item item(game.item_type("key"));
 	game.add_object("pot").pos(Point(1, 0)).item(item);
 	Open(Point(0, -1)).commit(dummy(), game);
 	EQUAL(game.current_level().items[0].type, item.type);
@@ -204,6 +211,8 @@ TEST_FIXTURE(GameWithDummyAndObjects, should_not_open_empty_containers)
 }
 
 SUITE(close) {
+using GameMocks::GameWithDummyAndObjects;
+using Chthon::Close;
 
 TEST_FIXTURE(GameWithDummyAndObjects, should_close_opened_doors)
 {
@@ -234,11 +243,13 @@ TEST_FIXTURE(GameWithDummyAndObjects, should_not_close_empty_cell)
 }
 
 SUITE(swing) {
+using GameMocks::GameWithDummyAndObjects;
+using Chthon::Swing;
 
 TEST_FIXTURE(GameWithDummyAndObjects, should_hit_impassable_cells_on_swing)
 {
 	game.add_cell_type("wall").name("wall").passable(false);
-	game.current_level().map.cell(Point(1, 0)) = Cell(game.cell_type("wall"));
+	game.current_level().map.cell(Point(1, 0)) = Chthon::Cell(game.cell_type("wall"));
 	Swing(Point(0, -1)).commit(dummy(), game);
 	TEST_CONTAINER(game.events, e) {
 		EQUAL(e.type, GameEvent::HITS);
@@ -279,6 +290,8 @@ TEST_FIXTURE(GameWithDummyAndObjects, should_swing_at_nothing_at_empty_cell)
 }
 
 SUITE(fire) {
+using GameMocks::GameWithDummyWieldingAndWearing;
+using Chthon::Fire;
 
 TEST_FIXTURE(GameWithDummyWieldingAndWearing, should_not_throw_if_wields_nothing)
 {
@@ -303,7 +316,7 @@ TEST_FIXTURE(GameWithDummyWieldingAndWearing, should_unwield_item_from_monster_w
 TEST_FIXTURE(GameWithDummyWieldingAndWearing, should_hit_opaque_cell_and_drop_item_before_it)
 {
 	game.add_cell_type("wall").name("wall").transparent(false);
-	game.current_level().map.cell(Point(1, 0)) = Cell(game.cell_type("wall"));
+	game.current_level().map.cell(Point(1, 0)) = Chthon::Cell(game.cell_type("wall"));
 	Fire(Point(0, -1)).commit(dummy(), game);
 	TEST_CONTAINER(game.events, e) {
 		EQUAL(e.type, GameEvent::THROWS);
@@ -376,6 +389,8 @@ TEST_FIXTURE(GameWithDummyWieldingAndWearing, should_hit_monster_and_drop_item_u
 }
 
 SUITE(put) {
+using GameMocks::GameWithDummyWieldingAndWearing;
+using Chthon::Put;
 
 TEST_FIXTURE(GameWithDummyWieldingAndWearing, should_not_put_if_wields_nothing)
 {
@@ -436,15 +451,13 @@ TEST_FIXTURE(GameWithDummyWieldingAndWearing, should_not_refill_already_full_ite
 TEST_FIXTURE(GameWithDummyWieldingAndWearing, should_put_item_under_monster_if_target_is_impassable)
 {
 	game.add_cell_type("wall").name("wall").transparent(false);
-	game.current_level().map.cell(Point(1, 1)) = Cell(game.cell_type("wall"));
+	game.current_level().map.cell(Point(1, 1)) = Chthon::Cell(game.cell_type("wall"));
 	Put(Point(0, -1)).commit(dummy(), game);
 	TEST_CONTAINER(game.events, e) {
 		EQUAL(e.type, GameEvent::DROPS_AT);
 	} DONE(e);
 	ASSERT(!game.current_level().items.empty());
 	EQUAL(game.current_level().items[0].pos, Point(1, 2));
-}
-
 }
 
 }

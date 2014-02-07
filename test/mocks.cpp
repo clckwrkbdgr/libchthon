@@ -1,7 +1,11 @@
 #include "mocks.h"
 #include "../src/log.h"
-
-namespace Chthon {
+using Chthon::Level;
+using Chthon::Point;
+using Chthon::Monster;
+using Chthon::Map;
+using Chthon::Cell;
+using Chthon::Item;
 
 namespace GameMocks {
 
@@ -12,8 +16,8 @@ void DummyDungeon::create_types(Game & /*game*/) {}
 
 TestDungeon::TestDungeon(const Point & player_pos1, const Point & player_pos2)
 	: generated(false), pos1(player_pos1), pos2(player_pos2),
-	player_one(MonsterType::Builder("player_one").sprite(1).faction(Monster::PLAYER)),
-	player_two(MonsterType::Builder("player_two").sprite(2).faction(Monster::PLAYER))
+	player_one(Chthon::MonsterType::Builder("player_one").sprite(1).faction(Monster::PLAYER)),
+	player_two(Chthon::MonsterType::Builder("player_two").sprite(2).faction(Monster::PLAYER))
 {
 }
 void TestDungeon::create_types(Game &) { }
@@ -99,7 +103,7 @@ GameWithDummyAndStairs::GameWithDummyAndStairs()
 	game.add_object("stairs").pos(Point(1, 1));
 }
 Monster & GameWithDummyAndStairs::dummy() { return game.current_level().monsters[0]; }
-Object & GameWithDummyAndStairs::stairs() { return game.current_level().objects[0]; }
+Chthon::Object & GameWithDummyAndStairs::stairs() { return game.current_level().objects[0]; }
 
 GameWithDummyAndObjects::GameWithDummyAndObjects()
 	: game()
@@ -182,8 +186,8 @@ LevelWithPath::LevelWithPath()
 	game.current_level() = Level(4, 4);
 	game.add_cell_type("floor").passable(true);
 	game.add_cell_type("wall").passable(false);
-	const CellType * f = game.cell_type("floor");
-	const CellType * w = game.cell_type("wall");
+	const Chthon::CellType * f = game.cell_type("floor");
+	const Chthon::CellType * w = game.cell_type("wall");
 	const Cell a[] = {
 		Cell(f), Cell(w), Cell(f), Cell(f),
 		Cell(w), Cell(f), Cell(f), Cell(w),
@@ -199,8 +203,8 @@ LevelForSeeing::LevelForSeeing()
 	game.current_level() = Level(3, 2);
 	game.add_cell_type("floor").sprite(1).passable(true).transparent(true);
 	game.add_cell_type("wall").sprite(2).passable(false).transparent(false);
-	const CellType * f = game.cell_type("floor");
-	const CellType * w = game.cell_type("wall");
+	const Chthon::CellType * f = game.cell_type("floor");
+	const Chthon::CellType * w = game.cell_type("wall");
 	const Cell a[] = {
 		Cell(w), Cell(f), Cell(w),
 		Cell(f), Cell(w), Cell(f),
@@ -208,8 +212,6 @@ LevelForSeeing::LevelForSeeing()
 	game.current_level().map.fill(a);
 	game.add_monster_type("player").faction(Monster::PLAYER).sight(3).sprite(100);
 	game.add_monster("player").pos(Point(2, 1));
-}
-
 }
 
 }

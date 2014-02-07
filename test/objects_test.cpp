@@ -1,10 +1,8 @@
 #include "../src/objects.h"
 #include "../src/game.h"
 #include "../src/test.h"
-
-using namespace Chthon::UnitTest;
-
-namespace Chthon {
+using Chthon::ObjectType;
+using Chthon::Object;
 
 SUITE(objects) {
 
@@ -57,8 +55,6 @@ TEST(negative_down_destination_should_be_exit_from_dungeon)
 	ObjectType type = ObjectType::Builder("test").transporting();
 	Object object = Object::Builder(&type).down_destination(-1);
 	ASSERT(object.is_exit_down());
-}
-
 }
 
 }
