@@ -4,6 +4,8 @@
 namespace Chthon { /// @defgroup Format String formatting utilities
 /// @{
 
+/// Converts boolean value to string ("true"/"false").
+std::string to_string(bool value);
 /// Converts integer value to string.
 std::string to_string(int value);
 /// Converts unsigned integer value to string.

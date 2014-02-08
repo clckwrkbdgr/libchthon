@@ -3,6 +3,12 @@
 
 namespace Chthon {
 
+std::string to_string(bool value)
+{
+	static const std::string t = "true", f = "false";
+	return value ? t : f;
+}
+
 std::string to_string(int value)
 {
 	return std::to_string(value);
