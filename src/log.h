@@ -11,30 +11,18 @@ std::string now();
 void direct_log(std::ostream * out_stream);
 /// Outputs message to log.
 void log(const std::string & message);
-/** Overloaded logging routine for formatted output.
+/** Overloaded logging routine for templated formatted output.
  * @see log()
  * @see format()
  */
-template<class T0>
-	void log(const std::string & message, const T0 & t0)
-	{ log(format(message, t0)); }
-/** Overloaded logging routine for formatted output.
- * @see log()
- * @see format()
- */
-template<class T0, class T1>
-	void log(const std::string & message, const T0 & t0, const T1 & t1)
-	{ log(format(message, t0, t1)); }
-/** Overloaded logging routine for formatted output.
- * @see log()
- * @see format()
- */
-template<class T0, class T1, class T2>
-	void log(const std::string & message, const T0 & t0, const T1 & t1, const T2 & t2)
-	{ log(format(message, t0, t1, t2)); }
+template<class... Args>
+void log(const std::string & message, Args... args)
+{
+	log(format(message, args...));
+}
 
 /// Prints expression text and its value to log.
-#define TRACE(x) do { log(format(#x "={0}", (x))); } while(0);
+#define TRACE(x) do { Chthon::log(Chthon::format(#x "={0}", (x))); } while(0)
 
 /// @}
 }
