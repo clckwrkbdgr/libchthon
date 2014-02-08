@@ -5,30 +5,22 @@ namespace Chthon {
 
 std::string to_string(int value)
 {
-    std::ostringstream value_out;
-    value_out << value;
-    return value_out.str();
+	return std::to_string(value);
 }
 
 std::string to_string(char value)
 {
-    std::ostringstream value_out;
-    value_out << value;
-    return value_out.str();
+	return std::string(1, value);
 }
 
 std::string to_string(unsigned value)
 {
-    std::ostringstream value_out;
-    value_out << value;
-    return value_out.str();
+	return std::to_string(value);
 }
 
 std::string to_string(long unsigned value)
 {
-    std::ostringstream value_out;
-    value_out << value;
-    return value_out.str();
+	return std::to_string(value);
 }
 
 std::string to_string(const std::string & value)
