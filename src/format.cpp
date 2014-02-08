@@ -45,4 +45,8 @@ void subs_arg_str(std::string & result, int index, const std::string & value)
 	}
 }
 
+void subs_args_from(std::string &, int)
+{
+}
+
 }
