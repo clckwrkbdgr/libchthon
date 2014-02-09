@@ -18,12 +18,16 @@ std::string read_string(std::istream & in, char quote)
 	char c;
 	in >> std::ws;
 	in.get(c);
-	if(c != quote) {
-		return result;
+	bool quoted = c == quote;
+	if(quoted) {
+		in.get(c);
 	}
-	in.get(c);
-	while(in.good() && c != quote) {
-		if(c == '\\') {
+	while(in.good()) {
+		bool done = (quoted ? (c == quote) : isspace(c));
+		if(done) {
+			break;
+		}
+		if(quoted && c == '\\') {
 			in.get(c);
 		}
 		result += c;

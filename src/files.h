@@ -12,7 +12,10 @@ namespace Chthon { /// @defgroup Files File utilities
 
 /// Returns true if file with given filename exists.
 bool file_exists(const std::string & filename);
-/** Reads string from in stream, considering it being quoted.
+/** Reads string from in stream.
+ * Skips whitespaces before any non-space character is being found.
+ * If string starts with quote symbol (`"` by default), it should end with a quote.
+ * If string starts with non-quote symbol, read until first whitespace.
  * @see escaped()
  */
 std::string read_string(std::istream & in, char quote = '"');

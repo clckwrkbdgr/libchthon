@@ -5,8 +5,30 @@
 #include <sstream>
 
 SUITE(files) {
+
+TEST(should_read_quoted_string)
+{
+	std::istringstream in("\"hello world\"");
+	std::string s = Chthon::read_string(in);
+	EQUAL(s, "hello world");
+}
+
+TEST(should_read_quoted_string_with_escaped_symbols)
+{
+	std::istringstream in("\"hello \\\"world\\\"\"");
+	std::string s = Chthon::read_string(in);
+	EQUAL(s, "hello \"world\"");
+}
+
+TEST(should_read_word_as_a_string_if_not_quoted)
+{
+	std::istringstream in("hello world");
+	std::string s = Chthon::read_string(in);
+	EQUAL(s, "hello");
+}
+
+
 using Chthon::Reader;
-using Chthon::Writer;
 
 TEST(reader_should_skip_newline)
 {
@@ -99,6 +121,8 @@ TEST(reader_should_read_string_as_quoted_string)
 	EQUAL(s, "hello world");
 }
 
+
+using Chthon::Writer;
 
 TEST(writer_should_write_newline)
 {
