@@ -12,7 +12,7 @@ bool file_exists(const std::string & filename)
 	return (stat(filename.c_str(), &buffer) == 0); 
 }
 
-std::string read_string(std::istream & in, char quote)
+std::string read_string(std::istream & in, char quote, char nonword)
 {
 	std::string result;
 	char c;
@@ -23,7 +23,7 @@ std::string read_string(std::istream & in, char quote)
 		in.get(c);
 	}
 	while(in.good()) {
-		bool done = (quoted ? (c == quote) : isspace(c));
+		bool done = (quoted ? (c == quote) : (isspace(c) || c == nonword));
 		if(done) {
 			break;
 		}

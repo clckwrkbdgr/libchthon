@@ -27,6 +27,13 @@ TEST(should_read_word_as_a_string_if_not_quoted)
 	EQUAL(s, "hello");
 }
 
+TEST(should_read_word_until_nonword_symbol)
+{
+	std::istringstream in("hello>world ");
+	std::string s = Chthon::read_string(in, '"', '>');
+	EQUAL(s, "hello");
+}
+
 
 using Chthon::Reader;
 

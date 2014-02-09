@@ -26,7 +26,9 @@ lib: $(LIBNAME)
 docs: Doxyfile $(HEADERS) $(SOURCES)
 	doxygen
 
-install: all
+install:
+	@[ -f $(LIBNAME) ] || (echo "./$(LIBNAME) isn't found. Run make all first!"; false)
+	@[ -d docs/html ] || (echo "./docs/html isn't found. Run make all first!"; false)
 	@echo Installing lib...
 	cp $(LIBNAME) $(INSTALL_PREFIX_LIB)/$(LIBNAME_VERSION)
 	chmod 0755 $(INSTALL_PREFIX_LIB)/$(LIBNAME_VERSION)

@@ -15,10 +15,10 @@ bool file_exists(const std::string & filename);
 /** Reads string from in stream.
  * Skips whitespaces before any non-space character is being found.
  * If string starts with quote symbol (`"` by default), it should end with a quote.
- * If string starts with non-quote symbol, read until first whitespace.
+ * If string starts with non-quote symbol, read until first whitespace or **nonword** symbol is found.
  * @see escaped()
  */
-std::string read_string(std::istream & in, char quote = '"');
+std::string read_string(std::istream & in, char quote = '"', char nonword = ' ');
 /** Returns escaped version of given string, using given quote symbol.
  * E. g. <Hello, world> -> <"Hello, world">.
  * If quote symbol is found in string, it is escaped using backslash:
