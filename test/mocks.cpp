@@ -52,7 +52,8 @@ GameWithDummyWieldingAndWearing::GameWithDummyWieldingAndWearing()
 	game.add_item_type("full_flask").sprite(1).name("water flask");
 	game.add_item_type("empty_flask").sprite(2).name("empty flask");
 
-	game.current_level().map.fill(Cell(game.cell_type("floor")));
+	Map<Cell> & map = game.current_level().map;
+	std::fill(map.begin(), map.end(), Cell(game.cell_type("floor")));
 	game.add_monster("dummy").pos(Point(1, 2)).item(Item(game.item_type("spear"))).item(Item(game.item_type("armor"))).wield(0).wear(1).item(game.item_type("jacket")).item(Item::Builder(game.item_type("full_flask"), game.item_type("empty_flask")).make_empty());
 }
 Monster & GameWithDummyWieldingAndWearing::dummy() { return game.current_level().monsters[0]; }
@@ -67,7 +68,8 @@ GameWithDummyWithItems::GameWithDummyWithItems()
 	game.add_item_type("spear").sprite(2).damage(3).name("spear");
 	game.add_item_type("pot").sprite(1).name("pot");
 
-	game.current_level().map.fill(Cell(game.cell_type("floor")));
+	Map<Cell> & map = game.current_level().map;
+	std::fill(map.begin(), map.end(), Cell(game.cell_type("floor")));
 	game.add_monster("dummy").pos(Point(1, 2)).item(game.item_type("spear")).item(game.item_type("armor")).item(game.item_type("pot")).item(game.item_type("pot"));
 	dummy().inventory.take_item(2);
 }
@@ -118,7 +120,8 @@ GameWithDummyAndObjects::GameWithDummyAndObjects()
 	game.add_object_type("pot").name("pot").containable();
 	game.add_object_type("well").name("well").drinkable();
 	game.add_item_type("key").name("item").sprite(1);
-	game.current_level().map.fill(Cell(game.cell_type("floor")));
+	Map<Cell> & map = game.current_level().map;
+	std::fill(map.begin(), map.end(), Cell(game.cell_type("floor")));
 	game.add_monster("dummy").pos(Point(1, 1));
 }
 Monster & GameWithDummyAndObjects::dummy() { return game.current_level().monsters[0]; }
@@ -143,7 +146,8 @@ GameWithDummy::GameWithDummy()
 	game.add_monster_type("dummy").max_hp(100).name("dummy");
 	game.add_monster_type("player").max_hp(100).name("dummy").faction(Monster::PLAYER);
 
-	game.current_level().map.fill(Cell(game.cell_type("floor")));
+	Map<Cell> & map = game.current_level().map;
+	std::fill(map.begin(), map.end(), Cell(game.cell_type("floor")));
 	game.add_item_type("armor").sprite(1).wearable().defence(3).name("item");
 	game.add_monster("dummy").pos(Point(1, 1)).item(game.item_type("armor"));
 	game.add_monster("player").pos(Point(1, 1)).item(game.item_type("armor"));
@@ -177,7 +181,8 @@ Game2x2::Game2x2()
 	game.add_object_type("passable").passable().sprite(2);
 	game.add_object_type("transparent").transparent();
 	game.add_item_type("item").sprite(4);
-	game.current_level().map.fill(Cell(game.cell_type("floor")));
+	Map<Cell> & map = game.current_level().map;
+	std::fill(map.begin(), map.end(), Cell(game.cell_type("floor")));
 }
 
 LevelWithPath::LevelWithPath()
@@ -194,7 +199,8 @@ LevelWithPath::LevelWithPath()
 		Cell(f), Cell(w), Cell(w), Cell(f),
 		Cell(f), Cell(w), Cell(f), Cell(w),
 	};
-	game.current_level().map.fill(a);
+	Map<Cell> & map = game.current_level().map;
+	std::copy(a, a + size_of_array(a), map.begin());
 }
 
 LevelForSeeing::LevelForSeeing()
@@ -209,7 +215,8 @@ LevelForSeeing::LevelForSeeing()
 		Cell(w), Cell(f), Cell(w),
 		Cell(f), Cell(w), Cell(f),
 	};
-	game.current_level().map.fill(a);
+	Map<Cell> & map = game.current_level().map;
+	std::copy(a, a + size_of_array(a), map.begin());
 	game.add_monster_type("player").faction(Monster::PLAYER).sight(3).sprite(100);
 	game.add_monster("player").pos(Point(2, 1));
 }

@@ -65,8 +65,8 @@ CompiledInfo Level::get_info(const Point & pos) const
 
 void Level::invalidate_fov(Monster & monster)
 {
-	for(int x = 0; x < int(map.width); ++x) {
-		for(int y = 0; y < int(map.height); ++y) {
+	for(int x = 0; x < int(map.width()); ++x) {
+		for(int y = 0; y < int(map.height()); ++y) {
 			map.cell(x, y).visible = false;
 		}
 	}

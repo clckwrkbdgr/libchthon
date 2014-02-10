@@ -19,10 +19,10 @@ TEST(point_outside_map_should_be_invalid)
 	ASSERT(!map.valid(point));
 }
 
-TEST(should_fill_map_with_value)
+TEST(should_use_iterators)
 {
 	Map<int> map(2, 2);
-	map.fill(1);
+	std::fill(map.begin(), map.end(), 1);
 	EQUAL(map.cell(0, 0), 1);
 	EQUAL(map.cell(1, 0), 1);
 	EQUAL(map.cell(0, 1), 1);
@@ -33,7 +33,7 @@ TEST(should_fill_map_with_multi_values)
 {
 	Map<int> map(2, 2);
 	int a[] = {1, 2, 3, 4};
-	map.fill(a);
+	std::copy(a, a + 4, map.begin());
 	EQUAL(map.cell(0, 0), 1);
 	EQUAL(map.cell(1, 0), 2);
 	EQUAL(map.cell(0, 1), 3);
