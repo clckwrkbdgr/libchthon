@@ -39,16 +39,89 @@ std::string to_string(const char * value)
 	return value;
 }
 
-void subs_arg_str(std::string & result, int index, const std::string & value)
+
+Spec::Spec(const std::string & _spec)
+	: width(0), fill(' '), spec(_spec)
 {
-	std::ostringstream out;
-	out << "{" << index << "}";
-	std::string placeholder = out.str();
-	size_t pos = result.find(placeholder);
-	while(pos != std::string::npos) {
-		result.replace(pos, placeholder.size(), value);
-		pos = result.find(placeholder, pos + 1);
+	size_t last_digits = spec.find_last_not_of("0123456789");
+	if(last_digits == std::string::npos) {
+		last_digits = 0;
 	}
+	width_start = spec.find_first_of("123456879", last_digits);
+	if(width_start != std::string::npos) {
+		width = std::stoul(spec.substr(width_start));
+		if(width_start > 0) {
+			fill = spec[width_start - 1];
+			--width_start;
+		}
+	}
+}
+
+std::string Spec::flags() const
+{
+	return spec.substr(0, width_start);
+}
+
+std::string Spec::padded(const std::string & subs) const
+{
+	if(subs.size() < width) {
+		return std::string(width - subs.size(), fill) + subs;
+	}
+	return subs;
+}
+
+Format::Format(std::string & _result, int index)
+	: result(_result), placeholder_index(std::to_string(index)), pos(0), end(0)
+{
+}
+
+bool Format::ok() const
+{
+	return pos != std::string::npos && end != std::string::npos;
+}
+
+bool Format::to_next()
+{
+	spec.clear();
+	while(ok()) {
+		pos = result.find('{', end);
+		if(!ok()) {
+			return false;
+		}
+		end = result.find('}', pos);
+		if(!ok()) {
+			return false;
+		}
+		if(result.substr(pos + 1, placeholder_index.size()) == placeholder_index) {
+			size_t spec_pos = result.find(':', pos);
+			if(spec_pos < end) {
+				spec = result.substr(spec_pos + 1, end - spec_pos - 1);
+			}
+			return true;
+		}
+	}
+	return false;
+}
+
+const std::string & Format::get_spec() const
+{
+	return spec;
+}
+
+void Format::replace_current(const std::string & value)
+{
+	result.replace(pos, end - pos + 1, value);
+}
+
+std::string to_string_with_flags(int value, const std::string & flags)
+{
+	/// Flag `#` commands to convert value to hex.
+	if(flags.find('#') != std::string::npos) {
+		std::ostringstream stream;
+		stream << std::hex << value;
+		return stream.str();
+	}
+	return to_string(value);
 }
 
 void subs_args_from(std::string &, int)

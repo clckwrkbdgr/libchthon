@@ -1,6 +1,7 @@
 #include "../src/util.h"
 #include "../src/format.h"
 #include "../src/test.h"
+#include <sstream>
 
 SUITE(format) {
 
@@ -64,6 +65,24 @@ TEST(should_leave_unused_placeholders_intact)
 {
 	std::string result = Chthon::format("hello {1}", "hello");
 	EQUAL(result, "hello {1}");
+}
+
+TEST(should_fill_with_spaces_by_default_when_padding_in_format)
+{
+	std::string result = Chthon::format("<{0:5}>", 1);
+	EQUAL(result, "<    1>");
+}
+
+TEST(should_fill_with_zeroes_when_specified_in_format)
+{
+	std::string result = Chthon::format("<{0:05}>", 1);
+	EQUAL(result, "<00001>");
+}
+
+TEST(should_convert_to_hex_in_format)
+{
+	std::string result = Chthon::format("<{0:#}>", 255);
+	EQUAL(result, "<ff>");
 }
 
 }

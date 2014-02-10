@@ -22,7 +22,7 @@ void log(const std::string & message, Args... args)
 }
 
 /// Prints expression text and its value to log.
-#define TRACE(x) do { Chthon::log(Chthon::format(#x "={0}", (x))); } while(0)
+#define TRACE(x) do { Chthon::log(std::string(#x) + "=" + Chthon::to_string(x)); } while(0)
 
 /// @}
 }

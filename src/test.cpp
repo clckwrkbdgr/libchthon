@@ -80,13 +80,13 @@ int run_all_tests(int argc, char ** argv)
 			test->run();
 		} catch(const AssertException & e) {
 			ok = false;
-			exception_text = format("{0}:{1}: {2}", e.filename, e.line, e.what);
+			exception_text = std::string(e.filename) + ":" + std::to_string(e.line) + ": " + e.what;
 		} catch(const std::exception & e) {
 			ok = false;
-			exception_text = format("{0}:{1}: exception caught: {2}", test->filename, test->line, e.what());
+			exception_text = std::string(test->filename) + ":" + std::to_string(test->line) + ": exception caught: " + e.what();
 		} catch(...) {
 			ok = false;
-			exception_text = format("{0}:{1}: unknown exception", test->filename, test->line);
+			exception_text = std::string(test->filename) + ":" + std::to_string(test->line) + ": unknown exception";
 		}
 		/// Each test result is printed either with `[ OK ]` sign or with '[FAIL]' sign.
 		/// Each test failure message is prepended with file name and line number.
