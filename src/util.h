@@ -56,6 +56,7 @@ struct ForeachIterator {
 
 /** Generic container iteration macro.
  * Container must support methods `begin()`, `end()` which returns forward iterator.
+ * @deprected Since v0.3 its just a sugar syntax for a C++0x `for(:)` loop.
  * @param expression expression which defines iterator variable, e.g. `const int & value`.
  * @param container container to iterate.
  *
@@ -68,10 +69,7 @@ struct ForeachIterator {
  * // v == {1, 4, 9};
  * @endcode
  */
-#define foreach(expression, container) \
-	if(Chthon::ForeachIterator<decltype(container.begin())> UNIQUE_NAME(it) = container.begin()) \
-        for(; UNIQUE_NAME(it).iterator != container.end() && !UNIQUE_NAME(it).brk; ++UNIQUE_NAME(it).iterator, UNIQUE_NAME(it).reset_done()) \
-            for(expression = *UNIQUE_NAME(it).iterator; !UNIQUE_NAME(it).is_done(); UNIQUE_NAME(it).mark_done())
+#define foreach(expression, container) for(expression : container)
 
 /** Determines size of a static allocated array.
  *
