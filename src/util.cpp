@@ -25,6 +25,22 @@ std::vector<std::string> split(const std::string & s, char delimeter)
 	return tokens;
 }
 
+bool starts_with(const std::string & s, const std::string & start)
+{
+	if(s.length() < start.length()) {
+		return false;
+	}
+	return s.compare(0, start.length(), start) == 0;
+}
+
+bool ends_with(const std::string & s, const std::string & end)
+{
+	if(s.length() < end.length()) {
+		return false;
+	}
+	return s.compare(s.length() - end.length(), end.length(), end) == 0;
+}
+
 }
 
 std::vector<std::string> & operator<<(std::vector<std::string> & out, const char * t)

@@ -113,4 +113,24 @@ TEST(should_split_string)
 	} DONE(token);
 }
 
+TEST(should_return_true_if_string_starts_with_pattern)
+{
+	ASSERT(Chthon::starts_with("hello world", "hell"));
+}
+
+TEST(should_return_false_if_string_does_not_starts_with_pattern)
+{
+	ASSERT(!Chthon::starts_with("hello world", "paradise"));
+}
+
+TEST(should_return_true_if_string_ends_with_pattern)
+{
+	ASSERT(Chthon::ends_with("foo bar baz", "az"));
+}
+
+TEST(should_return_false_if_string_does_not_ends_with_pattern)
+{
+	ASSERT(!Chthon::ends_with("foo bar baz", "foo"));
+}
+
 }

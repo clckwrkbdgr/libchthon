@@ -87,6 +87,12 @@ void split(const std::string & s, std::vector<std::string> & tokens, char delime
 /// Splits string into parts using specified separator (overloaded).
 std::vector<std::string> split(const std::string & s, char delimeter = '\n');
 
+/// Returns true if string starts with specified start pattern, otherwise returns false.
+bool starts_with(const std::string & s, const std::string & start);
+
+/// Returns true if string ends with specified end pattern, otherwise returns false.
+bool ends_with(const std::string & s, const std::string & end);
+
 }
 
 /** Generic append operator for vector
