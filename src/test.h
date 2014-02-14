@@ -142,6 +142,13 @@ void test_equal(const A & a, const B & b, const char * a_string, const char * b_
 		throw Chthon::AssertException(__FILE__, __LINE__, "expected exception  was not thrown (" #exception_expression ")"); \
 	} catch(exception_expression)
 
+#define NOTHROW(expression) \
+	try { \
+		do ( (expression); ) while(0); \
+	} catch(...) { \
+		FAIL("Exception caught but should not be thrown!"); \
+	}
+
 /// @cond INTERNAL
 template<class Container>
 struct TestContainer {
