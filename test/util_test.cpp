@@ -120,7 +120,7 @@ TEST(should_return_true_if_string_starts_with_pattern)
 
 TEST(should_return_false_if_string_does_not_starts_with_pattern)
 {
-	ASSERT(!Chthon::starts_with("hello world", "paradise"));
+	ASSERT(!Chthon::starts_with("hello world", "heaven"));
 }
 
 TEST(should_return_true_if_string_ends_with_pattern)
@@ -131,6 +131,42 @@ TEST(should_return_true_if_string_ends_with_pattern)
 TEST(should_return_false_if_string_does_not_ends_with_pattern)
 {
 	ASSERT(!Chthon::ends_with("foo bar baz", "foo"));
+}
+
+TEST(should_know_if_string_contains_substring)
+{
+	std::string s = "hello world";
+	std::string h = "hell";
+	std::string w = "war";
+	ASSERT(Chthon::contains(s, h));
+	ASSERT(!Chthon::contains(s, w));
+}
+
+TEST(should_know_if_c_string_contains_substring)
+{
+	ASSERT(Chthon::contains("hello world", "hell"));
+	ASSERT(!Chthon::contains("hello world", "war"));
+}
+
+TEST(should_know_if_vector_contains_value)
+{
+	std::vector<int> v = {1, 2, 3};
+	ASSERT(Chthon::contains(v, 1));
+	ASSERT(!Chthon::contains(v, 0));
+}
+
+TEST(should_know_if_list_contains_value)
+{
+	std::list<int> v = {1, 2, 3};
+	ASSERT(Chthon::contains(v, 1));
+	ASSERT(!Chthon::contains(v, 0));
+}
+
+TEST(should_know_if_map_contains_key)
+{
+	std::map<int, char> m = {{1, 'a'}, {2, 'b'}, {3, 'c'}};
+	ASSERT(Chthon::contains(m, 1));
+	ASSERT(!Chthon::contains(m, 0));
 }
 
 }

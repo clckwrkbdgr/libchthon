@@ -1,6 +1,9 @@
 #pragma once
+#include <algorithm>
 #include <string>
 #include <vector>
+#include <list>
+#include <map>
 
 #define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
 #if GCC_VERSION < 40300
@@ -92,6 +95,29 @@ bool starts_with(const std::string & s, const std::string & start);
 
 /// Returns true if string ends with specified end pattern, otherwise returns false.
 bool ends_with(const std::string & s, const std::string & end);
+
+/// Returns true if string contains specified pattern, otherwise returns false.
+bool contains(const std::string & s, const std::string & pattern);
+/// Returns true if string contains specified pattern, otherwise returns false.
+bool contains(const char * s, const char * pattern);
+/// Returns true if vector contains specified value, otherwise returns false.
+template<class T>
+bool contains(const std::vector<T> & container, const T & value)
+{
+	return std::find(container.begin(), container.end(), value) != container.end();
+}
+/// Returns true if list contains specified value, otherwise returns false.
+template<class T>
+bool contains(const std::list<T> & container, const T & value)
+{
+	return std::find(container.begin(), container.end(), value) != container.end();
+}
+/// Returns true if map contains specified key, otherwise returns false.
+template<class K, class V>
+bool contains(const std::map<K, V> & map, const K & key)
+{
+	return map.count(key) > 0;
+}
 
 }
 

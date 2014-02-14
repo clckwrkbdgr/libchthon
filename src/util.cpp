@@ -1,6 +1,7 @@
 #include "util.h"
 #include <sstream>
 #include <unistd.h>
+#include <cstring>
 
 namespace Chthon {
 
@@ -39,6 +40,16 @@ bool ends_with(const std::string & s, const std::string & end)
 		return false;
 	}
 	return s.compare(s.length() - end.length(), end.length(), end) == 0;
+}
+
+bool contains(const std::string & s, const std::string & pattern)
+{
+	return s.find(pattern) != std::string::npos;
+}
+
+bool contains(const char * s, const char * pattern)
+{
+	return strstr(s, pattern) != nullptr;
 }
 
 }
