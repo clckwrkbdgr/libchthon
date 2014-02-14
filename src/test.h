@@ -131,16 +131,16 @@ void test_equal(const A & a, const B & b, const char * a_string, const char * b_
  * If any other exception is thrown, it will interrupt test case as usual.
  *
  * @code{.cpp}
- * CATCH(throw std::logic_error("Its a trap!"), std::logic_error, e) {
+ * CATCH(throw std::logic_error("Its a trap!"), const std::logic_error & e) {
  *     EQUAL(e.what(), "Its a trap!");
  * }
  * @endcode
  */
-#define CATCH(expression, exception_class, exception_variable) \
+#define CATCH(expression, exception_expression) \
 	try { \
 		do { (expression); } while(0); \
-		throw Chthon::AssertException(__FILE__, __LINE__, "expected exception " #exception_class " was not thrown"); \
-	} catch(const exception_class & exception_variable)
+		throw Chthon::AssertException(__FILE__, __LINE__, "expected exception  was not thrown (" #exception_expression ")"); \
+	} catch(exception_expression)
 
 /// @cond INTERNAL
 template<class Container>

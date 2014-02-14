@@ -17,14 +17,14 @@ using Chthon::Drop;
 TEST_FIXTURE(GameWithDummyWieldingAndWearing, should_not_drop_if_nothing_to_drop)
 {
 	dummy().inventory.clear();
-	CATCH(Drop(0).commit(dummy(), game), Action::Exception, e) {
+	CATCH(Drop(0).commit(dummy(), game), const Action::Exception & e) {
 		EQUAL(e.type, GameEvent::NOTHING_TO_DROP);
 	}
 }
 
 TEST_FIXTURE(GameWithDummyWieldingAndWearing, should_drop_items_only_in_range)
 {
-	CATCH(Drop(4).commit(dummy(), game), Action::Exception, e) {
+	CATCH(Drop(4).commit(dummy(), game), const Action::Exception & e) {
 		EQUAL(e.type, GameEvent::NO_SUCH_ITEM);
 	}
 }
@@ -72,7 +72,7 @@ using GameMocks::GameWithDummyWieldingAndWearing;
 
 TEST_FIXTURE(GameWithDummyWieldingAndWearing, should_not_grab_if_floor_is_empty)
 {
-	CATCH(Grab().commit(dummy(), game), Action::Exception, e) {
+	CATCH(Grab().commit(dummy(), game), const Action::Exception & e) {
 		EQUAL(e.type, GameEvent::NOTHING_TO_GRAB);
 	}
 }
@@ -111,7 +111,7 @@ TEST_FIXTURE(GameWithDummyWieldingAndWearing, should_not_grab_item_if_inventory_
 		dummy().inventory.insert(Chthon::Item(game.item_type("stub")));
 	}
 	game.add_item("item").pos(Chthon::Point(1, 2));
-	CATCH(Grab().commit(dummy(), game), Action::Exception, e) {
+	CATCH(Grab().commit(dummy(), game), const Action::Exception & e) {
 		EQUAL(e.type, GameEvent::NO_SPACE_LEFT);
 	}
 }
@@ -133,14 +133,14 @@ TEST_FIXTURE(GameWithDummyWithItems, should_wield_any_item)
 
 TEST_FIXTURE(GameWithDummyWithItems, should_not_wield_invalid_slot)
 {
-	CATCH(Wield(10).commit(dummy(), game), Action::Exception, e) {
+	CATCH(Wield(10).commit(dummy(), game), const Action::Exception & e) {
 		EQUAL(e.type, GameEvent::NO_SUCH_ITEM);
 	}
 }
 
 TEST_FIXTURE(GameWithDummyWithItems, should_not_wield_empty_slot)
 {
-	CATCH(Wield(2).commit(dummy(), game), Action::Exception, e) {
+	CATCH(Wield(2).commit(dummy(), game), const Action::Exception & e) {
 		EQUAL(e.type, GameEvent::NO_SUCH_ITEM);
 	}
 }
@@ -191,7 +191,7 @@ TEST_FIXTURE(GameWithDummyWieldingAndWearing, should_unwield_item_if_wielded)
 
 TEST_FIXTURE(GameWithDummyWithItems, should_not_unwield_item_if_not_wielded)
 {
-	CATCH(Unwield().commit(dummy(), game), Action::Exception, e) {
+	CATCH(Unwield().commit(dummy(), game), const Action::Exception & e) {
 		EQUAL(e.type, GameEvent::NOTHING_TO_UNWIELD);
 	}
 }
@@ -213,21 +213,21 @@ TEST_FIXTURE(GameWithDummyWithItems, should_wear_any_item)
 
 TEST_FIXTURE(GameWithDummyWithItems, should_not_wear_invalid_slot)
 {
-	CATCH(Wear(10).commit(dummy(), game), Action::Exception, e) {
+	CATCH(Wear(10).commit(dummy(), game), const Action::Exception & e) {
 		EQUAL(e.type, GameEvent::NO_SUCH_ITEM);
 	}
 }
 
 TEST_FIXTURE(GameWithDummyWithItems, should_not_wear_empty_slot)
 {
-	CATCH(Wear(2).commit(dummy(), game), Action::Exception, e) {
+	CATCH(Wear(2).commit(dummy(), game), const Action::Exception & e) {
 		EQUAL(e.type, GameEvent::NO_SUCH_ITEM);
 	}
 }
 
 TEST_FIXTURE(GameWithDummyWithItems, should_not_wear_unwearable_item)
 {
-	CATCH(Wear(3).commit(dummy(), game), Action::Exception, e) {
+	CATCH(Wear(3).commit(dummy(), game), const Action::Exception & e) {
 		EQUAL(e.type, GameEvent::CANNOT_WEAR);
 		EQUAL(e.target.name, "pot");
 	}
@@ -279,7 +279,7 @@ TEST_FIXTURE(GameWithDummyWieldingAndWearing, should_take_off_item_if_worn)
 
 TEST_FIXTURE(GameWithDummyWithItems, should_not_take_off_item_if_not_worn)
 {
-	CATCH(TakeOff().commit(dummy(), game), Action::Exception, e) {
+	CATCH(TakeOff().commit(dummy(), game), const Action::Exception & e) {
 		EQUAL(e.type, GameEvent::NOTHING_TO_TAKE_OFF);
 	}
 }
@@ -292,21 +292,21 @@ using Chthon::Eat;
 
 TEST_FIXTURE(GameWithDummyAndFood, should_not_eat_invalid_slot)
 {
-	CATCH(Eat(NONE).commit(dummy(), game), Action::Exception, e) {
+	CATCH(Eat(NONE).commit(dummy(), game), const Action::Exception & e) {
 		EQUAL(e.type, GameEvent::NO_SUCH_ITEM);
 	}
 }
 
 TEST_FIXTURE(GameWithDummyAndFood, should_not_eat_empty_slot)
 {
-	CATCH(Eat(EMPTY).commit(dummy(), game), Action::Exception, e) {
+	CATCH(Eat(EMPTY).commit(dummy(), game), const Action::Exception & e) {
 		EQUAL(e.type, GameEvent::NO_SUCH_ITEM);
 	}
 }
 
 TEST_FIXTURE(GameWithDummyAndFood, should_not_eat_not_edible_item)
 {
-	CATCH(Eat(JUNK).commit(dummy(), game), Action::Exception, e) {
+	CATCH(Eat(JUNK).commit(dummy(), game), const Action::Exception & e) {
 		EQUAL(e.type, GameEvent::CANNOT_EAT);
 		EQUAL(e.target.name, "junk");
 	}

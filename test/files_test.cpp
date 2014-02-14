@@ -49,7 +49,7 @@ TEST(reader_should_throw_exception_when_major_version_is_wrong)
 {
 	std::istringstream in("1 2 ");
 	Reader reader(in);
-	CATCH(reader.version(2, 2), Reader::Exception, e) {
+	CATCH(reader.version(2, 2), const Reader::Exception & e) {
 		EQUAL(
 				e.message,
 				"Savefile has major version 1, which is incompatible with current program savefile major version 2."
@@ -61,7 +61,7 @@ TEST(reader_should_throw_exception_when_minor_version_is_less)
 {
 	std::istringstream in("1 2 ");
 	Reader reader(in);
-	CATCH(reader.version(1, 1), Reader::Exception, e) {
+	CATCH(reader.version(1, 1), const Reader::Exception & e) {
 		EQUAL(
 				e.message,
 				"Savefile has minor version 2, which is incompatible with current program savefile minor version 1."
@@ -75,7 +75,7 @@ TEST(reader_should_throw_exception_when_stream_is_bad)
 	Reader reader(in);
 	int i;
 	reader.store(i);
-	CATCH(reader.check("test"), Reader::Exception, e) {
+	CATCH(reader.check("test"), const Reader::Exception & e) {
 		EQUAL(
 				e.message,
 				"Error: savefile is corrupted (reading test)."
@@ -219,7 +219,7 @@ TEST(should_throw_exception_when_cannot_read_user_defined_type)
 	std::istringstream in("1 a ");
 	Reader reader(in);
 	UserNamespace::UserDefinedType value;
-	CATCH(store(reader, value, "user defined type"), Reader::Exception, e) {
+	CATCH(store(reader, value, "user defined type"), const Reader::Exception & e) {
 		EQUAL(
 				e.message,
 				"Error: savefile is corrupted (reading user defined type)."

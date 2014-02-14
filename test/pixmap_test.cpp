@@ -320,7 +320,7 @@ TEST(should_load_pixmap_from_xpm_file)
 TEST(should_throw_exception_when_value_line_is_missing_in_xpm)
 {
 	std::vector<std::string> xpm_lines;
-	CATCH(Pixmap(xpm_lines), Pixmap::Exception, e) {
+	CATCH(Pixmap(xpm_lines), const Pixmap::Exception & e) {
 		EQUAL(e.what, "Value line is missing");
 	}
 }
@@ -332,7 +332,7 @@ TEST(should_throw_exception_when_colour_lines_are_missing_or_not_enough_in_xpm)
 	". c #ff0000"
 	};
 	std::vector<std::string> xpm_lines(xpm, xpm + size_of_array(xpm));
-	CATCH(Pixmap(xpm_lines), Pixmap::Exception, e) {
+	CATCH(Pixmap(xpm_lines), const Pixmap::Exception & e) {
 		EQUAL(e.what, "Color lines are missing or not enough");
 	}
 }
@@ -346,7 +346,7 @@ TEST(should_throw_exception_when_pixel_lines_are_missing_or_not_enough_in_xpm)
 	"#.#"
 	};
 	std::vector<std::string> xpm_lines(xpm, xpm + size_of_array(xpm));
-	CATCH(Pixmap(xpm_lines), Pixmap::Exception, e) {
+	CATCH(Pixmap(xpm_lines), const Pixmap::Exception & e) {
 		EQUAL(e.what, "Pixel rows are missing or not enough");
 	}
 }
@@ -357,7 +357,7 @@ TEST(should_throw_exception_when_value_count_is_not_four_in_xpm)
 	"3 2",
 	};
 	std::vector<std::string> xpm_lines(xpm, xpm + size_of_array(xpm));
-	CATCH(Pixmap(xpm_lines), Pixmap::Exception, e) {
+	CATCH(Pixmap(xpm_lines), const Pixmap::Exception & e) {
 		EQUAL(e.what, "Value line should be in format '<width> <height> <color_count> <char_per_pixel>'");
 	}
 }
@@ -368,7 +368,7 @@ TEST(should_throw_exception_when_values_are_not_integer_in_xpm)
 	"3 2 a 1",
 	};
 	std::vector<std::string> xpm_lines(xpm, xpm + size_of_array(xpm));
-	CATCH(Pixmap(xpm_lines), Pixmap::Exception, e) {
+	CATCH(Pixmap(xpm_lines), const Pixmap::Exception & e) {
 		EQUAL(e.what, "Values in value line should be integers and non-zero.");
 	}
 }
@@ -381,7 +381,7 @@ TEST(should_throw_exception_when_colours_are_repeated_in_xpm)
 	". c #00ff00",
 	};
 	std::vector<std::string> xpm_lines(xpm, xpm + size_of_array(xpm));
-	CATCH(Pixmap(xpm_lines), Pixmap::Exception, e) {
+	CATCH(Pixmap(xpm_lines), const Pixmap::Exception & e) {
 		EQUAL(e.what, "Color <.> was found more than once.");
 	}
 }
@@ -393,7 +393,7 @@ TEST(should_throw_exception_when_there_is_no_space_after_colour_in_xpm)
 	".c #ff0000"
 	};
 	std::vector<std::string> xpm_lines(xpm, xpm + size_of_array(xpm));
-	CATCH(Pixmap(xpm_lines), Pixmap::Exception, e) {
+	CATCH(Pixmap(xpm_lines), const Pixmap::Exception & e) {
 		EQUAL(e.what, "Color char should be followed by space in color table.");
 	}
 }
@@ -405,7 +405,7 @@ TEST(should_throw_exception_when_colour_key_is_not_c_in_xpm)
 	". s #ff0000"
 	};
 	std::vector<std::string> xpm_lines(xpm, xpm + size_of_array(xpm));
-	CATCH(Pixmap(xpm_lines), Pixmap::Exception, e) {
+	CATCH(Pixmap(xpm_lines), const Pixmap::Exception & e) {
 		EQUAL(e.what, "Only color key 'c' is supported.");
 	}
 }
@@ -417,7 +417,7 @@ TEST(should_throw_exception_when_colour_key_is_missing_in_xpm)
 	". "
 	};
 	std::vector<std::string> xpm_lines(xpm, xpm + size_of_array(xpm));
-	CATCH(Pixmap(xpm_lines), Pixmap::Exception, e) {
+	CATCH(Pixmap(xpm_lines), const Pixmap::Exception & e) {
 		EQUAL(e.what, "Color key is missing.");
 	}
 }
@@ -429,7 +429,7 @@ TEST(should_throw_exception_when_colour_value_is_missing_in_xpm)
 	". c"
 	};
 	std::vector<std::string> xpm_lines(xpm, xpm + size_of_array(xpm));
-	CATCH(Pixmap(xpm_lines), Pixmap::Exception, e) {
+	CATCH(Pixmap(xpm_lines), const Pixmap::Exception & e) {
 		EQUAL(e.what, "Color value is missing.");
 	}
 }
@@ -441,7 +441,7 @@ TEST(should_throw_exception_when_colour_value_is_invalid_in_xpm)
 	". c invalid"
 	};
 	std::vector<std::string> xpm_lines(xpm, xpm + size_of_array(xpm));
-	CATCH(Pixmap(xpm_lines), Pixmap::Exception, e) {
+	CATCH(Pixmap(xpm_lines), const Pixmap::Exception & e) {
 		EQUAL(e.what, "Color value <invalid> is invalid.");
 	}
 }
@@ -456,7 +456,7 @@ TEST(shoudl_throw_exception_when_pixel_row_length_is_too_small_in_xpm)
 	".#"
 	};
 	std::vector<std::string> xpm_lines(xpm, xpm + size_of_array(xpm));
-	CATCH(Pixmap(xpm_lines), Pixmap::Exception, e) {
+	CATCH(Pixmap(xpm_lines), const Pixmap::Exception & e) {
 		EQUAL(e.what, "Pixel row is too small.");
 	}
 }
@@ -471,7 +471,7 @@ TEST(shoudl_throw_exception_when_pixel_row_length_is_too_large_in_xpm)
 	".#"
 	};
 	std::vector<std::string> xpm_lines(xpm, xpm + size_of_array(xpm));
-	CATCH(Pixmap(xpm_lines), Pixmap::Exception, e) {
+	CATCH(Pixmap(xpm_lines), const Pixmap::Exception & e) {
 		EQUAL(e.what, "Pixel row is too large.");
 	}
 }
@@ -487,7 +487,7 @@ TEST(shoudl_throw_exception_when_pixel_row_count_is_too_large_in_xpm)
 	".##"
 	};
 	std::vector<std::string> xpm_lines(xpm, xpm + size_of_array(xpm));
-	CATCH(Pixmap(xpm_lines), Pixmap::Exception, e) {
+	CATCH(Pixmap(xpm_lines), const Pixmap::Exception & e) {
 		EQUAL(e.what, "Extra pixel rows are found.");
 	}
 }
@@ -502,7 +502,7 @@ TEST(shoudl_throw_exception_when_pixel_is_broken_in_xpm)
 	"a.b#a"
 	};
 	std::vector<std::string> xpm_lines(xpm, xpm + size_of_array(xpm));
-	CATCH(Pixmap(xpm_lines), Pixmap::Exception, e) {
+	CATCH(Pixmap(xpm_lines), const Pixmap::Exception & e) {
 		EQUAL(e.what, "Pixel value in a row is broken.");
 	}
 }
@@ -517,7 +517,7 @@ TEST(shoudl_throw_exception_when_pixel_is_invalid_in_xpm)
 	"a.b#a$"
 	};
 	std::vector<std::string> xpm_lines(xpm, xpm + size_of_array(xpm));
-	CATCH(Pixmap(xpm_lines), Pixmap::Exception, e) {
+	CATCH(Pixmap(xpm_lines), const Pixmap::Exception & e) {
 		EQUAL(e.what, "Pixel value is invalid.");
 	}
 }
