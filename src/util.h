@@ -81,6 +81,12 @@ struct ForeachIterator {
 template<class T, size_t N>
 size_t size_of_array(T (&)[N]) { return N; }
 
+/// Splits string into parts using specified separator.
+void split(const std::string & s, std::vector<std::string> & tokens, char delimeter = '\n');
+
+/// Splits string into parts using specified separator (overloaded).
+std::vector<std::string> split(const std::string & s, char delimeter = '\n');
+
 }
 
 /** Generic append operator for vector

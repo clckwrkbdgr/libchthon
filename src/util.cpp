@@ -1,4 +1,5 @@
 #include "util.h"
+#include <sstream>
 #include <unistd.h>
 
 namespace Chthon {
@@ -6,6 +7,22 @@ namespace Chthon {
 void delay(unsigned msec)
 {
 	usleep(msec * 1000);
+}
+
+void split(const std::string & s, std::vector<std::string> & tokens, char delimeter)
+{
+	std::stringstream in(s);
+	std::string token;
+	while(std::getline(in, token, delimeter)) {
+		tokens.push_back(token);
+	}
+}
+
+std::vector<std::string> split(const std::string & s, char delimeter)
+{
+	std::vector<std::string> tokens;
+	split(s, tokens, delimeter);
+	return tokens;
 }
 
 }

@@ -101,4 +101,16 @@ TEST(should_push_back_c_string_to_vector)
 	EQUAL(stringlist[0], "hello");
 }
 
+TEST(should_split_string)
+{
+	std::vector<std::string> tokens = Chthon::split("foo\nbar\nbaz\n");
+	TEST_CONTAINER(tokens, token) {
+		EQUAL(token, "foo");
+	} NEXT(token) {
+		EQUAL(token, "bar");
+	} NEXT(token) {
+		EQUAL(token, "baz");
+	} DONE(token);
+}
+
 }
