@@ -21,16 +21,18 @@ TEST(should_find_path_between_points)
 			[map](const Point & pos) { return map.cell(pos) == ' '; }
 			);
 	ASSERT(ok);
-	TEST_CONTAINER(finder.best_path, pos) {
-		EQUAL(pos, Point(0, -1));
+	TEST_CONTAINER(finder.path, pos) {
+		EQUAL(pos, Point(0, 3));
 	} NEXT(pos) {
-		EQUAL(pos, Point(1, -1));
+		EQUAL(pos, Point(0, 2));
 	} NEXT(pos) {
-		EQUAL(pos, Point(1,  0));
+		EQUAL(pos, Point(1, 1));
 	} NEXT(pos) {
-		EQUAL(pos, Point(1,  1));
+		EQUAL(pos, Point(2,  1));
 	} NEXT(pos) {
-		EQUAL(pos, Point(-1, 1));
+		EQUAL(pos, Point(3,  2));
+	} NEXT(pos) {
+		EQUAL(pos, Point(2, 3));
 	} DONE(pos);
 }
 
@@ -43,7 +45,7 @@ TEST(should_find_path_between_close_points)
 			[map](const Point & pos) { return map.cell(pos) == ' '; }
 			);
 	ASSERT(ok);
-	TEST_CONTAINER(finder.best_path, pos) {
+	TEST_CONTAINER(finder.directions, pos) {
 		EQUAL(pos, Point(0, -1));
 	} DONE(pos);
 }

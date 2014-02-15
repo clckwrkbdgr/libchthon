@@ -133,7 +133,7 @@ std::list<Point> Level::find_path(const Point & player_pos, const Point & target
 			[this](const Point & pos) {
 				return get_info(pos).compiled().passable;
 			});
-	return pathfinder.best_path;
+	return pathfinder.directions;
 }
 
 void Level::erase_dead_monsters()

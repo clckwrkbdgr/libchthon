@@ -1,16 +1,56 @@
 #pragma once
 #include "point.h"
-#include <list>
 #include <algorithm>
+#include <list>
+#include <set>
 
 namespace Chthon { /// @defgroup Pathfinding Pathfinding algorithms
 /// @{
 
+struct LeeAlgorithmImpl {
+	enum { MAX_WAVE_COUNT = 2000 };
+	typedef std::set<Point> Wave;
+	std::list<Wave> waves;
+	Wave neighs;
+	static const Point shifts[8];
+
+	LeeAlgorithmImpl(const Point & target);
+	void new_wave();
+	void add_new_neigh(const Point & neigh);
+	void construct_path(const Point & start, std::list<Point> & path, std::list<Point> & directions);
+
+	template<class IsPassable>
+	bool produce_waves(const Point & start, IsPassable is_passable)
+	{
+		while(waves.size() < MAX_WAVE_COUNT) {
+			new_wave();
+			for(const Point & point : waves.front()) {
+				for(const Point & shift : shifts) {
+					Point n = point + shift;
+					if(!is_passable(n)) {
+						continue;
+					}
+					if(n == start) {
+						return true;
+					}
+					add_new_neigh(n);
+				}
+			}
+		}
+		return false;
+	}
+};
+
 /// Incapsulates pathfinding.
 class Pathfinder {
 public:
-	/// Storeas best found path if exists, empty path otherwise.
-	std::list<Point> best_path;
+	/// Stores found path if exists, empty path otherwise.
+	std::list<Point> path;
+	/** Stores directions needed to traverse found path.
+	 * I.e. for path `(0, 0)-(1, 0)-(2, 1)` directions will be
+	 * `(1, 0)-(1-1)`.
+	 */
+	std::list<Point> directions;
 
 	/** Simple Lee pathfinding algorithm.
 	 * Runs pathfinding between points start and target (including them).
@@ -23,72 +63,18 @@ public:
 	template<class IsPassable>
 	bool lee(const Point & start, const Point & target, IsPassable is_passable)
 	{
-		best_path.clear();
+		path.clear();
+		directions.clear();
 		if(!is_passable(target) || start == target) {
 			return false;
 		}
 
-		std::vector<Point> shifts;
-		for(Point shift(-1, 0); shift.x <= 1; ++shift.x) {
-			for(shift.y = -1; shift.y <= 1; ++shift.y) {
-				if(!shift.null()) {
-					shifts.push_back(shift);
-				}
-			}
+		LeeAlgorithmImpl impl(target);
+		if(!impl.produce_waves(start, is_passable)) {
+			return false;
 		}
-
-		std::list<std::vector<Point> > waves;
-		waves.push_front(std::vector<Point>(1, target));
-
-		bool found = false;
-		for(int i = 0; i < 2000; ++i) {
-			std::vector<Point> neighs;
-			for(const Point & point : waves.front()) {
-				for(const Point & shift : shifts) {
-					Point n = point + shift;
-					if(n == start) {
-						found = true;
-						break;
-					}
-					if(!is_passable(n)) {
-						continue;
-					}
-					bool already_present = false;
-					for(const std::vector<Point> & wave : waves) {
-						if(std::find(wave.begin(), wave.end(), n) != wave.end()) {
-							already_present = true;
-							break;
-						}
-					}
-					if(!already_present) {
-						if(std::find(neighs.begin(), neighs.end(), n) == neighs.end()) {
-							neighs.push_back(n);
-						}
-					}
-				}
-				if(found) {
-					break;
-				}
-			}
-			if(found) {
-				break;
-			}
-			waves.push_front(neighs);
-		}
-
-		Point prev = start;
-		for(const std::vector<Point> wave : waves) {
-			for(const Point & point : wave) {
-				Point shift = Point(point.x - prev.x, point.y - prev.y);
-				bool is_close = std::abs(shift.x) <= 1 && std::abs(shift.y) <= 1;
-				if(!shift.null() && is_close) {
-					prev = point;
-					best_path.push_back(shift);
-					break;
-				}
-			}
-		}
-		return found;
+		impl.construct_path(start, path, directions);
+		return true;
 	}
 };
 

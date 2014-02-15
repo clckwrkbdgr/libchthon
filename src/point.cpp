@@ -57,6 +57,14 @@ bool operator!=(const Point & a, const Point & b)
 	return !(a == b);
 }
 
+bool operator<(const Point & a, const Point & b)
+{
+	if(a.x == b.x) {
+		return a.y < b.y;
+	}
+	return a.x < b.x;
+}
+
 Point operator+(const Point & a, const Point & b)
 {
 	Point result = a;

@@ -30,6 +30,8 @@ struct Point {
 bool operator==(const Point & a, const Point & b);
 /** Returns true if points are not equal, otherwise returns false. */
 bool operator!=(const Point & a, const Point & b);
+/** Returns true if a is lesser than b, otherwise returns false. */
+bool operator<(const Point & a, const Point & b);
 /** Returns a sum of two points. */
 Point operator+(const Point & a, const Point & b);
 /** Returns a diffrence between two points. */
