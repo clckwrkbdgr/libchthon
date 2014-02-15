@@ -20,22 +20,21 @@ struct MapWithPath {
 	}
 };
 
-class MapPath : public Chthon::LeeAlgorithm {
+class MapPath {
 public:
 	MapPath(const Chthon::Map<char> & _map) : map(_map) {}
-	virtual ~MapPath() {}
-protected:
-	virtual bool is_passable(const Chthon::Point & pos) const { return map.cell(pos) == ' '; }
+	bool operator()(const Chthon::Point & pos) const { return map.cell(pos) == ' '; }
 private:
 	const Chthon::Map<char> & map;
 };
 
 TEST_FIXTURE(MapWithPath, should_find_path_between_points)
 {
+	Chthon::Pathfinder finder;
 	MapPath path(map);
-	bool ok = path.find_path(Point(0, 3), Point(2, 3));
+	bool ok = finder.lee(Point(0, 3), Point(2, 3), path);
 	ASSERT(ok);
-	TEST_CONTAINER(path.best_path, pos) {
+	TEST_CONTAINER(finder.best_path, pos) {
 		EQUAL(pos, Point(0, -1));
 	} NEXT(pos) {
 		EQUAL(pos, Point(1, -1));
@@ -50,18 +49,20 @@ TEST_FIXTURE(MapWithPath, should_find_path_between_points)
 
 TEST_FIXTURE(MapWithPath, should_find_path_between_close_points)
 {
+	Chthon::Pathfinder finder;
 	MapPath path(map);
-	bool ok = path.find_path(Point(0, 3), Point(0, 2));
+	bool ok = finder.lee(Point(0, 3), Point(0, 2), path);
 	ASSERT(ok);
-	TEST_CONTAINER(path.best_path, pos) {
+	TEST_CONTAINER(finder.best_path, pos) {
 		EQUAL(pos, Point(0, -1));
 	} DONE(pos);
 }
 
 TEST_FIXTURE(MapWithPath, should_not_find_path_if_target_is_the_same_as_start)
 {
+	Chthon::Pathfinder finder;
 	MapPath path(map);
-	bool ok = path.find_path(Point(0, 3), Point(0, 3));
+	bool ok = finder.lee(Point(0, 3), Point(0, 3), path);
 	ASSERT(!ok);
 }
 
