@@ -3,6 +3,7 @@
 #include "objects.h"
 #include "monsters.h"
 #include "items.h"
+#include "pathfinding.h"
 #include "log.h"
 #include "format.h"
 #include <cmath>
@@ -127,72 +128,12 @@ void Level::invalidate_fov(Monster & monster)
 
 std::list<Point> Level::find_path(const Point & player_pos, const Point & target)
 {
-	std::list<Point> best_path;
-	if(!get_info(target.x, target.y).compiled().passable || player_pos == target) {
-		return best_path;
-	}
-
-	std::vector<Point> shifts;
-	for(Point shift(-1, 0); shift.x <= 1; ++shift.x) {
-		for(shift.y = -1; shift.y <= 1; ++shift.y) {
-			if(!shift.null()) {
-				shifts.push_back(shift);
-			}
-		}
-	}
-
-	std::list<std::vector<Point> > waves;
-	waves.push_front(std::vector<Point>(1, target));
-
-	for(int i = 0; i < 2000; ++i) {
-		bool found = false;
-		std::vector<Point> neighs;
-		foreach(const Point & point, waves.front()) {
-			foreach(const Point & shift, shifts) {
-				Point n = point + shift;
-				if(n == player_pos) {
-					found = true;
-					break;
-				}
-				if(!get_info(n.x, n.y).compiled().passable) {
-					continue;
-				}
-				bool already_present = false;
-				foreach(const std::vector<Point> & wave, waves) {
-					if(std::find(wave.begin(), wave.end(), n) != wave.end()) {
-						already_present = true;
-						break;
-					}
-				}
-				if(!already_present) {
-					if(std::find(neighs.begin(), neighs.end(), n) == neighs.end()) {
-						neighs.push_back(n);
-					}
-				}
-			}
-			if(found) {
-				break;
-			}
-		}
-		if(found) {
-			break;
-		}
-		waves.push_front(neighs);
-	}
-
-	Point prev = player_pos;
-	foreach(const std::vector<Point> wave, waves) {
-		foreach(const Point & point, wave) {
-			Point shift = Point(point.x - prev.x, point.y - prev.y);
-			bool is_close = std::abs(shift.x) <= 1 && std::abs(shift.y) <= 1;
-			if(!shift.null() && is_close) {
-				prev = point;
-				best_path.push_back(shift);
-				break;
-			}
-		}
-	}
-	return best_path;
+	Pathfinder pathfinder;
+	pathfinder.lee(player_pos, target,
+			[this](const Point & pos) {
+				return get_info(pos).compiled().passable;
+			});
+	return pathfinder.best_path;
 }
 
 void Level::erase_dead_monsters()

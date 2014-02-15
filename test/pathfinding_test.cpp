@@ -5,34 +5,21 @@ using Chthon::Point;
 
 SUITE(pathfinding) {
 
-struct MapWithPath {
-	Chthon::Map<char> map;
-	MapWithPath()
-		: map(4, 4)
-	{
-		static const char data[] =
-			" #  "
-			"#  #"
-			" ## "
-			" # #"
-			;
-		std::copy(std::begin(data), std::end(data), map.begin());
-	}
-};
+static const char data[] =
+	" #  "
+	"#  #"
+	" ## "
+	" # #"
+	;
 
-class MapPath {
-public:
-	MapPath(const Chthon::Map<char> & _map) : map(_map) {}
-	bool operator()(const Chthon::Point & pos) const { return map.cell(pos) == ' '; }
-private:
-	const Chthon::Map<char> & map;
-};
-
-TEST_FIXTURE(MapWithPath, should_find_path_between_points)
+TEST(should_find_path_between_points)
 {
+	Chthon::Map<char> map(4, 4);
+	std::copy(std::begin(data), std::end(data), map.begin());
 	Chthon::Pathfinder finder;
-	MapPath path(map);
-	bool ok = finder.lee(Point(0, 3), Point(2, 3), path);
+	bool ok = finder.lee(Point(0, 3), Point(2, 3),
+			[map](const Point & pos) { return map.cell(pos) == ' '; }
+			);
 	ASSERT(ok);
 	TEST_CONTAINER(finder.best_path, pos) {
 		EQUAL(pos, Point(0, -1));
@@ -47,22 +34,28 @@ TEST_FIXTURE(MapWithPath, should_find_path_between_points)
 	} DONE(pos);
 }
 
-TEST_FIXTURE(MapWithPath, should_find_path_between_close_points)
+TEST(should_find_path_between_close_points)
 {
+	Chthon::Map<char> map(4, 4);
+	std::copy(std::begin(data), std::end(data), map.begin());
 	Chthon::Pathfinder finder;
-	MapPath path(map);
-	bool ok = finder.lee(Point(0, 3), Point(0, 2), path);
+	bool ok = finder.lee(Point(0, 3), Point(0, 2),
+			[map](const Point & pos) { return map.cell(pos) == ' '; }
+			);
 	ASSERT(ok);
 	TEST_CONTAINER(finder.best_path, pos) {
 		EQUAL(pos, Point(0, -1));
 	} DONE(pos);
 }
 
-TEST_FIXTURE(MapWithPath, should_not_find_path_if_target_is_the_same_as_start)
+TEST(should_not_find_path_if_target_is_the_same_as_start)
 {
+	Chthon::Map<char> map(4, 4);
+	std::copy(std::begin(data), std::end(data), map.begin());
 	Chthon::Pathfinder finder;
-	MapPath path(map);
-	bool ok = finder.lee(Point(0, 3), Point(0, 3), path);
+	bool ok = finder.lee(Point(0, 3), Point(0, 3),
+			[map](const Point & pos) { return map.cell(pos) == ' '; }
+			);
 	ASSERT(!ok);
 }
 
