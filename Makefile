@@ -1,4 +1,4 @@
-CHTHON = chthon
+CHTHON = chthon2
 
 INSTALL_PREFIX = /usr/local
 INSTALL_PREFIX_LIB = $(INSTALL_PREFIX)/lib

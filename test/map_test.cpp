@@ -69,4 +69,36 @@ TEST(should_fill_new_cells_with_default_values_when_resizing_map)
 	EQUAL(map.cell(1, 2), 0u);
 }
 
+TEST(should_flood_fill_map)
+{
+	std::string data = 
+		"        "
+		"  ###   "
+		" #   #  "
+		"  #  #  "
+		"   # #  "
+		"  #   # "
+		" #    # "
+		" #    # "
+		;
+	std::string expected_result = 
+		"        "
+		"  ###   "
+		" #...#  "
+		"  #..#  "
+		"   #.#  "
+		"  #...# "
+		" #....# "
+		" #....# "
+		;
+	Map<char> map(8, 8);
+	std::copy(data.begin(), data.end(), map.begin());
+
+	map.floodfill(5, 5, ' ', '.');
+
+	std::string result(64, ' ');
+	std::copy(map.begin(), map.end(), result.begin());
+	EQUAL(result, expected_result);
+}
+
 }

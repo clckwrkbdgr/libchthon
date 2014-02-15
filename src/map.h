@@ -86,6 +86,54 @@ public:
 		w = new_width;
 		h = new_height;
 	}
+
+	/// Run floodfill algorithm.
+	/// Replaces all found values of which_value to to_what_value,
+	/// starting with (x, y) point.
+	void floodfill(int x, int y, const T & which_value, const T & to_what_value)
+	{
+		if(cell(x, y) != which_value) {
+			return;
+		}
+		if(cell(x, y) == to_what_value) {
+			return;
+		}
+		cell(x, y) = to_what_value;
+		if(x > 0) {
+			floodfill(x - 1, y, which_value, to_what_value);
+		}
+		if(x < width() - 1) {
+			floodfill(x + 1, y, which_value, to_what_value);
+		}
+		if(y > 0) {
+			floodfill(x, y - 1, which_value, to_what_value);
+		}
+		if(y < height() - 1) {
+			floodfill(x, y + 1, which_value, to_what_value);
+		}
+	}
+	/// Run floodfill algorithm (overloaded function).
+	/// Replaces all found values of which_value to to_what_value,
+	/// starting with pos point.
+	void floodfill(const Point & pos, const T & which_value, const T & to_what_value)
+	{
+		floodfill(pos.x, pos.y, which_value, to_what_value);
+	}
+	/// Run floodfill algorithm (overloaded function).
+	/// Replaces all found values of that under (x, y) to to_what_value,
+	/// starting with (x, y) point.
+	void floodfill(int x, int y, const T & to_what_value)
+	{
+		floodfill(x, y, cell(x, y), to_what_value);
+	}
+	/// Run floodfill algorithm (overloaded function).
+	/// Replaces all found values of that under pos to to_what_value,
+	/// starting with pos point.
+	void floodfill(const Point & pos, const T & to_what_value)
+	{
+		floodfill(pos.x, pos.y, to_what_value);
+	}
+
 private:
 	unsigned w, h;
 	std::vector<T> cells;
@@ -93,3 +141,4 @@ private:
 
 /// @}
 }
+
