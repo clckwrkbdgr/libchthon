@@ -43,49 +43,6 @@ Point operator/(const Point & a, int factor);
 /** Returns string in form: "(x, y)", where `x` and `y` are point coordinates. */
 std::string to_string(const Point & value);
 
-/** Searches vector for an object at specified position and returns found object.
- * If no such object is found, then returns a default contstructed value.
- * Container values must have `pos` member of Point type.
- * If index is specified, it holds pointer to iterator which links to returned object.
- */
-template<class T>
-const T & find_at(const std::vector<T> & container, const Point & pos, typename std::vector<T>::const_iterator * index = nullptr)
-{
-	typename std::vector<T>::const_iterator i;
-    for(i = container.begin(); i != container.end(); ++i) {
-        if(i->pos == pos) {
-			if(index) {
-				*index = i;
-			}
-            return *i;
-        }
-    }
-    static T empty;
-    return empty;
-}
-
-/** Searches vector for an object at specified position and returns found object.
- * If no such object is found, then returns a default contstructed value.
- * Container values must have `pos` member of Point type.
- * If index is specified, it holds pointer to iterator which links to returned object.
- */
-template<class T>
-T & find_at(std::vector<T> & container, const Point & pos, typename std::vector<T>::iterator * index = nullptr)
-{
-	typename std::vector<T>::iterator i;
-    for(i = container.begin(); i != container.end(); ++i) {
-        if(i->pos == pos) {
-			if(index) {
-				*index = i;
-			}
-            return *i;
-        }
-    }
-    static T empty;
-	empty = T();
-    return empty;
-}
-
 /** Calculates distance between two points.
  * Formula is: `sqrt((a.x - b.x) ^ 2 + (a.y - b.y) ^ 2)`.
  * Result is converted to integer precision.

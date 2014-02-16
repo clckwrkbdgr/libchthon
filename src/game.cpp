@@ -227,15 +227,18 @@ void Game::process_environment(Monster & someone)
 		event(current_level().cell_type_at(someone.pos), GameEvent::HURTS, someone);
 		hurt(someone, 1);
 	}
-	Object & object = find_at(current_level().objects, someone.pos);
-	if(object.valid() && object.type->triggerable) {
-		if(object.items.empty()) {
-			event(object, GameEvent::TRAP_IS_OUT_OF_ITEMS);
+	auto & objects = current_level().objects;
+	auto object = std::find_if(objects.begin(), objects.end(),
+			[someone](const Object & i) { return i.pos == someone.pos; }
+			);
+	if(object != objects.end() && object->type->triggerable) {
+		if(object->items.empty()) {
+			event(*object, GameEvent::TRAP_IS_OUT_OF_ITEMS);
 		} else {
-			event(someone, GameEvent::TRIGGERS, object);
-			object.items.back().pos = object.pos;
-			current_level().items.push_back(object.items.back());
-			object.items.pop_back();
+			event(someone, GameEvent::TRIGGERS, *object);
+			object->items.back().pos = object->pos;
+			current_level().items.push_back(object->items.back());
+			object->items.pop_back();
 			hurt(someone, 1);
 		}
 	}

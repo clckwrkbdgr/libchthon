@@ -36,16 +36,18 @@ void Drop::commit(Monster & someone, Game & game)
 
 void Grab::commit(Monster & someone, Game & game)
 {
-	std::vector<Item>::iterator item_index;
-	Item item = find_at(game.current_level().items, someone.pos, &item_index);
-	assert(item.valid(), Exception::NOTHING_TO_GRAB, someone);
-	unsigned slot = someone.inventory.insert(item);
+	auto & items = game.current_level().items;
+	auto item = std::find_if(items.begin(), items.end(),
+			[someone](const Item & i) { return i.pos == someone.pos; }
+			);
+	assert(item != items.end(), Exception::NOTHING_TO_GRAB, someone);
+	unsigned slot = someone.inventory.insert(*item);
 	assert(slot != Inventory::NOTHING, Exception::NO_SPACE_LEFT, someone);
-	game.current_level().items.erase(item_index);
-	game.event(someone, GameEvent::PICKS_UP_FROM, item, game.current_level().cell_type_at(someone.pos));
-	if(item.type->quest) {
+	game.event(someone, GameEvent::PICKS_UP_FROM, *item, game.current_level().cell_type_at(someone.pos));
+	if(item->type->quest) {
 		game.event(someone, GameEvent::PICKED_UP_A_QUEST_ITEM);
 	}
+	game.current_level().items.erase(item);
 }
 
 void Wield::commit(Monster & someone, Game & game)
@@ -133,9 +135,12 @@ void Eat::commit(Monster & someone, Game & game)
 
 void GoUp::commit(Monster & someone, Game & game)
 {
-    Object & object = find_at(game.current_level().objects, someone.pos);
-	assert(object.valid() && object.type->transporting && object.up_destination, Exception::CANNOT_GO_UP, someone);
-	if(object.is_exit_up()) {
+	auto & objects = game.current_level().objects;
+	auto object = std::find_if(objects.begin(), objects.end(),
+			[someone](const Object & i) { return i.pos == someone.pos; }
+			);
+	assert(object != objects.end() && object->type->transporting && object->up_destination, Exception::CANNOT_GO_UP, someone);
+	if(object->is_exit_up()) {
 		const Item & quest_item = someone.inventory.quest_item();
 		if(quest_item.valid()) {
 			game.event(someone, GameEvent::WINS_GAME_WITH, quest_item);
@@ -145,16 +150,19 @@ void GoUp::commit(Monster & someone, Game & game)
 		}
 	} else {
 		game.event(someone, GameEvent::GOES_UP);
-		game.go_to_level(object.up_destination);
+		game.go_to_level(object->up_destination);
 		game.state = Game::TURN_ENDED;
 	}
 }
 
 void GoDown::commit(Monster & someone, Game & game)
 {
-    Object & object = find_at(game.current_level().objects, someone.pos);
-	assert(object.valid() && object.type->transporting && object.down_destination, Exception::CANNOT_GO_DOWN, someone);
-	if(object.is_exit_down()) {
+	auto & objects = game.current_level().objects;
+	auto object = std::find_if(objects.begin(), objects.end(),
+			[someone](const Object & i) { return i.pos == someone.pos; }
+			);
+	assert(object != objects.end() && object->type->transporting && object->down_destination, Exception::CANNOT_GO_UP, someone);
+	if(object->is_exit_down()) {
 		const Item & quest_item = someone.inventory.quest_item();
 		if(quest_item.valid()) {
 			game.event(someone, GameEvent::WINS_GAME_WITH, quest_item);
@@ -164,7 +172,7 @@ void GoDown::commit(Monster & someone, Game & game)
 		}
 	} else {
 		game.event(someone, GameEvent::GOES_DOWN);
-		game.go_to_level(object.down_destination);
+		game.go_to_level(object->down_destination);
 		game.state = Game::TURN_ENDED;
 	}
 }
