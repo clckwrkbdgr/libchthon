@@ -56,7 +56,7 @@ struct ForeachIterator {
 
 /** Generic container iteration macro.
  * Container must support methods `begin()`, `end()` which returns forward iterator.
- * @deprected Since v0.3 its just a sugar syntax for a C++0x `for(:)` loop.
+ * @deprecated Since v0.3 its just a sugar syntax for a C++0x `for(:)` loop.
  * @param expression expression which defines iterator variable, e.g. `const int & value`.
  * @param container container to iterate.
  *

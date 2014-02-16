@@ -40,6 +40,7 @@ std::string to_string(const char * value)
 }
 
 
+/// @cond INTERNAL
 Spec::Spec(const std::string & _spec)
 	: width(0), fill(' '), spec(_spec)
 {
@@ -127,5 +128,6 @@ std::string to_string_with_flags(int value, const std::string & flags)
 void subs_args_from(std::string &, int)
 {
 }
+/// @endcond
 
 }
