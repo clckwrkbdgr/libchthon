@@ -203,23 +203,6 @@ TEST_FIXTURE(LevelForSeeing, should_remember_sprite_instead_of_content)
 	EQUAL(game.current_level().map.cell(2, 1).seen_sprite, 100);
 }
 
-TEST_FIXTURE(LevelForSeeing, should_calculate_visible_area_within_sight_radius)
-{
-	game.current_level().invalidate_fov(game.current_level().get_player());
-	EQUAL(game.current_level().map.cell(0, 0).visible, false);
-	EQUAL(game.current_level().map.cell(0, 1).visible, false);
-	EQUAL(game.current_level().map.cell(1, 0).visible, true);
-	EQUAL(game.current_level().map.cell(2, 0).visible, true);
-	EQUAL(game.current_level().map.cell(1, 1).visible, true);
-	EQUAL(game.current_level().map.cell(2, 1).visible, true);
-}
-
-TEST_FIXTURE(LevelForSeeing, should_not_see_through_opaque_cells)
-{
-	game.current_level().invalidate_fov(game.current_level().get_player());
-	EQUAL(game.current_level().map.cell(0, 1).visible, false);
-}
-
 
 TEST(should_erase_dead_monsters)
 {

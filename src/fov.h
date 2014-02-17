@@ -1,6 +1,7 @@
 #pragma once
 #include "point.h"
 #include <set>
+#include <cmath>
 
 namespace Chthon { /// @defgroup FOV Field-of-vision
 /// @{

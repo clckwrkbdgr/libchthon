@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <set>
 #include <map>
 
 #define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
@@ -109,6 +110,12 @@ template<class T>
 bool contains(const std::list<T> & container, const T & value)
 {
 	return std::find(container.begin(), container.end(), value) != container.end();
+}
+/// Returns true if set contains specified value, otherwise returns false.
+template<class T>
+bool contains(const std::set<T> & set, const T & value)
+{
+	return set.count(value) > 0;
 }
 /// Returns true if map contains specified key, otherwise returns false.
 template<class K, class V>
