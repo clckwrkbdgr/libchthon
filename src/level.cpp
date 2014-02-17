@@ -4,6 +4,7 @@
 #include "monsters.h"
 #include "items.h"
 #include "pathfinding.h"
+#include "fov.h"
 #include "log.h"
 #include "format.h"
 #include <cmath>
@@ -71,57 +72,17 @@ void Level::invalidate_fov(Monster & monster)
 			map.cell(x, y).visible = false;
 		}
 	}
-	for(int x = monster.pos.x - monster.type->sight; x <= monster.pos.x + monster.type->sight; ++x) {
-		for(int y = monster.pos.y - monster.type->sight; y <= monster.pos.y + monster.type->sight; ++y) {
-			if(!map.valid(x, y)) {
-				continue;
-			}
-			int dx = std::abs(x - monster.pos.x);
-			int dy = std::abs(y - monster.pos.y);
-			int distance = int(std::sqrt(dx * dx + dy * dy));
-			bool can_see = distance <= monster.type->sight;
-			if(can_see) {
-				int deltax = x - monster.pos.x;
-				int deltay = y - monster.pos.y;
-				double error = 0.0;
-				int iy = deltay > 0 ? 1 : -1;
-				int ix = deltax > 0 ? 1 : -1;
-				if(dx > dy) {
-					double delta_error = std::abs(double(deltay) / double(deltax));
-					int cy = monster.pos.y;
-					for(int cx = monster.pos.x; cx != x; cx += ix) {
-						if(!get_info(cx, cy).compiled().transparent) {
-							can_see = false;
-							break;
-						}
-
-						error += delta_error;
-						if(error > 0.5) {
-							cy += iy;
-							error -= 1.0;
-						}
-					}
-				} else {
-					double delta_error = std::abs(double(deltax) / double(deltay));
-					int cx = monster.pos.x;
-					for(int cy = monster.pos.y; cy != y; cy += iy) {
-						if(!get_info(cx, cy).compiled().transparent) {
-							can_see = false;
-							break;
-						}
-
-						error += delta_error;
-						if(error > 0.5) {
-							cx += ix;
-							error -= 1.0;
-						}
-					}
-				}
-			}
-			map.cell(x, y).visible = can_see;
-			if(can_see && monster.type->faction == Monster::PLAYER) {
-				map.cell(x, y).seen_sprite = get_info(x, y).compiled().sprite;
-			}
+	std::set<Point> visible_points = get_fov(
+			monster.pos, monster.type->sight,
+			[this](const Point & p) { return get_info(p).compiled().transparent; }
+			);
+	for(const Point & p : visible_points) {
+		if(!map.valid(p)) {
+			continue;
+		}
+		map.cell(p).visible = true;
+		if(monster.type->faction == Monster::PLAYER) {
+			map.cell(p).seen_sprite = get_info(p).compiled().sprite;
 		}
 	}
 }
