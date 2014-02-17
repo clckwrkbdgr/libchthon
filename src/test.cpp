@@ -16,7 +16,7 @@ static std::list<Test*> & all_tests()
 }
 
 Test::Test(const char * test_suite, const char * test_name, const char * test_filename, int test_line)
-	: suite(test_suite), name(test_name), filename(test_filename), line(test_line)
+	: _suite(test_suite), _name(test_name), _filename(test_filename), _line(test_line)
 {
 	all_tests().push_back(this);
 }
@@ -24,7 +24,7 @@ Test::Test(const char * test_suite, const char * test_name, const char * test_fi
 bool Test::specified(int argc, char ** argv) const
 {
 	for(int i = 1; i < argc; ++i) {
-		if(strcmp(name, argv[i]) == 0 || strcmp(suite, argv[i]) == 0) {
+		if(strcmp(_name, argv[i]) == 0 || strcmp(_suite, argv[i]) == 0) {
 			return true;
 		}
 	}
@@ -67,15 +67,15 @@ int run_all_tests(int argc, char ** argv)
 		if(tests_specified && !test->specified(argc, argv)) {
 			continue;
 		}
-		current_filename = test->filename;
-		current_line = test->line;
+		current_filename = test->_filename;
+		current_line = test->_line;
 		++total_test_count;
 		bool ok = true;
 		std::string exception_text;
-		std::string test_name = test->suite;
+		std::string test_name = test->_suite;
 		/// Test name is printed with its suite name, e.g. "test_suite :: test_name".
 		/// If test is outside any suite, it has no suite name.
-		test_name += std::string(test_name.empty() ? "" : " :: ") + test->name;
+		test_name += std::string(test_name.empty() ? "" : " :: ") + test->_name;
 		try {
 			test->run();
 		} catch(const AssertException & e) {
@@ -83,10 +83,10 @@ int run_all_tests(int argc, char ** argv)
 			exception_text = std::string(e.filename) + ":" + std::to_string(e.line) + ": " + e.what;
 		} catch(const std::exception & e) {
 			ok = false;
-			exception_text = std::string(test->filename) + ":" + std::to_string(test->line) + ": exception caught: " + e.what();
+			exception_text = std::string(test->_filename) + ":" + std::to_string(test->_line) + ": exception caught: " + e.what();
 		} catch(...) {
 			ok = false;
-			exception_text = std::string(test->filename) + ":" + std::to_string(test->line) + ": unknown exception";
+			exception_text = std::string(test->_filename) + ":" + std::to_string(test->_line) + ": unknown exception";
 		}
 		/// Each test result is printed either with `[ OK ]` sign or with '[FAIL]' sign.
 		/// Each test failure message is prepended with file name and line number.

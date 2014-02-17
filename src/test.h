@@ -11,10 +11,10 @@ int run_all_tests(int argc, char ** argv);
 
 /// @cond INTERNAL
 struct Test {
-	const char * suite;
-	const char * name;
-	const char * filename;
-	int line;
+	const char * _suite;
+	const char * _name;
+	const char * _filename;
+	int _line;
 	Test(const char * test_suite, const char * test_name, const char * filename, int line);
 	virtual ~Test() {}
 	virtual void run() = 0;
