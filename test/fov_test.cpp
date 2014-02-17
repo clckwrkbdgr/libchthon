@@ -5,48 +5,121 @@
 
 SUITE(fov) {
 
-static const char data[] = 
-	"# #"
-	" #@"
-	;
-
-template<class T>
-static void strip_fov_to_the_map(std::set<Chthon::Point> & fov, const Chthon::Map<T> & map)
+static std::string get_fov_as_string(const std::set<Chthon::Point> & fov)
 {
-	for(auto i = fov.begin(); i != fov.end();) {
-		if(map.valid(*i)) {
-			++i;
-		} else {
-			fov.erase(i++);
+	Chthon::Map<char> fov_map(9, 9);
+	std::fill(fov_map.begin(), fov_map.end(), ' ');
+	for(const Chthon::Point & p : fov) {
+		if(fov_map.valid(p)) {
+			fov_map.cell(p) = '*';
 		}
 	}
+	return std::string(fov_map.begin(), fov_map.end());
 }
 
-TEST(should_calculate_visible_area_within_sight_radius)
+TEST(should_see_as_most_as_it_can)
 {
-	Chthon::Map<char> map(3, 2);
+	static const char data[] =
+		"         "
+		"         "
+		"         "
+		"         "
+		"    @    "
+		"         "
+		"         "
+		"         "
+		"         "
+		;
+	Chthon::Map<char> map(9, 9);
 	std::copy(std::begin(data), std::end(data), map.begin());
+
 	std::set<Chthon::Point> fov = Chthon::get_fov(
-			Chthon::Point(2, 1), 3,
+			Chthon::Point(4, 4), 3,
 			[map](const Chthon::Point & p) { return map.valid(p) && map.cell(p) != '#'; }
 			);
-	strip_fov_to_the_map(fov, map);
-	EQUAL(fov.size(), 4);
-	ASSERT(Chthon::contains(fov, Chthon::Point(1, 0)));
-	ASSERT(Chthon::contains(fov, Chthon::Point(2, 0)));
-	ASSERT(Chthon::contains(fov, Chthon::Point(1, 1)));
-	ASSERT(Chthon::contains(fov, Chthon::Point(2, 1)));
+
+	static const char expected[] =
+		"         "
+		"  *****  "
+		" ******* "
+		" ******* "
+		" ******* "
+		" ******* "
+		" ******* "
+		"  *****  "
+		"         "
+		;
+	EQUAL(get_fov_as_string(fov), expected);
 }
 
-TEST(should_not_see_through_opaque_cells)
+TEST(should_not_see_behind_walls)
 {
-	Chthon::Map<char> map(3, 2);
+	static const char data[] =
+		"         "
+		"         "
+		"         "
+		"    #    "
+		"    @    "
+		"         "
+		"         "
+		"         "
+		"         "
+		;
+	Chthon::Map<char> map(9, 9);
 	std::copy(std::begin(data), std::end(data), map.begin());
+
 	std::set<Chthon::Point> fov = Chthon::get_fov(
-			Chthon::Point(2, 1), 3,
-			[map](const Chthon::Point & p) { return map.valid(p) && map.cell(p) == ' '; }
+			Chthon::Point(4, 4), 3,
+			[map](const Chthon::Point & p) { return map.valid(p) && map.cell(p) != '#'; }
 			);
-	ASSERT(!Chthon::contains(fov, Chthon::Point(0, 1)));
+
+	static const char expected[] =
+		"         "
+		"  *   *  "
+		" **   ** "
+		" ******* "
+		" ******* "
+		" ******* "
+		" ******* "
+		"  *****  "
+		"         "
+		;
+	EQUAL(get_fov_as_string(fov), expected);
+}
+
+TEST(should_see_walls_themselves)
+{
+	static const char data[] =
+		"         "
+		"         "
+		"  #####  "
+		"  #   #  "
+		"  # @ #  "
+		"  #   #  "
+		"  #####  "
+		"         "
+		"         "
+		;
+	Chthon::Map<char> map(9, 9);
+	std::copy(std::begin(data), std::end(data), map.begin());
+
+	std::set<Chthon::Point> fov = Chthon::get_fov(
+			Chthon::Point(4, 4), 3,
+			[map](const Chthon::Point & p) { return map.valid(p) && map.cell(p) != '#'; }
+			);
+
+	static const char expected[] =
+		"         "
+		"         "
+		"  *****  "
+		"  *****  "
+		"  *****  "
+		"  *****  "
+		"  *****  "
+		"         "
+		"         "
+		;
+	EQUAL(get_fov_as_string(fov), expected);
 }
 
 }
