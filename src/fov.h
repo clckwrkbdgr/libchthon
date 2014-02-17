@@ -6,6 +6,26 @@
 namespace Chthon { /// @defgroup FOV Field-of-vision
 /// @{
 
+/** Class for ray casting. Traverses between start and stop points
+ * using Bresenham algorithm.
+ */
+class Ray {
+public:
+	/// Constructs ray from start to stop point.
+	Ray(const Point & start, const Point & stop);
+	/// Returns true, is current point is past stop, otherwise return false.
+	bool done() const;
+	/// Returns current point.
+	const Point & current() const;
+	/// Moves to next point.
+	void to_next();
+private:
+	bool hor;
+	double error, delta_error;
+	int side, i_side, pos, i_pos, end;
+	Point current_point;
+};
+
 /** Calculates visible points, starting from light_pos and with max distance of
  * light_distance. Visibility of each point is calculated using is_transparent
  * function object:
@@ -26,45 +46,14 @@ std::set<Point> get_fov(const Point & light_pos, int light_distance, IsTranspare
 			int dy = std::abs(y - light_pos.y);
 			int distance = int(std::sqrt(dx * dx + dy * dy));
 			bool can_see = distance <= light_distance;
-			if(can_see) {
-				int deltax = x - light_pos.x;
-				int deltay = y - light_pos.y;
-				double error = 0.0;
-				int iy = deltay > 0 ? 1 : -1;
-				int ix = deltax > 0 ? 1 : -1;
-				if(dx > dy) {
-					double delta_error = std::abs(double(deltay) / double(deltax));
-					int cy = light_pos.y;
-					for(int cx = light_pos.x; cx != x; cx += ix) {
-						if(!is_transparent(Point(cx, cy))) {
-							can_see = false;
-							break;
-						}
-
-						error += delta_error;
-						if(error > 0.5) {
-							cy += iy;
-							error -= 1.0;
-						}
-					}
-				} else {
-					double delta_error = std::abs(double(deltax) / double(deltay));
-					int cx = light_pos.x;
-					for(int cy = light_pos.y; cy != y; cy += iy) {
-						if(!is_transparent(Point(cx, cy))) {
-							can_see = false;
-							break;
-						}
-
-						error += delta_error;
-						if(error > 0.5) {
-							cx += ix;
-							error -= 1.0;
-						}
-					}
-				}
+			if(!can_see) {
+				continue;
 			}
-			if(can_see) {
+			Ray ray(light_pos, Point(x, y));
+			while(!ray.done() && is_transparent(ray.current())) {
+				ray.to_next();
+			}
+			if(ray.done()) {
 				result.insert(Point(x, y));
 			}
 		}
