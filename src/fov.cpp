@@ -47,4 +47,44 @@ void Ray::to_next()
 	}
 }
 
+/// @cond INTERNAL
+FOV::FOV(const Point & light_pos, int light_distance)
+	: center(light_pos), radius(light_distance),
+	current(center.x - radius, center.y - radius)
+{
+	fov.insert(center);
+}
+
+bool FOV::done() const
+{
+	return current == center;
+}
+
+void FOV::to_next()
+{
+	if(done()) {
+		return;
+	}
+	++current.x;
+	if(current == center) {
+		++current.x;
+	}
+	if(current.x > center.x + radius) {
+		current.x = 0;
+		++current.y;
+	}
+	if(current.y > center.y + radius) {
+		current = center;
+	}
+}
+
+bool FOV::is_in_radius(const Point & p) const
+{
+	int dx = std::abs(p.x - center.x);
+	int dy = std::abs(p.y - center.y);
+	int distance = int(std::sqrt(dx * dx + dy * dy));
+	return distance <= radius;
+}
+/// @endcond
+
 }

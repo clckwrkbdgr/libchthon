@@ -78,17 +78,6 @@ TEST(should_cast_ray)
 	EQUAL(data[RIGHT].map, data[RIGHT].expected_map);
 }
 
-static std::string get_fov_as_string(const std::set<Chthon::Point> & fov)
-{
-	Chthon::Map<char> fov_map(9, 9, ' ');
-	for(const Chthon::Point & p : fov) {
-		if(fov_map.valid(p)) {
-			fov_map.cell(p) = '*';
-		}
-	}
-	return std::string(fov_map.begin(), fov_map.end());
-}
-
 TEST(should_see_as_most_as_it_can)
 {
 	static const char data[] =
@@ -108,6 +97,12 @@ TEST(should_see_as_most_as_it_can)
 			Chthon::Point(4, 4), 3,
 			[map](const Chthon::Point & p) { return map.valid(p) && map.cell(p) != '#'; }
 			);
+	Chthon::Map<char> fov_map(9, 9, ' ');
+	for(const Chthon::Point & p : fov) {
+		if(fov_map.valid(p)) {
+			fov_map.cell(p) = '*';
+		}
+	}
 
 	static const char expected[] =
 		"         "
@@ -120,7 +115,8 @@ TEST(should_see_as_most_as_it_can)
 		"  *****  "
 		"         "
 		;
-	EQUAL(get_fov_as_string(fov), expected);
+	Chthon::Map<char> expected_map(9, 9, std::begin(expected), std::end(expected));
+	EQUAL(fov_map, expected_map);
 }
 
 TEST(should_not_see_behind_walls)
@@ -142,6 +138,12 @@ TEST(should_not_see_behind_walls)
 			Chthon::Point(4, 4), 3,
 			[map](const Chthon::Point & p) { return map.valid(p) && map.cell(p) != '#'; }
 			);
+	Chthon::Map<char> fov_map(9, 9, ' ');
+	for(const Chthon::Point & p : fov) {
+		if(fov_map.valid(p)) {
+			fov_map.cell(p) = '*';
+		}
+	}
 
 	static const char expected[] =
 		"         "
@@ -154,7 +156,8 @@ TEST(should_not_see_behind_walls)
 		"  *****  "
 		"         "
 		;
-	EQUAL(get_fov_as_string(fov), expected);
+	Chthon::Map<char> expected_map(9, 9, std::begin(expected), std::end(expected));
+	EQUAL(fov_map, expected_map);
 }
 
 TEST(should_see_walls_themselves)
@@ -176,6 +179,12 @@ TEST(should_see_walls_themselves)
 			Chthon::Point(4, 4), 3,
 			[map](const Chthon::Point & p) { return map.valid(p) && map.cell(p) != '#'; }
 			);
+	Chthon::Map<char> fov_map(9, 9, ' ');
+	for(const Chthon::Point & p : fov) {
+		if(fov_map.valid(p)) {
+			fov_map.cell(p) = '*';
+		}
+	}
 
 	static const char expected[] =
 		"         "
@@ -188,7 +197,8 @@ TEST(should_see_walls_themselves)
 		"         "
 		"         "
 		;
-	EQUAL(get_fov_as_string(fov), expected);
+	Chthon::Map<char> expected_map(9, 9, std::begin(expected), std::end(expected));
+	EQUAL(fov_map, expected_map);
 }
 
 }

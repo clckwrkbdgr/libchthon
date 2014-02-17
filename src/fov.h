@@ -1,5 +1,6 @@
 #pragma once
 #include "point.h"
+#include "log.h"
 #include <set>
 #include <cmath>
 
@@ -26,6 +27,36 @@ private:
 	Point current_point;
 };
 
+/// @cond INTERNAL
+struct FOV {
+	std::set<Point> fov;
+
+	FOV(const Point & light_pos, int light_distance);
+	bool done() const;
+	template<class IsTransparent>
+	void check_current(IsTransparent is_transparent)
+	{
+		if(!is_in_radius(current)) {
+			return;
+		}
+
+		Ray ray(center, current);
+		while(!ray.done() && is_transparent(ray.current())) {
+			ray.to_next();
+		}
+		if(ray.done()) {
+			fov.insert(current);
+		}
+	}
+	void to_next();
+private:
+	bool is_in_radius(const Point & p) const;
+	const Point & center;
+	int radius;
+	Point current;
+};
+/// @endcond
+
 /** Calculates visible points, starting from light_pos and with max distance of
  * light_distance. Visibility of each point is calculated using is_transparent
  * function object:
@@ -39,26 +70,12 @@ private:
 template<class IsTransparent>
 std::set<Point> get_fov(const Point & light_pos, int light_distance, IsTransparent is_transparent)
 {
-	std::set<Point> result;
-	for(int x = light_pos.x - light_distance; x <= light_pos.x + light_distance; ++x) {
-		for(int y = light_pos.y - light_distance; y <= light_pos.y + light_distance; ++y) {
-			int dx = std::abs(x - light_pos.x);
-			int dy = std::abs(y - light_pos.y);
-			int distance = int(std::sqrt(dx * dx + dy * dy));
-			bool can_see = distance <= light_distance;
-			if(!can_see) {
-				continue;
-			}
-			Ray ray(light_pos, Point(x, y));
-			while(!ray.done() && is_transparent(ray.current())) {
-				ray.to_next();
-			}
-			if(ray.done()) {
-				result.insert(Point(x, y));
-			}
-		}
+	FOV fov(light_pos, light_distance);
+	while(!fov.done()) {
+		fov.check_current(is_transparent);
+		fov.to_next();
 	}
-	return result;
+	return fov.fov;
 }
 
 /// @}
