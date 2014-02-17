@@ -5,6 +5,25 @@ using Chthon::Map;
 
 SUITE(map) {
 
+TEST(should_create_map_filled_with_value)
+{
+	Map<char> map(3, 3, '#');
+	std::string map_as_string(map.begin(), map.end());
+	EQUAL(map_as_string, "#########");
+}
+
+TEST(should_create_map_from_sequence)
+{
+	static const char data[] =
+		"# #"
+		"@#@"
+		"# #"
+		;
+	Map<char> map(3, 3, std::begin(data), std::end(data));
+	std::string map_as_string(map.begin(), map.end());
+	EQUAL(map_as_string, "# #@#@# #");
+}
+
 TEST(point_inside_map_should_be_valid)
 {
 	Map<int> map(3, 3);
@@ -91,8 +110,7 @@ TEST(should_flood_fill_map)
 		" #....# "
 		" #....# "
 		;
-	Map<char> map(8, 8);
-	std::copy(data.begin(), data.end(), map.begin());
+	Map<char> map(8, 8, data.begin(), data.end());
 
 	map.floodfill(5, 5, ' ', '.');
 

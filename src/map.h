@@ -17,12 +17,20 @@ public:
 	/// All values is constructed using default constructor.
 	Map(unsigned map_width = 0, unsigned map_height = 0)
 		: w(map_width), h(map_height), cells(w * h, T()) {}
+	/// Constructs Map with specified size filled with filler.
+	Map(unsigned map_width, unsigned map_height, const T & filler)
+		: w(map_width), h(map_height), cells(w * h, filler) {}
+	/// Constructs Map from sequence of values.
+	/// Sequence should be exactly the size of W * H.
+	template<class Iterator>
+	Map(unsigned map_width, unsigned map_height, Iterator first, Iterator last)
+		: w(map_width), h(map_height), cells(first, last) {}
 	~Map() {}
 
 	iterator begin() { return cells.begin(); }
 	const_iterator begin() const { return cells.begin(); }
-	iterator end() { return cells.end(); }
-	const_iterator end() const { return cells.end(); }
+	iterator end() { return cells.begin() + w * h; }
+	const_iterator end() const { return cells.begin() + w * h; }
 
 	unsigned width() const { return w; }
 	unsigned height() const { return h; }

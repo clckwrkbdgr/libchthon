@@ -7,8 +7,7 @@ SUITE(fov) {
 
 static std::string get_fov_as_string(const std::set<Chthon::Point> & fov)
 {
-	Chthon::Map<char> fov_map(9, 9);
-	std::fill(fov_map.begin(), fov_map.end(), ' ');
+	Chthon::Map<char> fov_map(9, 9, ' ');
 	for(const Chthon::Point & p : fov) {
 		if(fov_map.valid(p)) {
 			fov_map.cell(p) = '*';
@@ -30,8 +29,7 @@ TEST(should_see_as_most_as_it_can)
 		"         "
 		"         "
 		;
-	Chthon::Map<char> map(9, 9);
-	std::copy(std::begin(data), std::end(data), map.begin());
+	Chthon::Map<char> map(9, 9, std::begin(data), std::end(data));
 
 	std::set<Chthon::Point> fov = Chthon::get_fov(
 			Chthon::Point(4, 4), 3,
@@ -65,8 +63,7 @@ TEST(should_not_see_behind_walls)
 		"         "
 		"         "
 		;
-	Chthon::Map<char> map(9, 9);
-	std::copy(std::begin(data), std::end(data), map.begin());
+	Chthon::Map<char> map(9, 9, std::begin(data), std::end(data));
 
 	std::set<Chthon::Point> fov = Chthon::get_fov(
 			Chthon::Point(4, 4), 3,
@@ -100,8 +97,7 @@ TEST(should_see_walls_themselves)
 		"         "
 		"         "
 		;
-	Chthon::Map<char> map(9, 9);
-	std::copy(std::begin(data), std::end(data), map.begin());
+	Chthon::Map<char> map(9, 9, std::begin(data), std::end(data));
 
 	std::set<Chthon::Point> fov = Chthon::get_fov(
 			Chthon::Point(4, 4), 3,
