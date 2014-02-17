@@ -41,21 +41,21 @@ struct RayData {
 TEST(should_cast_ray)
 {
 	static const std::string char_data[] = {
-		"#        ", "  #      ", "    #    ", "      #  ", 
-		" #       ", "   #     ", "    #    ", "     #   ", 
-		"  #      ", "   #     ", "    #    ", "     #   ", 
-		"   #     ", "    #    ", "    #    ", "    #    ", 
-		"    #    ", "    #    ", "    #    ", "    #    ", 
-		"         ", "         ", "         ", "         ", 
-		"         ", "         ", "         ", "         ", 
-		"         ", "         ", "         ", "         ", 
-		"         ", "         ", "         ", "         ", 
+		"#        ","  #      ","    #    ","      #  ","        #","         ",
+		" #       ","   #     ","    #    ","     #   ","       # ","         ",
+		"  #      ","   #     ","    #    ","     #   ","      #  ","        #",
+		"   #     ","    #    ","    #    ","    #    ","     #   ","      ## ",
+		"    #    ","    #    ","    #    ","    #    ","    #    ","    ##   ",
+		"         ","         ","         ","         ","         ","         ",
+		"         ","         ","         ","         ","         ","         ",
+		"         ","         ","         ","         ","         ","         ",
+		"         ","         ","         ","         ","         ","         ",
 		""
 	};
 	static const Chthon::Point dest[] = {
-		{0, 0}, {2, 0}, {4, 0}, {6, 0},
+		{0, 0}, {2, 0}, {4, 0}, {6, 0}, {8, 0}, {8, 2},
 	};
-	enum { DIAGONAL, LEFT, STRAIGHT, RIGHT, COUNT };
+	enum { DIAGONAL, LEFT, STRAIGHT, RIGHT, LEFT_DIAGONAL, LEFT_UP, COUNT };
 	RayData data[COUNT];
 	for(const std::string * line = char_data; !line->empty(); ) {
 		for(int i = 0; i < COUNT; ++i) {
