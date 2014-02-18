@@ -229,5 +229,47 @@ private:
 #define DONE(var) \
 	test_c_##var.check_at_end(__FILE__, __LINE__)
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wredundant-decls"
+/** Declare test case for data-driven testing.
+ * Used when test flow (setup-execute-assert-teardown) is shared between
+ * a number tests with only difference in test data and expected values:
+ *
+ * @code{.cpp}
+ * toupper("hello") -> "HELLO"
+ * toupper("World") -> "WORLD"
+ * toupper("foo 123") -> "FOO 123"
+ * @endcode
+ *
+ * Data-driven testing approach uses one code to test each data set in the
+ * same way. Inside the test case function the test data is accesible under the
+ * name of dataset. All test cases under the same dataset_name should have
+ * _exactly_ the same value type. Each case has it's own test_name like an
+ * ordinary test.
+ *
+ * @code{.cpp}
+ * struct UppercaseData {
+ *     std::string data, expected;
+ *     UppercaseData(const std::string & _data, const std::string & _ex)
+ *         : data(_data), expected(_ex) {}
+ * };
+ * // Notice a semicolon after declaration.
+ * TEST_DATA(upper, UppercaseData("hello", "HELLO"), should_convert_all_lower_to_upper);
+ * TEST_DATA(upper, UppercaseData("World", "WORLD"), should_convert_mixed_to_upper);
+ * TEST_DATA(upper, UppercaseData("foo 123", "FOO 123"), should_not_convert_digits)
+ * {
+ *     EQUAL(toupper(upper.data), upper.expected);
+ * }
+ * @endcode
+ */
+#define TEST_DATA(dataset_name, value, test_name) \
+	void run_##dataset_name(const decltype(value) & dataset_name); \
+	TEST(test_name) \
+	{ \
+		const decltype(value) & test_data_var = value; \
+		run_##dataset_name(test_data_var); \
+	} \
+	void run_##dataset_name(const decltype(value) & dataset_name)
+
 /// @}
 }
