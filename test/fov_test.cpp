@@ -117,25 +117,18 @@ static const std::string expected_data[] = {
 	"  *****  ","  *****  ","         ",
 	"         ","         ","         ",
 };
-static const std::vector<std::string> ex =
+static const std::vector<std::string> expected_maps =
 	from_side_by_side(std::begin(expected_data), std::end(expected_data), 3);
 
-struct Data {
-	Chthon::Map<char> map, expected;
-	Data() {}
-	Data(unsigned w, unsigned h,
-			const std::string & map_string, const std::string & expected_string)
-		: map(w, h, map_string.begin(), map_string.end()),
-		expected(w, h, expected_string.begin(), expected_string.end()) {}
-};
-
-TEST_DATA(fov, Data(9, 9, maps[0], ex[0]), should_see_as_most_as_it_can);
-TEST_DATA(fov, Data(9, 9, maps[1], ex[1]), should_not_see_behind_walls);
-TEST_DATA(fov, Data(9, 9, maps[2], ex[2]), should_see_walls_themselves)
+TEST_DATA(fov, maps[0], expected_maps[0], should_see_as_most_as_it_can);
+TEST_DATA(fov, maps[1], expected_maps[1], should_not_see_behind_walls);
+TEST_DATA(fov, maps[2], expected_maps[2], should_see_walls_themselves)
 {
+	Chthon::Map<char> map(9, 9, fov_data.begin(), fov_data.end());
+
 	std::set<Chthon::Point> fov_points = Chthon::get_fov(
 			Chthon::Point(4, 4), 3,
-			[fov](const Chthon::Point & p) { return fov.map.valid(p) && fov.map.cell(p) != '#'; }
+			[map](const Chthon::Point & p) { return map.valid(p) && map.cell(p) != '#'; }
 			);
 	Chthon::Map<char> fov_map(9, 9, ' ');
 	for(const Chthon::Point & p : fov_points) {
@@ -144,7 +137,8 @@ TEST_DATA(fov, Data(9, 9, maps[2], ex[2]), should_see_walls_themselves)
 		}
 	}
 
-	EQUAL(fov_map, fov.expected);
+	Chthon::Map<char> expected(9, 9, fov_expected.begin(), fov_expected.end());
+	EQUAL(fov_map, expected);
 }
 
 }

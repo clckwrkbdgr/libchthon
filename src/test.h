@@ -243,33 +243,32 @@ private:
  *
  * Data-driven testing approach uses one code to test each data set in the
  * same way. Inside the test case function the test data is accesible under the
- * name of dataset. All test cases under the same dataset_name should have
- * _exactly_ the same value type. Each case has it's own test_name like an
- * ordinary test.
+ * name of <dataset>_data and expected value under the name of <dataset>_expected.
+ * All test data under the same dataset_name should have _exactly_ the same
+ * value type up to const qualifiers.
+ * Each case has it's own test_name like an ordinary test.
  *
  * @code{.cpp}
- * struct UppercaseData {
- *     std::string data, expected;
- *     UppercaseData(const std::string & _data, const std::string & _ex)
- *         : data(_data), expected(_ex) {}
- * };
  * // Notice a semicolon after declaration.
- * TEST_DATA(upper, UppercaseData("hello", "HELLO"), should_convert_all_lower_to_upper);
- * TEST_DATA(upper, UppercaseData("World", "WORLD"), should_convert_mixed_to_upper);
- * TEST_DATA(upper, UppercaseData("foo 123", "FOO 123"), should_not_convert_digits)
+ * TEST_DATA(upper, "hello", "HELLO", should_convert_all_lower_to_upper);
+ * TEST_DATA(upper, "World", "WORLD", should_convert_mixed_to_upper);
+ * TEST_DATA(upper, "foo 123", "FOO 123", should_not_convert_digits)
  * {
- *     EQUAL(toupper(upper.data), upper.expected);
+ *     EQUAL(toupper(upper_data), upper_expected);
  * }
  * @endcode
  */
-#define TEST_DATA(dataset_name, value, test_name) \
-	void run_##dataset_name(const decltype(value) & dataset_name); \
+#define TEST_DATA(dataset_name, data_value, expected_value, test_name) \
+	void run_##dataset_name( \
+			decltype(data_value) & dataset_name##_data, \
+			decltype(expected_value) & dataset_name##_expected); \
 	TEST(test_name) \
 	{ \
-		const decltype(value) & test_data_var = value; \
-		run_##dataset_name(test_data_var); \
+		run_##dataset_name(data_value, expected_value); \
 	} \
-	void run_##dataset_name(const decltype(value) & dataset_name)
+	void run_##dataset_name( \
+			decltype(data_value) & dataset_name##_data, \
+			decltype(expected_value) & dataset_name##_expected)
 
 /// @}
 }
