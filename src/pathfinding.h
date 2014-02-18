@@ -56,9 +56,12 @@ public:
 	 * Runs pathfinding between points start and target (including them).
 	 * Returns true if path was found, otherwise returns false.
 	 * Uses is_passable function object to determine whether specified point
-	 * is passable or nor.
-	 * is_passable should take Point as an argument and return boolean value.
+	 * is passable or not.
+	 * is_passable() should take Point as an argument and return boolean value.
 	 * Found path is stored in best_path member.
+	 *
+	 * **Warning**: argument of is_passable() could be an invalid point (i.e.
+	 * a point out of map bounds)!
 	 */
 	template<class IsPassable>
 	bool lee(const Point & start, const Point & target, IsPassable is_passable)
