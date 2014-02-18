@@ -142,7 +142,7 @@ void Fire::commit(Monster & someone, Game & game)
     item.pos = someone.pos;
 	game.event(someone, GameEvent::THROWS, item);
 	while(true) {
-		if(!game.current_level().map.valid(item.pos)) {
+		if(!game.current_level().map.valid(item.pos + shift)) {
 			break;
 		}
 		if(!game.current_level().cell_type_at(item.pos + shift).transparent) {
