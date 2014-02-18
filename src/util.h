@@ -124,6 +124,58 @@ bool contains(const std::map<K, V> & map, const K & key)
 	return map.count(key) > 0;
 }
 
+/** Class for obtaining string value from interleave 2D char array.
+ * Usable through iterators, each begin()/end() call is supplied with
+ * index of specified map. Mostly usable for compact storage of small
+ * rectangular patterns (i.e. for testing).
+ *
+ * @code{.cpp}
+ * InterleavedCharMap data = { 9, 9, 3, { // W x H x COUNT
+ *    "         ","         ","         ",
+ *    "         ","         ","         ",
+ *    "         ","         ","  #####  ",
+ *    "         ","    #    ","  #   #  ",
+ *    "    @    ","    @    ","  # @ #  ",
+ *    "         ","         ","  #   #  ",
+ *    "         ","         ","  #####  ",
+ *    "         ","         ","         ",
+ *    "         ","         ","         ",
+ * }};
+ * Map<char> map(9, 9, data.begin(1), data.end(1));
+ * @endcode
+ *
+ */
+struct InterleavedCharMap
+{
+	class const_iterator : public std::iterator<std::input_iterator_tag, char> {
+	public:
+		const_iterator(size_t map_index, const InterleavedCharMap & _map,
+				const std::string::const_iterator & actual_it);
+
+		const_iterator & operator++();
+		const_iterator operator++(int);
+
+		bool operator==(const const_iterator & other) const;
+		bool operator!=(const const_iterator & other) const;
+		
+		char operator*() const;
+		char operator->() const;
+	private:
+		const InterleavedCharMap & map;
+		size_t index;
+		std::string::const_iterator it;
+		std::vector<std::string>::const_iterator current_string;
+	};
+
+	const size_t width, height, count;
+	const std::vector<std::string> data;
+
+	/// Returns iterator which points at the begin of the speicified map.
+	const_iterator begin(size_t index) const;
+	/// Returns iterator which points at the end of the speicified map.
+	const_iterator end(size_t index) const;
+};
+
 }
 
 /** Generic append operator for vector

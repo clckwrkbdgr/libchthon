@@ -169,4 +169,16 @@ TEST(should_know_if_map_contains_key)
 	ASSERT(!Chthon::contains(m, 0));
 }
 
+TEST(should_extract_interleaved_charmap)
+{
+	Chthon::InterleavedCharMap map = { 3, 3, 4, {
+		"1  ","222","abc","4 4",
+		" 1 ","2 2","def","444",
+		"  1","222","ghi","  4",
+	}};
+
+	std::string result(map.begin(2), map.end(2));
+	EQUAL(result, "abcdefghi");
+}
+
 }
