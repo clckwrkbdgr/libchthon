@@ -31,69 +31,37 @@ static std::string to_string(const Chthon::Map<char> & map)
 
 SUITE(fov) {
 
-struct RayData {
-	Chthon::Map<char> map, expected_map;
-	std::string expected;
+static Chthon::InterleavedCharMap rays = {9, 9, 6, {
+	"#        ","  #      ","    #    ","      #  ","        #","         ",
+	" #       ","   #     ","    #    ","     #   ","       # ","         ",
+	"  #      ","   #     ","    #    ","     #   ","      #  ","        #",
+	"   #     ","    #    ","    #    ","    #    ","     #   ","      ## ",
+	"    #    ","    #    ","    #    ","    #    ","    #    ","    ##   ",
+	"         ","         ","         ","         ","         ","         ",
+	"         ","         ","         ","         ","         ","         ",
+	"         ","         ","         ","         ","         ","         ",
+	"         ","         ","         ","         ","         ","         ",
+}};
 
-	RayData() : map(9, 9, ' '), expected_map(9, 9, ' ') {}
-};
-
-TEST(should_cast_ray)
+TEST_DATA(ray, Chthon::Point(0, 0), rays.value(0), should_cast_ray_diagonally);
+TEST_DATA(ray, Chthon::Point(2, 0), rays.value(1), should_cast_ray_a_bit_left);
+TEST_DATA(ray, Chthon::Point(4, 0), rays.value(2), should_cast_ray_straight);
+TEST_DATA(ray, Chthon::Point(6, 0), rays.value(3), should_cast_ray_a_bit_right);
+TEST_DATA(ray, Chthon::Point(8, 0), rays.value(4), should_cast_ray_diagonally_left);
+TEST_DATA(ray, Chthon::Point(8, 2), rays.value(5), should_cast_ray_a_bit_down)
 {
-	static const std::string char_data[] = {
-		"#        ","  #      ","    #    ","      #  ","        #","         ",
-		" #       ","   #     ","    #    ","     #   ","       # ","         ",
-		"  #      ","   #     ","    #    ","     #   ","      #  ","        #",
-		"   #     ","    #    ","    #    ","    #    ","     #   ","      ## ",
-		"    #    ","    #    ","    #    ","    #    ","    #    ","    ##   ",
-		"         ","         ","         ","         ","         ","         ",
-		"         ","         ","         ","         ","         ","         ",
-		"         ","         ","         ","         ","         ","         ",
-		"         ","         ","         ","         ","         ","         ",
-		""
-	};
-	static const Chthon::Point dest[] = {
-		{0, 0}, {2, 0}, {4, 0}, {6, 0}, {8, 0}, {8, 2},
-	};
-	enum { DIAGONAL, LEFT, STRAIGHT, RIGHT, LEFT_DIAGONAL, LEFT_UP, COUNT };
-	RayData data[COUNT];
-	for(const std::string * line = char_data; !line->empty(); ) {
-		for(int i = 0; i < COUNT; ++i) {
-			data[i].expected += *line++;
-		}
+	Chthon::Map<char> map(9, 9, ' ');
+	Chthon::Ray ray(Chthon::Point(4, 4), ray_data);
+	while(!ray.done()) {
+		map.cell(ray.current()) = '#';
+		ray.to_next();
 	}
-
-	for(int i = 0; i < COUNT; ++i) {
-		std::copy(data[i].expected.begin(), data[i].expected.end(), data[i].expected_map.begin());
-		Chthon::Ray ray(Chthon::Point(4, 4), dest[i]);
-		while(!ray.done()) {
-			data[i].map.cell(ray.current()) = '#';
-			ray.to_next();
-		}
-		data[i].map.cell(ray.current()) = '#';
-	}
-	EQUAL(data[DIAGONAL].map, data[DIAGONAL].expected_map);
-	EQUAL(data[LEFT].map, data[LEFT].expected_map);
-	EQUAL(data[STRAIGHT].map, data[STRAIGHT].expected_map);
-	EQUAL(data[RIGHT].map, data[RIGHT].expected_map);
+	map.cell(ray.current()) = '#';
+	Chthon::Map<char> expected(9, 9, ray_expected.begin(), ray_expected.end());
+	EQUAL(map, expected);
 }
 
-template<class Iterator>
-std::vector<std::string> from_side_by_side(Iterator first, Iterator last, unsigned count)
-{
-	std::vector<std::string> result(count);
-	unsigned current = 0;
-	for(Iterator it = first; it != last; ++it) {
-		if(current >= count) {
-			current = 0;
-		}
-		result[current] += *it;
-		++current;
-	}
-	return result;
-}
-
-static const std::string map_data[] = {
+static Chthon::InterleavedCharMap maps = {9, 9, 3, {
 	"         ","         ","         ",
 	"         ","         ","         ",
 	"         ","         ","  #####  ",
@@ -103,10 +71,8 @@ static const std::string map_data[] = {
 	"         ","         ","  #####  ",
 	"         ","         ","         ",
 	"         ","         ","         ",
-};
-static const std::vector<std::string> maps =
-	from_side_by_side(std::begin(map_data), std::end(map_data), 3);
-static const std::string expected_data[] = {
+}};
+static Chthon::InterleavedCharMap expected_maps = {9, 9, 3, {
 	"         ","         ","         ",
 	"  *****  ","  *   *  ","         ",
 	" ******* "," **   ** ","  *****  ",
@@ -116,13 +82,11 @@ static const std::string expected_data[] = {
 	" ******* "," ******* ","  *****  ",
 	"  *****  ","  *****  ","         ",
 	"         ","         ","         ",
-};
-static const std::vector<std::string> expected_maps =
-	from_side_by_side(std::begin(expected_data), std::end(expected_data), 3);
+}};
 
-TEST_DATA(fov, maps[0], expected_maps[0], should_see_as_most_as_it_can);
-TEST_DATA(fov, maps[1], expected_maps[1], should_not_see_behind_walls);
-TEST_DATA(fov, maps[2], expected_maps[2], should_see_walls_themselves)
+TEST_DATA(fov, maps.value(0), expected_maps.value(0), should_see_as_most_as_it_can);
+TEST_DATA(fov, maps.value(1), expected_maps.value(1), should_not_see_behind_walls);
+TEST_DATA(fov, maps.value(2), expected_maps.value(2), should_see_walls_themselves)
 {
 	Chthon::Map<char> map(9, 9, fov_data.begin(), fov_data.end());
 

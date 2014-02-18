@@ -259,16 +259,15 @@ private:
  * @endcode
  */
 #define TEST_DATA(dataset_name, data_value, expected_value, test_name) \
-	void run_##dataset_name( \
-			decltype(data_value) & dataset_name##_data, \
-			decltype(expected_value) & dataset_name##_expected); \
+	template<class T, class X> \
+	void run_##dataset_name(const T &, const X &); \
 	TEST(test_name) \
 	{ \
 		run_##dataset_name(data_value, expected_value); \
 	} \
-	void run_##dataset_name( \
-			decltype(data_value) & dataset_name##_data, \
-			decltype(expected_value) & dataset_name##_expected)
+	template<class T, class X> \
+	void run_##dataset_name(const T & dataset_name##_data, \
+			const X & dataset_name##_expected)
 
 /// @}
 }

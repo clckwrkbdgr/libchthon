@@ -174,6 +174,8 @@ struct InterleavedCharMap
 	const_iterator begin(size_t index) const;
 	/// Returns iterator which points at the end of the speicified map.
 	const_iterator end(size_t index) const;
+	/// Returns constructed string of the specified map.
+	std::string value(size_t index) const;
 };
 
 }
