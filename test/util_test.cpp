@@ -169,6 +169,13 @@ TEST(should_know_if_map_contains_key)
 	ASSERT(!Chthon::contains(m, 0));
 }
 
+TEST(should_add_to_vector_and_return_index)
+{
+	std::vector<int> v = {1, 2, 3};
+	size_t index = Chthon::add_to(v, 10);
+	EQUAL(index, 3);
+}
+
 TEST(should_extract_interleaved_charmap)
 {
 	Chthon::InterleavedCharMap map = { 3, 3, 4, {

@@ -212,6 +212,13 @@ typename V::Builder insert_builder(std::map<K, V> & map, const K & key)
 	return typename V::Builder(map[key]);
 }
 
+template<class T>
+size_t add_to(std::vector<T> & container, const T & value)
+{
+	container.push_back(value);
+	return container.size() - 1;
+}
+
 }
 
 /** Generic append operator for vector
