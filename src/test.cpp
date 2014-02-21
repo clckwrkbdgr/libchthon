@@ -7,6 +7,13 @@
 #include <cstdlib>
 #include <signal.h>
 
+namespace Colors {
+	const char * DEFAULT = "\033[39m";
+	const char * RED = "\033[31m";
+	const char * GREEN = "\033[32m";
+	const char * BLUE = "\033[34m";
+}
+
 namespace Chthon {
 
 /// @cond INTERNAL
@@ -58,7 +65,7 @@ int run_all_tests(int argc, char ** argv)
 	signal(SIGSEGV, catch_segfault);
 
 	std::cout.setf(std::ios::fixed, std::ios::floatfield);
-	std::cout.precision(6);
+	std::cout.precision(3);
 	bool tests_specified = argc > 1;
 	int total_test_count = 0;
 	int passed_tests = 0;
@@ -101,21 +108,28 @@ int run_all_tests(int argc, char ** argv)
 		if(ok) {
 			std::chrono::duration<double> seconds =
 				std::chrono::duration_cast<std::chrono::duration<double>>(duration);
-			std::cout << "[ OK ] " << test_name << ' '
-				<< duration.count() << "ns (" << seconds.count() << "s)" << std::endl;
+			std::cout << Colors::GREEN << "[ OK ] " << Colors::DEFAULT << test_name << ' '
+				<< Colors::BLUE << duration.count() << "ns";
+			if(seconds.count() >= 1e-3) {
+				std:: cout << " ("
+				<< seconds.count() << "s)";
+			}
+			std::cout << Colors::DEFAULT << std::endl;
 			++passed_tests;
 		} else {
-			std::cout << "[FAIL] " << test_name << std::endl;
+			std::cout << Colors::RED << "[FAIL] " << Colors::DEFAULT << test_name << std::endl;
 			std::cerr << exception_text << std::endl;
 		}
 	}
 	int failed_tests = total_test_count - passed_tests;
 	if(total_test_count == 0) {
-		std::cout << "No tests to run." << std::endl;
+		std::cout << Colors::RED << "No tests to run." << Colors::DEFAULT << std::endl;
 	} else if(failed_tests == 0) {
-		std::cout << "All tests are passed." << std::endl;
+		std::cout << Colors::GREEN << "All tests are passed." << Colors::DEFAULT << std::endl;
 	} else {
-		std::cout << failed_tests << ((failed_tests % 10 == 1) ? " test" : " tests") << " failed!" << std::endl;
+		std::cout << Colors::RED << failed_tests <<
+			((failed_tests % 10 == 1) ? " test" : " tests") << " failed!"
+			<< Colors::DEFAULT << std::endl;
 	}
 	/// @return count of failed tests.
 	return failed_tests;
