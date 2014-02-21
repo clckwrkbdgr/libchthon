@@ -4,68 +4,57 @@
 #include <sstream>
 #include <iomanip>
 
-namespace Chthon {
-
-static std::string to_string(const Chthon::Pixmap::Color & color)
-{
-	if(color.transparent) {
-		return "None";
-	} else {
-		std::ostringstream color_value;
-		color_value << std::hex << std::setw(6) << std::setfill('0') << (color.argb() & 0xffffff);
-		return "#" + color_value.str();
-	}
-}
-
-}
-
 SUITE(pixmap) {
 using Chthon::Pixmap;
 
-TEST(should_construct_color_from_argb)
-{
-	Pixmap::Color c = Pixmap::Color::from_argb(0x00ff00ff);
-	ASSERT(c.transparent);
-	EQUAL((int)c.r, 0);
-	EQUAL((int)c.g, 0);
-	EQUAL((int)c.b, 0);
-}
-
 TEST(should_construct_color_from_rgb)
 {
-	Pixmap::Color c = Pixmap::Color::from_rgb(0x00ff00ff);
-	ASSERT(!c.transparent);
-	EQUAL((int)c.r, 255);
-	EQUAL((int)c.g, 0);
-	EQUAL((int)c.b, 255);
+	Chthon::Color c = Chthon::from_rgb(255, 0, 255);
+	EQUAL(c, 0xffff00ff);
 }
 
-TEST(should_construct_transparent_color_from_argb_with_zero_alpha)
+TEST(should_get_red_component)
 {
-	Pixmap::Color c = Pixmap::Color::from_argb(0xf0ff00ff);
-	ASSERT(!c.transparent);
-	EQUAL((int)c.r, 255);
-	EQUAL((int)c.g, 0);
-	EQUAL((int)c.b, 255);
+	Chthon::ColorComponent r = Chthon::get_red(0xff00ff);
+	EQUAL(r, 0xff);
 }
 
-TEST(should_get_transparent_rgba_as_transparent_black)
+TEST(should_get_green_component)
 {
-	Pixmap::Color c;
-	EQUAL(c.argb(), 0u);
+	Chthon::ColorComponent g = Chthon::get_green(0xff0aff);
+	EQUAL(g, 0x0a);
 }
 
-TEST(should_get_rgba_from_opaque_color)
+TEST(should_get_blue_component)
 {
-	Pixmap::Color c(255, 0, 255);
-	EQUAL(c.argb(), 0xffff00ff);
+	Chthon::ColorComponent b = Chthon::get_blue(0xff00af);
+	EQUAL(b, 0xaf);
 }
+
+TEST(should_get_transparency)
+{
+	ASSERT(Chthon::is_transparent(0xff00ff));
+	ASSERT(!Chthon::is_transparent(0xffff00ff));
+}
+
+TEST(should_convert_from_rgb_to_argb)
+{
+	Chthon::Color c = Chthon::rgb_to_argb(0x3300ff);
+	EQUAL(c, 0xff3300ff);
+}
+
+TEST(should_construct_transparent_color_from_default_color)
+{
+	Chthon::Color c = Chthon::Color();
+	ASSERT(Chthon::is_transparent(c));
+}
+
 
 TEST(should_make_palette_with_one_opaque_black_color_by_default)
 {
 	Pixmap pixmap(2, 2);
 	EQUAL(pixmap.color_count(), 1u);
-	EQUAL(pixmap.color(0), Pixmap::Color(0, 0, 0));
+	EQUAL(pixmap.color(0), 0xff000000);
 }
 
 TEST(should_fill_image_with_default_color_on_create)
@@ -81,7 +70,7 @@ TEST(should_fill_image_with_default_color_on_create)
 TEST(should_fill_image_with_color)
 {
 	Pixmap pixmap(2, 2);
-	unsigned color = pixmap.add_color(Pixmap::Color(255, 255, 255));
+	unsigned color = pixmap.add_color(0xffffffff);
 	pixmap.fill(color);
 	for(unsigned x = 0; x < 2; ++x) {
 		for(unsigned y = 0; y < 2; ++y) {
@@ -189,31 +178,29 @@ TEST(should_flood_fill_area)
 TEST(should_change_palette_color_value)
 {
 	Pixmap pixmap(2, 2, 2);
-	pixmap.set_color(1, Pixmap::Color(0, 255, 0));
-	EQUAL(pixmap.color(1), Pixmap::Color(0, 255, 0));
+	pixmap.set_color(1, 0xff00ff00);
+	EQUAL(pixmap.color(1), 0xff00ff00);
 }
 
 TEST(should_add_new_color_to_palette)
 {
 	Pixmap pixmap(2, 2, 2);
-	unsigned index = pixmap.add_color(Pixmap::Color(0, 255, 0));
+	unsigned index = pixmap.add_color(0xff00ff00);
 	EQUAL(index, 2u);
-	EQUAL(pixmap.color(2), Pixmap::Color(0, 255, 0));
+	EQUAL(pixmap.color(2), 0xff00ff00);
 }
 
 TEST(should_consider_transparent_color_transparent)
 {
 	Pixmap pixmap(2, 2, 2);
-	Pixmap::Color c(255, 255, 255);
-	c.transparent = true;
-	pixmap.set_color(0, c);
+	pixmap.set_color(0, 0x00ffffff);
 	ASSERT(pixmap.is_transparent_color(0));
 }
 
 TEST(should_consider_default_color_transparent)
 {
 	Pixmap pixmap(2, 2, 2);
-	pixmap.set_color(0, Pixmap::Color());
+	pixmap.set_color(0, Chthon::Color());
 	ASSERT(pixmap.is_transparent_color(0));
 }
 
@@ -235,8 +222,8 @@ TEST(should_load_pixmap_from_text_lines)
 	std::vector<std::string> xpm_lines(xpm, xpm + size_of_array(xpm));
 	Pixmap pixmap(xpm_lines);
 	EQUAL(pixmap.color_count(), 2u);
-	EQUAL(pixmap.color(0), Pixmap::Color(255, 0, 0));
-	EQUAL(pixmap.color(1), Pixmap::Color(0, 255, 0));
+	EQUAL(pixmap.color(0), 0xffff0000);
+	EQUAL(pixmap.color(1), 0xff00ff00);
 	EQUAL(pixmap.width(), 3u);
 	EQUAL(pixmap.height(), 2u);
 	EQUAL(pixmap.pixel(0, 0), 1u);
@@ -259,7 +246,7 @@ TEST(should_recognize_none_color)
 	std::vector<std::string> xpm_lines(xpm, xpm + size_of_array(xpm));
 	Pixmap pixmap(xpm_lines);
 	EQUAL(pixmap.color_count(), 2u);
-	EQUAL(pixmap.color(0), Pixmap::Color());
+	EQUAL(pixmap.color(0), Chthon::Color());
 }
 
 TEST(should_recognize_x11_color_names)
@@ -274,7 +261,7 @@ TEST(should_recognize_x11_color_names)
 	std::vector<std::string> xpm_lines(xpm, xpm + size_of_array(xpm));
 	Pixmap pixmap(xpm_lines);
 	EQUAL(pixmap.color_count(), 2u);
-	EQUAL(pixmap.color(0), Pixmap::Color(0, 0, 0x80));
+	EQUAL(pixmap.color(0), 0xff000080);
 }
 
 TEST(should_recognize_x11_color_names_with_spaces)
@@ -289,7 +276,7 @@ TEST(should_recognize_x11_color_names_with_spaces)
 	std::vector<std::string> xpm_lines(xpm, xpm + size_of_array(xpm));
 	Pixmap pixmap(xpm_lines);
 	EQUAL(pixmap.color_count(), 2u);
-	EQUAL(pixmap.color(0), Pixmap::Color(0x90, 0xee, 0x90));
+	EQUAL(pixmap.color(0), 0xff90ee90);
 }
 
 TEST(should_load_pixmap_from_xpm_file)
@@ -305,8 +292,8 @@ TEST(should_load_pixmap_from_xpm_file)
 		;
 	Pixmap pixmap(xpm_data);
 	EQUAL(pixmap.color_count(), 2u);
-	EQUAL(pixmap.color(0), Pixmap::Color(255, 0, 0));
-	EQUAL(pixmap.color(1), Pixmap::Color(0, 255, 0));
+	EQUAL(pixmap.color(0), 0xffff0000);
+	EQUAL(pixmap.color(1), 0xff00ff00);
 	EQUAL(pixmap.width(), 3u);
 	EQUAL(pixmap.height(), 2u);
 	EQUAL(pixmap.pixel(0, 0), 1u);
@@ -616,8 +603,8 @@ TEST(should_keep_format_of_colours_when_saving_xpm)
 		"};\n"
 		;
 	Pixmap pixmap(xpm_data);
-	pixmap.set_color(0, Pixmap::Color(0, 0, 0));
-	pixmap.set_color(1, Pixmap::Color(255, 255, 255));
+	pixmap.set_color(0, 0xff000000);
+	pixmap.set_color(1, 0xffffffff);
 	std::string save_data = pixmap.save();
 	EQUAL(save_data, std::string(xpm_result));
 }
@@ -642,7 +629,7 @@ TEST(should_insert_line_breaks_when_colours_are_added_when_saving_xpm)
 		"};\n"
 		;
 	Pixmap pixmap(xpm_data);
-	pixmap.add_color(Pixmap::Color(0, 0, 255));
+	pixmap.add_color(0xff0000ff);
 	std::string save_data = pixmap.save();
 	EQUAL(save_data, std::string(xpm_result));
 }

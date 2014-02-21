@@ -7,53 +7,37 @@
 
 namespace Chthon {
 
-Pixmap::Color::Color()
-	: transparent(true), r(0), g(0), b(0)
+Color from_rgb(uint8_t r, uint8_t g, uint8_t b)
 {
-}
-
-Pixmap::Color::Color(uint8_t c_r, uint8_t c_g, uint8_t c_b)
-	: transparent(false), r(c_r), g(c_g), b(c_b)
-{
-}
-
-uint32_t Pixmap::Color::argb() const
-{
-	if(transparent) {
-		return 0;
-	}
 	return uint32_t(0xff << 24) | uint32_t(r << 16) | uint32_t(g << 8) | b;
 }
 
-Pixmap::Color Pixmap::Color::from_argb(uint32_t color)
+uint8_t get_red(Color color)
 {
-	if((color >> 24) == 0) {
-		return Color();
-	}
-	return Color((color >> 16) & 0xff, (color >> 8) & 0xff, color & 0xff);
+	return (color >> 16) & 0xff;
 }
 
-Pixmap::Color Pixmap::Color::from_rgb(uint32_t color)
+uint8_t get_green(Color color)
 {
-	return Color((color >> 16) & 0xff, (color >> 8) & 0xff, color & 0xff);
+	return (color >> 8) & 0xff;
 }
 
-bool Pixmap::Color::operator==(const Color & other) const
+uint8_t get_blue(Color color)
 {
-	if(transparent == other.transparent) {
-		return true;
-	} else if(transparent || other.transparent) {
-		return false;
-	}
-	return (r == other.r && g == other.g && b == other.b);
+	return color & 0xff;
 }
 
-bool Pixmap::Color::operator!=(const Color & other) const
+bool is_transparent(Color color)
 {
-	return !(operator ==(other));
+	return (color >> 24) == 0;
 }
 
-		
+Color rgb_to_argb(Color color)
+{
+	return color | uint32_t(0xff << 24);
+}
+
+
 Pixmap::Pixmap(const std::string & xpm_data)
 	: w(1), h(1), pixels(1, 0), palette(1)
 {
@@ -67,7 +51,7 @@ Pixmap::Pixmap(const std::vector<std::string> & xpm_lines)
 }
 
 Pixmap::Pixmap(unsigned pixmap_width, unsigned pixmap_height, unsigned palette_size)
-	: w(pixmap_width), h(pixmap_height), pixels(w * h, 0), palette(palette_size > 1 ? palette_size : 1, Color(0, 0, 0))
+	: w(pixmap_width), h(pixmap_height), pixels(w * h, 0), palette(palette_size > 1 ? palette_size : 1, from_rgb(0, 0, 0))
 {
 }
 
@@ -104,7 +88,7 @@ unsigned Pixmap::color_count() const
 	return palette.size();
 }
 
-Pixmap::Color Pixmap::color(unsigned index) const
+Color Pixmap::color(unsigned index) const
 {
 	if(valid_color_index(index)) {
 		return palette[index];
@@ -197,13 +181,13 @@ bool Pixmap::floodfill(unsigned x, unsigned y, unsigned index)
 	return false;
 }
 
-unsigned Pixmap::add_color(Pixmap::Color new_color)
+unsigned Pixmap::add_color(Color new_color)
 {
 	palette.push_back(new_color);
 	return palette.size() - 1;
 }
 
-bool Pixmap::set_color(unsigned index, Pixmap::Color new_color)
+bool Pixmap::set_color(unsigned index, Color new_color)
 {
 	if(valid_color_index(index)) {
 		palette[index] = new_color;
@@ -215,7 +199,7 @@ bool Pixmap::set_color(unsigned index, Pixmap::Color new_color)
 bool Pixmap::is_transparent_color(unsigned index) const
 {
 	if(valid_color_index(index)) {
-		return palette[index].transparent;
+		return is_transparent(palette[index]);
 	}
 	return false;
 }
@@ -360,7 +344,7 @@ void Pixmap::load_from_xpm_lines(const std::vector<std::string> & xpm_lines)
 			throw Exception("Color <" + color_name + "> was found more than once.");
 		}
 		if(Global::x11_colors.count(value) > 0) {
-			color_names[color_name] = add_color(Color::from_argb(Global::x11_colors.at(value)));
+			color_names[color_name] = add_color(Global::x11_colors.at(value));
 		} else if(value[0] == '#') {
 			std::string number_value = value.substr(1);
 			bool is_zero = true;
@@ -374,7 +358,7 @@ void Pixmap::load_from_xpm_lines(const std::vector<std::string> & xpm_lines)
 			if(color_value == 0 && !is_zero) {
 				throw Exception("Color value <" + value + "> is invalid.");
 			}
-			color_names[color_name] = add_color(Color::from_rgb(color_value));
+			color_names[color_name] = add_color(rgb_to_argb(color_value));
 		} else {
 			throw Exception("Color value <" + value + "> is invalid.");
 		}
@@ -462,11 +446,11 @@ std::string Pixmap::save() const
 			color_interspace.second.first = " ";
 		}
 		result += std::string("\"") + color_key + color_interspace.first + "c" + color_interspace.second.first;
-		if(current_color->transparent) {
+		if(is_transparent(*current_color)) {
 			result += "None";
 		} else {
 			std::ostringstream color_value;
-			color_value << std::hex << std::setw(6) << std::setfill('0') << (current_color->argb() & 0xffffff);
+			color_value << std::hex << std::setw(6) << std::setfill('0') << (*current_color & 0xffffff);
 			result += "#" + color_value.str();
 		}
 		result += color_interspace.second.second + '"';

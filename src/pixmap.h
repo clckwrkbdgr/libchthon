@@ -19,31 +19,28 @@ struct XPMData {
 };
 /// @endcond
 
+/// Represents RGB color with optional transparency flag.
+typedef uint32_t Color;
+typedef uint8_t ColorComponent;
+/// Makes colour from three RGB components.
+Color from_rgb(ColorComponent r, ColorComponent g, ColorComponent b);
+/// Returns red component of the colour.
+uint8_t get_red(Color color);
+/// Returns green component of the colour.
+uint8_t get_green(Color color);
+/// Returns blue component of the colour.
+uint8_t get_blue(Color color);
+/// Returns true if colour is transparent.
+bool is_transparent(Color color);
+/// Converts RGB color to an opaque ARGB quardruplet.
+Color rgb_to_argb(Color color);
+
 /** Stores pixmap and its palette.
  * Allows basic manipulation with pixels and palette colors.
  * Also loading and saving XPM files.
  */
 class Pixmap {
 public:
-	/// Represents RGB color with optional transparency flag.
-	struct Color {
-		bool transparent;
-		uint8_t r, g, b;
-		/// Constructs transparent black color.
-		Color();
-		/// Constructs color using its RGB components.
-		Color(uint8_t c_r, uint8_t c_g, uint8_t c_b);
-		/// Returns ARGB value for color.
-		uint32_t argb() const;
-		/// Compares color with another.
-		bool operator==(const Color & other) const;
-		/// Compares color with another.
-		bool operator!=(const Color & other) const;
-		/// Constructs color from ARGB value.
-		static Color from_argb(uint32_t color);
-		/// Constructs color from RGB value.
-		static Color from_rgb(uint32_t color);
-	};
 	/// Basic exception.
 	struct Exception {
 		std::string what;
