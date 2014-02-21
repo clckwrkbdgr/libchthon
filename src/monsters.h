@@ -42,7 +42,7 @@ struct Monster {
 	enum Faction { NEUTRAL, PLAYER, MONSTER };
 	typedef MonsterType Type;
 
-	TypePtr<Type> type;
+	const Type * type;
 	Point pos;
 	int hp;
 	Inventory inventory;

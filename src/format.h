@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <iostream>
+#include <sstream>
 
 namespace Chthon { /// @defgroup Format String formatting utilities
 /// @{
@@ -19,6 +20,14 @@ std::string to_string(char value);
 std::string to_string(const std::string & value);
 /// Converts c-string value to string (does nothing, basically).
 std::string to_string(const char * value);
+/// Converts pointer to an integer value of its address.
+template<class T>
+std::string to_string(const T * value)
+{
+	std::ostringstream out;
+	out << std::hex << value;
+	return out.str();
+}
 
 /// @cond INTERNAL
 /// Class for processing of format specificator.

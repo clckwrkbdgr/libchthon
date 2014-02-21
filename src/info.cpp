@@ -21,22 +21,37 @@ Info::Info()
 }
 
 Info::Info(const Item & base)
-	: id(base.type->id), sprite(base.type->sprite), name(base.type->name), passable(invalid_passable), transparent(invalid_transparent)
+	: Info(deref_default(base.type))
+{
+}
+
+Info::Info(const ItemType & base)
+	: id(base.id), sprite(base.sprite), name(base.name), passable(invalid_passable), transparent(invalid_transparent)
 {
 }
 
 Info::Info(const Object & base)
-	: id(base.type->id), sprite(base.type->sprite), name(base.type->name), passable(base.type->passable), transparent(base.type->transparent)
+	: Info(deref_default(base.type))
+{
+}
+
+Info::Info(const ObjectType & base)
+	: id(base.id), sprite(base.sprite), name(base.name), passable(base.passable), transparent(base.transparent)
 {
 }
 
 Info::Info(const Monster & base)
-	: id(base.type->id), sprite(base.type->sprite), name(base.type->name), passable(invalid_impassable), transparent(invalid_transparent)
+	: Info(deref_default(base.type))
+{
+}
+
+Info::Info(const MonsterType & base)
+	: id(base.id), sprite(base.sprite), name(base.name), passable(invalid_impassable), transparent(invalid_transparent)
 {
 }
 
 Info::Info(const Cell & base)
-	: id(base.type->id), sprite(base.type->sprite), name(base.type->name), passable(base.type->passable), transparent(base.type->transparent)
+	: Info(deref_default(base.type))
 {
 }
 

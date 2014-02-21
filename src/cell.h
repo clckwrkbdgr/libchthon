@@ -32,7 +32,7 @@ struct CellType::Builder {
 
 struct Cell {
 	typedef CellType Type;
-	TypePtr<Type> type;
+	const Type * type;
 	bool visible;
 	int seen_sprite;
 	explicit Cell(const CellType * cell_type = nullptr);

@@ -243,7 +243,7 @@ private:
  *
  * Data-driven testing approach uses one code to test each data set in the
  * same way. Inside the test case function the test data is accesible under the
- * name of <dataset>_data and expected value under the name of <dataset>_expected.
+ * name of {dataset}_data and expected value under the name of {dataset}_expected.
  * All test data under the same dataset_name should have _exactly_ the same
  * value type up to const qualifiers.
  * Each case has it's own test_name like an ordinary test.

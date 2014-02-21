@@ -172,9 +172,9 @@ void Game::run()
 			if(monster.is_dead()) {
 				continue;
 			}
-			Controller * controller = controller_factory.get_controller(monster.type->ai);
+			Controller * controller = controller_factory.get_controller(deref_default(monster.type).ai);
 			if(!controller) {
-				log("No controller found for AI #{0}!", monster.type->ai);
+				log("No controller found for AI #{0}!", deref_default(monster.type).ai);
 				continue;
 			}
 			current_level().invalidate_fov(monster);
@@ -231,7 +231,7 @@ void Game::process_environment(Monster & someone)
 	auto object = std::find_if(objects.begin(), objects.end(),
 			[someone](const Object & i) { return i.pos == someone.pos; }
 			);
-	if(object != objects.end() && object->type->triggerable) {
+	if(object != objects.end() && deref_default(object->type).triggerable) {
 		if(object->items.empty()) {
 			event(*object, GameEvent::TRAP_IS_OUT_OF_ITEMS);
 		} else {
@@ -260,14 +260,14 @@ void Game::die(Monster & someone)
 		event(someone, GameEvent::DROPS_AT, item, current_level().cell_type_at(someone.pos));
 	}
 	event(someone, GameEvent::DIED);
-	if(someone.type->faction == Monster::PLAYER) {
+	if(deref_default(someone.type).faction == Monster::PLAYER) {
 		state = PLAYER_DIED;
 	}
 }
 
 void Game::hurt(Monster & someone, int damage, bool pierce_armour)
 {
-	int received_damage = damage - (pierce_armour ? 0 : someone.inventory.worn_item().type->defence);
+	int received_damage = damage - (pierce_armour ? 0 : deref_default(someone.inventory.worn_item().type).defence);
 	someone.hp -= received_damage;
 	event(someone, GameEvent::LOSES_HEALTH, received_damage);
 	if(someone.is_dead()) {
@@ -277,7 +277,7 @@ void Game::hurt(Monster & someone, int damage, bool pierce_armour)
 
 void Game::hit(Item & item, Monster & other, int damage)
 {
-	int received_damage = damage - other.inventory.worn_item().type->defence;
+	int received_damage = damage - deref_default(other.inventory.worn_item().type).defence;
 	other.hp -= received_damage;
 	event(item, GameEvent::HITS_FOR_HEALTH, received_damage, other);
 	if(other.is_dead()) {
@@ -287,10 +287,10 @@ void Game::hit(Item & item, Monster & other, int damage)
 
 void Game::hit(Monster & someone, Monster & other, int damage)
 {
-	int received_damage = damage - other.inventory.worn_item().type->defence;
+	int received_damage = damage - deref_default(other.inventory.worn_item().type).defence;
 	other.hp -= received_damage;
 	event(someone, GameEvent::HITS_FOR_HEALTH, received_damage, other);
-	if(someone.type->poisonous) {
+	if(deref_default(someone.type).poisonous) {
 		event(someone, GameEvent::POISONS, other);
 		other.poisoning = std::min(5, std::max(5, other.poisoning));
 	}

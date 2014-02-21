@@ -24,26 +24,27 @@ ObjectType::Builder & ObjectType::Builder::openable() { result.openable = true; 
 
 
 Object::Object(const Type * object_type)
-	: type(object_type), up_destination(0), down_destination(0), locked(false), lock_type(0)
+	: type(object_type), closed_type(nullptr), opened_type(nullptr), 
+	up_destination(0), down_destination(0), locked(false), lock_type(0)
 {
-	assert(!type->openable);
+	assert(!deref_default(type).openable);
 }
 
 Object::Object(const Type * closed_object_type, const Type * opened_object_type)
 	: type(closed_object_type), closed_type(closed_object_type), opened_type(opened_object_type),
 	up_destination(0), down_destination(0), locked(false), lock_type(0)
 {
-	assert(type->openable);
+	assert(deref_default(type).openable);
 }
 
 bool Object::valid() const
 {
-	return type.valid();
+	return type != nullptr;
 }
 
 bool Object::open()
 {
-	if(type->openable && opened_type.valid() && closed_type.valid()) {
+	if(deref_default(type).openable && opened_type != nullptr && closed_type != nullptr) {
 		type = opened_type;
 		return true;
 	}
@@ -52,7 +53,7 @@ bool Object::open()
 
 bool Object::close()
 {
-	if(type->openable && opened_type.valid() && closed_type.valid()) {
+	if(deref_default(type).openable && opened_type != nullptr && closed_type != nullptr) {
 		type = closed_type;
 		return true;
 	}
@@ -61,7 +62,7 @@ bool Object::close()
 
 bool Object::opened() const
 {
-	return type.equal(opened_type);
+	return type == opened_type;
 }
 
 bool Object::is_exit_up() const

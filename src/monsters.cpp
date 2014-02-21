@@ -21,13 +21,13 @@ MonsterType::Builder & MonsterType::Builder::poisonous(bool value) { result.pois
 
 
 Monster::Monster(const Type * monster_type)
-	: type(monster_type), hp(type->max_hp), poisoning(0)
+	: type(monster_type), hp(deref_default(type).max_hp), poisoning(0)
 {
 }
 
 bool Monster::valid() const
 {
-	return type.valid();
+	return type != nullptr;
 }
 
 Monster::~Monster()
@@ -40,9 +40,9 @@ Monster::~Monster()
 int Monster::damage() const
 {
 	if(inventory.wielded_item().valid()) {
-		return inventory.wielded_item().type->damage;
+		return deref_default(inventory.wielded_item().type).damage;
 	}
-	return type->hit_strength;
+	return deref_default(type).hit_strength;
 }
 
 void Monster::add_path(const std::list<Point> & path)
@@ -54,16 +54,16 @@ void Monster::add_path(const std::list<Point> & path)
 
 bool Monster::heal_by(int hp_amount)
 {
-	if(hp < type->max_hp) {
+	if(hp < deref_default(type).max_hp) {
 		hp += hp_amount;
-		hp = std::min(hp, type->max_hp);
+		hp = std::min(hp, deref_default(type).max_hp);
 		return true;
 	}
 	return false;
 }
 
 Monster::Builder & Monster::Builder::pos(const Point & value) { result.pos = value; return *this; }
-Monster::Builder & Monster::Builder::hp(int value) { result.hp = (result.type->max_hp >= value) ? value : result.type->max_hp; return *this; }
+Monster::Builder & Monster::Builder::hp(int value) { result.hp = (deref_default(result.type).max_hp >= value) ? value : deref_default(result.type).max_hp; return *this; }
 Monster::Builder & Monster::Builder::item(const Item & value) { result.inventory.insert(value); return *this; }
 Monster::Builder & Monster::Builder::wield(unsigned value) { result.inventory.wield(value); return *this; }
 Monster::Builder & Monster::Builder::wear(unsigned value) { result.inventory.wear(value); return *this; }

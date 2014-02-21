@@ -38,8 +38,9 @@ struct ObjectType::Builder {
 
 struct Object {
 	typedef ObjectType Type;
-	TypePtr<Type> type;
-	TypePtr<Type> closed_type, opened_type;
+	const Type * type;
+	const Type * closed_type;
+	const Type * opened_type;
 
 	Point pos;
 	std::vector<Item> items;

@@ -4,70 +4,18 @@
 namespace Chthon { /// @defgroup Types Type system
 /// @{
 
-/** Stores pointer to type object.
- * If stored pointer is invalid (i.e. null) then default-contstructed value is returned.
+/** Returns value of dereferenced pointer.
+ * If pointer is null) then default-contstructed value is returned.
  */
 template<class T>
-struct TypePtr {
-	/// Constructs class using given type_pointer (null by default).
-	explicit TypePtr(const T * type_pointer = nullptr)
-		: pointer(type_pointer) {}
-	/// Returns true if stored pointer is valid (i.e. not null), otherwise returns false.
-	bool valid() const
-	{
-		return pointer;
-	}
-	/// Compares stored pointer with other.
-	bool equal(const TypePtr<T> & other) const
-	{
-		return other == pointer;
-	}
-	/// Compares stored pointer with other.
-	bool equal(const T * other) const
-	{
-		return other == pointer;
-	}
-	/** Returns stored value.
-	 * If stored pointer is invalid (i.e. null) then default-contstructed value is returned.
-	 */
-	const T & operator*() const
-	{
-		if(pointer) {
-			return *pointer;
-		}
-		static T empty;
-		return empty;
-	}
-	/** Returns stored value.
-	 * If stored pointer is invalid (i.e. null) then default-contstructed value is returned.
-	 */
-	const T * operator->() const
-	{
-		return &(operator*());
-	}
-private:
-	const T * pointer;
-};
-/// Compares two type object pointers.
-template<class T>
-bool operator==(const TypePtr<T> & typeptr, const T * ptr)
+const T & deref_default(const T * pointer)
 {
-	return typeptr.equal(ptr);
+	if(pointer) {
+		return *pointer;
+	}
+	static T empty;
+	return empty;
 }
-/// Compares two type object pointers.
-template<class T>
-bool operator==(const TypePtr<T> & typeptr, const TypePtr<T> & other)
-{
-	return typeptr.equal(other);
-}
-/// Compares two type object pointers.
-template<class T> bool operator==(const T * ptr, const TypePtr<T> & typeptr) { return operator==(typeptr, ptr); }
-/// Compares two type object pointers.
-template<class T> bool operator!=(const TypePtr<T> & typeptr, const TypePtr<T> & other) { return !operator==(typeptr, other); }
-/// Compares two type object pointers.
-template<class T> bool operator!=(const TypePtr<T> & typeptr, const T * ptr) { return !operator==(typeptr, ptr); }
-/// Compares two type object pointers.
-template<class T> bool operator!=(const T * ptr, const TypePtr<T> & typeptr) { return !operator==(typeptr, ptr); }
 
 /** Stores type objects by their Id's.
  * Class is instantiated using basic object type Value.

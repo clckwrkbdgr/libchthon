@@ -20,7 +20,7 @@ void Move::commit(Monster & someone, Game & game)
 	auto object = std::find_if(objects.begin(), objects.end(),
 			[new_pos](const Object & m) { return m.pos == new_pos; }
 			);
-	if(object != objects.end() && !object->type->passable) {
+	if(object != objects.end() && !deref_default(object->type).passable) {
 		game.event(someone, GameEvent::BUMPS_INTO, *object);
 		return;
 	}
@@ -52,7 +52,7 @@ void Drink::commit(Monster & someone, Game & game)
 	auto object = std::find_if(objects.begin(), objects.end(),
 			[new_pos](const Object & m) { return m.pos == new_pos; }
 			);
-	assert(object != objects.end() && object->type->drinkable, Exception::NOTHING_TO_DRINK, someone);
+	assert(object != objects.end() && deref_default(object->type).drinkable, Exception::NOTHING_TO_DRINK, someone);
 	game.event(someone, GameEvent::DRINKS, *object);
 	if(someone.heal_by(1)) {
 		game.event(*object, GameEvent::HEALS, someone);
@@ -66,8 +66,8 @@ void Open::commit(Monster & someone, Game & game)
 	auto object = std::find_if(objects.begin(), objects.end(),
 			[new_pos](const Object & m) { return m.pos == new_pos; }
 			);
-	assert(object != objects.end() && (object->type->openable || object->type->containable), Exception::NOTHING_TO_OPEN, someone);
-    if(object->type->openable) {
+	assert(object != objects.end() && (deref_default(object->type).openable || deref_default(object->type).containable), Exception::NOTHING_TO_OPEN, someone);
+    if(deref_default(object->type).openable) {
 		assert(!object->opened(), Exception::ALREADY_OPENED, *object);
 		if(object->locked) {
 			assert(someone.inventory.has_key(object->lock_type), Exception::LOCKED, *object);
@@ -76,7 +76,7 @@ void Open::commit(Monster & someone, Game & game)
 		}
 		object->open();
 		game.event(someone, GameEvent::OPENS, *object);
-    } else if(object->type->containable) {
+    } else if(deref_default(object->type).containable) {
 		assert(!object->items.empty(), Exception::HAS_NO_ITEMS, *object);
 		foreach(Item & item, object->items) {
 			item.pos = someone.pos;
@@ -94,7 +94,7 @@ void Close::commit(Monster & someone, Game & game)
 	auto object = std::find_if(objects.begin(), objects.end(),
 			[new_pos](const Object & m) { return m.pos == new_pos; }
 			);
-    assert(object != objects.end() && object->type->openable, Exception::NOTHING_TO_CLOSE, someone);
+    assert(object != objects.end() && deref_default(object->type).openable, Exception::NOTHING_TO_CLOSE, someone);
     assert(object->opened(), Exception::ALREADY_CLOSED, *object);
     object->close();
     game.event(someone, GameEvent::CLOSES, *object);
@@ -117,7 +117,7 @@ void Swing::commit(Monster & someone, Game & game)
 			);
 	if(object != objects.end()) {
 		game.event(someone, GameEvent::HITS, *object);
-		if(object->type->openable && !object->opened()) {
+		if(deref_default(object->type).openable && !object->opened()) {
 			if(object->locked) {
 				assert(someone.inventory.has_key(object->lock_type), Exception::LOCKED, *object);
 				game.event(someone, GameEvent::UNLOCKS, *object);
@@ -156,14 +156,14 @@ void Fire::commit(Monster & someone, Game & game)
 				[new_pos](const Object & m) { return m.pos == new_pos; }
 				);
 		if(object != objects.end()) {
-			if(object->type->containable) {
+			if(deref_default(object->type).containable) {
 				game.event(item, GameEvent::FALLS_INTO, *object);
 				object->items.push_back(item);
 				break;
-			} else if(object->type->drinkable) {
+			} else if(deref_default(object->type).drinkable) {
 				game.event(item, GameEvent::FALLS_INTO, *object);
 				break;
-			} else if(!object->type->transparent) {
+			} else if(!deref_default(object->type).transparent) {
 				game.event(item, GameEvent::HITS, *object);
 				game.current_level().items.push_back(item);
 				break;
@@ -176,7 +176,7 @@ void Fire::commit(Monster & someone, Game & game)
 		if(monster != monsters.end()) {
 			item.pos += shift;
 			game.current_level().items.push_back(item);
-			game.hit(item, *monster, item.type->damage);
+			game.hit(item, *monster, deref_default(item.type).damage);
 			break;
 		}
 		item.pos += shift;
@@ -194,7 +194,7 @@ void Put::commit(Monster & someone, Game & game)
 	auto object = std::find_if(objects.begin(), objects.end(),
 			[new_pos](const Object & m) { return m.pos == new_pos; }
 			);
-	if(object != objects.end() && object->type->drinkable && item.is_emptyable()) {
+	if(object != objects.end() && deref_default(object->type).drinkable && item.is_emptyable()) {
 		assert(item.is_empty(), Exception::ALREADY_FULL, item);
 		game.event(someone, GameEvent::REFILLS, item);
 		item.make_full();

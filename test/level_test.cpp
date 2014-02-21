@@ -33,6 +33,7 @@ TEST_FIXTURE(GameWithLevels, should_restore_previously_visited_level)
 TEST_FIXTURE(GameWithLevels, should_generated_newly_visited_level)
 {
 	game.go_to_level(1);
+	ASSERT(game.current_level().get_player().type);
 	EQUAL(game.current_level().get_player().type->sprite, 1);
 }
 
@@ -144,6 +145,7 @@ TEST_FIXTURE(Game2x2, should_get_player_from_monsters)
 {
 	game.add_monster("monster");
 	Chthon::Monster & monster = game.current_level().get_player();
+	ASSERT(monster.type);
 	EQUAL(monster.type->faction, Chthon::Monster::PLAYER);
 }
 
@@ -151,6 +153,7 @@ TEST_FIXTURE(Game2x2, should_get_player_from_const_monsters)
 {
 	game.add_monster("monster");
 	const Chthon::Monster & monster = static_cast<const Chthon::Game &>(game).current_level().get_player();
+	ASSERT(monster.type);
 	EQUAL(monster.type->faction, Chthon::Monster::PLAYER);
 }
 
@@ -214,6 +217,7 @@ TEST(should_erase_dead_monsters)
 	game.add_monster("alive").pos(Point(1, 1));
 	game.current_level().erase_dead_monsters();
 	EQUAL(game.current_level().monsters.size(), (unsigned)1);
+	ASSERT(game.current_level().monsters[0].type);
 	EQUAL(game.current_level().monsters[0].type->sprite, 2);
 }
 

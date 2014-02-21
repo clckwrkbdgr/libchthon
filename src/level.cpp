@@ -28,13 +28,13 @@ Level::Level(unsigned map_width, unsigned map_height)
 
 const CellType & Level::cell_type_at(const Point & pos) const
 {
-	return *(map.cell(pos).type);
+	return deref_default(map.cell(pos).type);
 }
 
 const Monster & Level::get_player() const
 {
 	foreach(const Monster & monster, monsters) {
-		if(monster.type->faction == Monster::PLAYER) {
+		if(deref_default(monster.type).faction == Monster::PLAYER) {
 			return monster;
 		}
 	}
@@ -45,7 +45,7 @@ const Monster & Level::get_player() const
 Monster & Level::get_player()
 {
 	foreach( Monster & monster, monsters) {
-		if(monster.type->faction == Monster::PLAYER) {
+		if(deref_default(monster.type).faction == Monster::PLAYER) {
 			return monster;
 		}
 	}
@@ -73,7 +73,7 @@ void Level::invalidate_fov(Monster & monster)
 		}
 	}
 	std::set<Point> visible_points = get_fov(
-			monster.pos, monster.type->sight,
+			monster.pos, deref_default(monster.type).sight,
 			[this](const Point & p) { return get_info(p).compiled().transparent; }
 			);
 	for(const Point & p : visible_points) {
@@ -81,7 +81,7 @@ void Level::invalidate_fov(Monster & monster)
 			continue;
 		}
 		map.cell(p).visible = true;
-		if(monster.type->faction == Monster::PLAYER) {
+		if(deref_default(monster.type).faction == Monster::PLAYER) {
 			map.cell(p).seen_sprite = get_info(p).compiled().sprite;
 		}
 	}
@@ -230,7 +230,7 @@ void DungeonBuilder::pop_player_front(std::vector<Monster> & monsters)
 		return;
 	}
 	foreach(Monster & monster, monsters) {
-		if(monster.type->faction == Monster::PLAYER) {
+		if(deref_default(monster.type).faction == Monster::PLAYER) {
 			std::swap(monster, monsters.front());
 			log("Player found.");
 			break;

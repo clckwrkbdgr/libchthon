@@ -20,7 +20,7 @@ ItemType::Builder & ItemType::Builder::quest() { result.quest = true; return *th
 
 
 Item::Item(const Type * item_type)
-	: type(item_type), key_type(0)
+	: type(item_type), full_type(nullptr), empty_type(nullptr), key_type(0)
 {
 }
 
@@ -31,12 +31,12 @@ Item::Item(const Type * full_item_type, const Type * empty_item_type)
 
 bool Item::valid() const
 {
-	return type.valid();
+	return type != nullptr;
 }
 
 bool Item::is_emptyable() const
 {
-	return full_type.valid() && empty_type.valid();
+	return full_type != nullptr && empty_type != nullptr;
 }
 
 bool Item::is_full() const
@@ -241,7 +241,7 @@ unsigned Inventory::insert(const Item & item)
 const Item & Inventory::quest_item() const
 {
 	foreach(const Item & item, items) {
-		if(item.type->quest) {
+		if(deref_default(item.type).quest) {
 			return item;
 		}
 	}

@@ -31,7 +31,7 @@ Action * BasicAI::act(Monster & monster, Game & game)
 	foreach(unsigned action, actions) {
 		switch(action) {
 			case MOVE_TO_HIT_PLAYER_IF_SEES:
-				if(sees_player && 1 < d && d <= monster.type->sight) {
+				if(sees_player && 1 < d && d <= deref_default(monster.type).sight) {
 					return new Move(shift);
 				} else if(sees_player && d == 1) {
 					return new Swing(shift);

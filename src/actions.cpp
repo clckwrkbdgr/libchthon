@@ -5,6 +5,7 @@
 #include "cell.h"
 #include "util.h"
 #include "format.h"
+#include "log.h"
 
 namespace Chthon {
 
@@ -44,7 +45,7 @@ void Grab::commit(Monster & someone, Game & game)
 	unsigned slot = someone.inventory.insert(*item);
 	assert(slot != Inventory::NOTHING, Exception::NO_SPACE_LEFT, someone);
 	game.event(someone, GameEvent::PICKS_UP_FROM, *item, game.current_level().cell_type_at(someone.pos));
-	if(item->type->quest) {
+	if(deref_default(item->type).quest) {
 		game.event(someone, GameEvent::PICKED_UP_A_QUEST_ITEM);
 	}
 	game.current_level().items.erase(item);
@@ -79,7 +80,7 @@ void Wear::commit(Monster & someone, Game & game)
 	assert(!someone.inventory.empty(), Exception::NOTHING_TO_WEAR, someone);
 	const Item & item = someone.inventory.get_item(slot);
 	assert(item.valid(), Exception::NO_SUCH_ITEM, someone);
-	assert(item.type->wearable, Exception::CANNOT_WEAR, someone, item);
+	assert(deref_default(item.type).wearable, Exception::CANNOT_WEAR, someone, item);
 	if(someone.inventory.wields(slot)) {
 		game.event(someone, GameEvent::UNWIELDS, someone.inventory.wielded_item());
 		someone.inventory.unwield();
@@ -105,7 +106,7 @@ void Eat::commit(Monster & someone, Game & game)
 	assert(!someone.inventory.empty(), Exception::NOTHING_TO_EAT, someone);
 	Item & item = someone.inventory.get_item(slot);
 	assert(item.valid(), Exception::NO_SUCH_ITEM, someone);
-	assert(item.type->edible, Exception::CANNOT_EAT, someone, item);
+	assert(deref_default(item.type).edible, Exception::CANNOT_EAT, someone, item);
 	if(someone.inventory.wears(slot)) {
 		game.event(someone, GameEvent::TAKES_OFF, someone.inventory.worn_item());
 		someone.inventory.take_off();
@@ -115,13 +116,13 @@ void Eat::commit(Monster & someone, Game & game)
 		someone.inventory.unwield();
 	}
 	game.event(someone, GameEvent::EATS, item);
-	if(item.type->antidote > 0 && someone.poisoning > 0) {
-		someone.poisoning -= item.type->antidote;
+	if(deref_default(item.type).antidote > 0 && someone.poisoning > 0) {
+		someone.poisoning -= deref_default(item.type).antidote;
 		someone.poisoning = std::max(0, someone.poisoning);
 		game.event(item, GameEvent::CURES_POISONING, someone);
 	}
-	if(item.type->healing > 0) {
-		if(someone.heal_by(item.type->healing)) {
+	if(deref_default(item.type).healing > 0) {
+		if(someone.heal_by(deref_default(item.type).healing)) {
 			game.event(item, GameEvent::HEALS, someone);
 		}
 	}
@@ -139,7 +140,7 @@ void GoUp::commit(Monster & someone, Game & game)
 	auto object = std::find_if(objects.begin(), objects.end(),
 			[someone](const Object & i) { return i.pos == someone.pos; }
 			);
-	assert(object != objects.end() && object->type->transporting && object->up_destination, Exception::CANNOT_GO_UP, someone);
+	assert(object != objects.end() && deref_default(object->type).transporting && object->up_destination, Exception::CANNOT_GO_UP, someone);
 	if(object->is_exit_up()) {
 		const Item & quest_item = someone.inventory.quest_item();
 		if(quest_item.valid()) {
@@ -161,7 +162,7 @@ void GoDown::commit(Monster & someone, Game & game)
 	auto object = std::find_if(objects.begin(), objects.end(),
 			[someone](const Object & i) { return i.pos == someone.pos; }
 			);
-	assert(object != objects.end() && object->type->transporting && object->down_destination, Exception::CANNOT_GO_UP, someone);
+	assert(object != objects.end() && deref_default(object->type).transporting && object->down_destination, Exception::CANNOT_GO_UP, someone);
 	if(object->is_exit_down()) {
 		const Item & quest_item = someone.inventory.quest_item();
 		if(quest_item.valid()) {

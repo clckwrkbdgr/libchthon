@@ -42,8 +42,9 @@ struct ItemType::Builder {
 
 struct Item {
 	typedef ItemType Type;
-	TypePtr<Type> type;
-	TypePtr<Type> full_type, empty_type;
+	const Type * type;
+	const Type * full_type;
+	const Type * empty_type;
 
 	Point pos;
 	int key_type;

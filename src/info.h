@@ -8,8 +8,11 @@ namespace Chthon { /// @defgroup Info Object info
 /// @{
 
 class Item;
+class ItemType;
 class Object;
+class ObjectType;
 class Monster;
+class MonsterType;
 class Cell;
 class CellType;
 class Point;
@@ -27,13 +30,15 @@ struct Info {
 	Info();
 	/// Constructs info for Item. Item is passable and transparent.
 	Info(const Item & base);
+	Info(const ItemType & base);
 	/// Constructs info for Object.
 	Info(const Object & base);
+	Info(const ObjectType & base);
 	/// Constructs info for Monster. Monster if impassable and transparent.
 	Info(const Monster & base);
-	/// Constructs info for Cell.
-	Info(const Cell & base);
+	Info(const MonsterType & base);
 	/// Constructs info for Cell's type (conviniency usage).
+	Info(const Cell & base);
 	Info(const CellType & base);
 	/// Returns true if info was created from valid value, otherwise returns false.
 	bool valid() const;

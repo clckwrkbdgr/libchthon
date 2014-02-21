@@ -4,6 +4,7 @@
 #include "../src/cell.h"
 #include "../src/format.h"
 #include "../src/test.h"
+#include "../src/log.h"
 using Chthon::GameEvent;
 
 SUITE(game) {
@@ -31,6 +32,7 @@ TEST_FIXTURE(GameWithDummyOnTrap, should_hurt_monster_if_trap_is_set)
 TEST_FIXTURE(GameWithDummyOnTrap, should_leave_bolt_if_trap_is_set)
 {
 	game.process_environment(dummy());
+	ASSERT(game.current_level().items.front().type);
 	EQUAL(game.current_level().items.front().type->sprite, 1);
 }
 

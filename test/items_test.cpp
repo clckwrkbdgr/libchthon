@@ -29,6 +29,7 @@ TEST(item_should_be_of_empty_type_after_emptying)
 	Item item = Item::Builder(&full_item, &empty_item).make_full();
 	bool ok = item.make_empty();
 	ASSERT(ok);
+	ASSERT(item.type);
 	EQUAL(item.type->id, "empty");
 }
 
@@ -39,6 +40,7 @@ TEST(item_should_be_of_full_type_after_filling)
 	Item item = Item::Builder(&full_item, &empty_item).make_empty();
 	bool ok = item.make_full();
 	ASSERT(ok);
+	ASSERT(item.type);
 	EQUAL(item.type->id, "full");
 }
 
@@ -48,6 +50,7 @@ TEST(should_get_item)
 	Inventory inventory;
 	ItemType type = ItemType::Builder("item").sprite(1);
 	inventory.set_item(1, Item(&type));
+	ASSERT(inventory.get_item(1).type);
 	EQUAL(inventory.get_item(1).type->sprite, 1);
 }
 
@@ -65,6 +68,7 @@ TEST(should_set_item)
 	ItemType type = ItemType::Builder("item").sprite(1);
 	bool ok = inventory.set_item(1, Item(&type));
 	ASSERT(ok);
+	ASSERT(inventory.get_item(1).type);
 	EQUAL(inventory.get_item(1).type->sprite, 1);
 }
 
@@ -92,6 +96,7 @@ TEST(should_insert_at_first_empty_slot)
 	inventory.set_item(1, Item(&type));
 	unsigned slot = inventory.insert(Item(&type2));
 	EQUAL(slot, 0);
+	ASSERT(inventory.get_item(0).type);
 	EQUAL(inventory.get_item(0).type->sprite, 2);
 }
 
@@ -114,6 +119,7 @@ TEST(should_take_item_from_inventory)
 	inventory.set_item(0, Item(&type));
 	Item item = inventory.take_item(0);
 	ASSERT(!inventory.get_item(0).valid());
+	ASSERT(item.type);
 	EQUAL(item.type->sprite, 1);
 }
 
@@ -124,6 +130,7 @@ TEST(should_take_first_item_from_inventory)
 	inventory.set_item(0, Item(&type));
 	Item item = inventory.take_first_item();
 	ASSERT(!inventory.get_item(0).valid());
+	ASSERT(item.type);
 	EQUAL(item.type->sprite, 1);
 }
 

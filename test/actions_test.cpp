@@ -61,6 +61,7 @@ TEST_FIXTURE(GameWithDummyWieldingAndWearing, should_place_item_on_the_floor_whe
 {
 	Drop(0).commit(dummy(), game);
 	EQUAL(game.current_level().items.size(), 1);
+	ASSERT(game.current_level().items[0].type);
 	EQUAL(game.current_level().items[0].type->name, "spear");
 }
 
@@ -81,6 +82,7 @@ TEST_FIXTURE(GameWithDummyWieldingAndWearing, should_put_grabbed_item_to_the_fir
 {
 	game.add_item("item").pos(Chthon::Point(1, 2));
 	Grab().commit(dummy(), game);
+	ASSERT(dummy().inventory.get_item(4).type);
 	EQUAL(dummy().inventory.get_item(4).type->name, "item");
 	TEST_CONTAINER(game.events, e) {
 		EQUAL(e.type, GameEvent::PICKS_UP_FROM);

@@ -6,15 +6,6 @@ using Chthon::Point;
 using Chthon::GameEvent;
 using Chthon::Action;
 
-namespace Chthon {
-
-static std::string to_string(const Chthon::TypePtr<Chthon::ItemType> & type)
-{
-	return type->id;
-}
-
-}
-
 SUITE(move) {
 using GameMocks::GameWithDummyAndObjects;
 using Chthon::Move;
@@ -354,6 +345,7 @@ TEST_FIXTURE(GameWithDummyWieldingAndWearing, should_hit_container_and_drop_item
 	} DONE(e);
 	ASSERT(game.current_level().items.empty());
 	ASSERT(!game.current_level().objects[0].items.empty());
+	ASSERT(game.current_level().objects[0].items[0].type);
 	EQUAL(game.current_level().objects[0].items[0].type->name, "spear");
 }
 
