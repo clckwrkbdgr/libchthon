@@ -1,6 +1,7 @@
 #include "test.h"
 #include "log.h"
 #include "util.h"
+#include <chrono>
 #include <cstring>
 #include <cstdio>
 #include <cstdlib>
@@ -56,6 +57,8 @@ int run_all_tests(int argc, char ** argv)
 {
 	signal(SIGSEGV, catch_segfault);
 
+	std::cout.setf(std::ios::fixed, std::ios::floatfield);
+	std::cout.precision(6);
 	bool tests_specified = argc > 1;
 	int total_test_count = 0;
 	int passed_tests = 0;
@@ -76,8 +79,13 @@ int run_all_tests(int argc, char ** argv)
 		/// Test name is printed with its suite name, e.g. "test_suite :: test_name".
 		/// If test is outside any suite, it has no suite name.
 		test_name += std::string(test_name.empty() ? "" : " :: ") + test->_name;
+		/// Each test is also a benchmark using steady clock.
+		std::chrono::nanoseconds duration = std::chrono::nanoseconds::zero();
 		try {
+			const auto start_time = std::chrono::steady_clock::now();
 			test->run();
+			const auto end_time = std::chrono::steady_clock::now();
+			duration = end_time - start_time;
 		} catch(const AssertException & e) {
 			ok = false;
 			exception_text = std::string(e.filename) + ":" + std::to_string(e.line) + ": " + e.what;
@@ -91,7 +99,10 @@ int run_all_tests(int argc, char ** argv)
 		/// Each test result is printed either with `[ OK ]` sign or with '[FAIL]' sign.
 		/// Each test failure message is prepended with file name and line number.
 		if(ok) {
-			std::cout << "[ OK ] " << test_name << std::endl;
+			std::chrono::duration<double> seconds =
+				std::chrono::duration_cast<std::chrono::duration<double>>(duration);
+			std::cout << "[ OK ] " << test_name << ' '
+				<< duration.count() << "ns (" << seconds.count() << "s)" << std::endl;
 			++passed_tests;
 		} else {
 			std::cout << "[FAIL] " << test_name << std::endl;
