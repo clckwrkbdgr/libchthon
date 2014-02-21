@@ -1,6 +1,5 @@
 #pragma once
 #include "map.h"
-#include "types.h"
 #include "point.h"
 #include "util.h"
 #include <string>

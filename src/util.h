@@ -178,6 +178,40 @@ struct InterleavedCharMap
 	std::string value(size_t index) const;
 };
 
+/** Returns value of dereferenced pointer.
+ * If pointer is null) then default-contstructed value is returned.
+ */
+template<class T>
+const T & deref_default(const T * pointer)
+{
+	if(pointer) {
+		return *pointer;
+	}
+	static T empty;
+	return empty;
+}
+
+/// Returns pointer to a type object by its id, or null pointer if no object exists with such id.
+template<class K, class V>
+const V * get_pointer(const std::map<K, V> & map, const K & key)
+{
+	if(map.count(key) > 0) {
+		return &map.at(key);
+	}
+	return nullptr;
+}
+
+/** Creates empty type object and returns its Builder instance.
+ * Such object must have an `id` member, which is of type Id.
+ * Also it should have inner class or typedef called Builder, which has constructor receiving type object.
+ */
+template<class K, class V>
+typename V::Builder insert_builder(std::map<K, V> & map, const K & key)
+{
+	map[key].id = key;
+	return typename V::Builder(map[key]);
+}
+
 }
 
 /** Generic append operator for vector

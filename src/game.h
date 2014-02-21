@@ -49,10 +49,10 @@ struct Game {
 	int current_level_index;
 	std::map<int, Level> levels;
 
-	TypeRegistry<std::string, Cell> cell_types;
-	TypeRegistry<std::string, Monster> monster_types;
-	TypeRegistry<std::string, Object> object_types;
-	TypeRegistry<std::string, Item> item_types;
+	std::map<std::string, CellType> cell_types;
+	std::map<std::string, MonsterType> monster_types;
+	std::map<std::string, ObjectType> object_types;
+	std::map<std::string, ItemType> item_types;
 	ControllerFactory controller_factory;
 
 	Game();

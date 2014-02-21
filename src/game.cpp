@@ -70,71 +70,71 @@ void Game::go_to_level(int level_index)
 
 const ItemType * Game::item_type(const std::string & id) const
 {
-	return item_types.get(id);
+	return get_pointer(item_types, id);
 }
 
 const ObjectType * Game::object_type(const std::string & id) const
 {
-	return object_types.get(id);
+	return get_pointer(object_types, id);
 }
 
 const MonsterType * Game::monster_type(const std::string & id) const
 {
-	return monster_types.get(id);
+	return get_pointer(monster_types, id);
 }
 
 const CellType * Game::cell_type(const std::string & id) const
 {
-	return cell_types.get(id);
+	return get_pointer(cell_types, id);
 }
 
 ItemType::Builder Game::add_item_type(const std::string & id)
 {
-	return item_types.insert(id);
+	return insert_builder(item_types, id);
 }
 
 ObjectType::Builder Game::add_object_type(const std::string & id)
 {
-	return object_types.insert(id);
+	return insert_builder(object_types, id);
 }
 
 MonsterType::Builder Game::add_monster_type(const std::string & id)
 {
-	return monster_types.insert(id);
+	return insert_builder(monster_types, id);
 }
 
 CellType::Builder Game::add_cell_type(const std::string & id)
 {
-	return cell_types.insert(id);
+	return insert_builder(cell_types, id);
 }
 
 Item::Builder Game::add_item(Level & level, const std::string & type_id)
 {
-	level.items.push_back(Item(item_types.get(type_id)));
+	level.items.push_back(Item(get_pointer(item_types, type_id)));
 	return Item::Builder(level.items.back());
 }
 
 Item::Builder Game::add_item(Level & level, const std::string & full_type_id, const std::string & empty_type_id)
 {
-	level.items.push_back(Item(item_types.get(full_type_id), item_types.get(empty_type_id)));
+	level.items.push_back(Item(get_pointer(item_types, full_type_id), get_pointer(item_types, empty_type_id)));
 	return Item::Builder(level.items.back());
 }
 
 Object::Builder Game::add_object(Level & level, const std::string & type_id)
 {
-	level.objects.push_back(Object(object_types.get(type_id)));
+	level.objects.push_back(Object(get_pointer(object_types, type_id)));
 	return Object::Builder(level.objects.back());
 }
 
 Object::Builder Game::add_object(Level & level, const std::string & closed_type_id, const std::string & opened_type_id)
 {
-	level.objects.push_back(Object(object_types.get(closed_type_id), object_types.get(opened_type_id)));
+	level.objects.push_back(Object(get_pointer(object_types, closed_type_id), get_pointer(object_types, opened_type_id)));
 	return Object::Builder(level.objects.back());
 }
 
 Monster::Builder Game::add_monster(Level & level, const std::string & type_id)
 {
-	level.monsters.push_back(Monster(monster_types.get(type_id)));
+	level.monsters.push_back(Monster(get_pointer(monster_types, type_id)));
 	return Monster::Builder(level.monsters.back());
 }
 
