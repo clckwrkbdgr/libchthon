@@ -229,7 +229,10 @@ XPMData::XPMData()
 
 /// @cond INTERNAL
 namespace Global {
-#include "x11_colors.cpp"
+static const std::map<std::string, uint32_t> x11_colors = {
+#include "x11_colors.inc"
+};
+
 }
 /// @endcond
 

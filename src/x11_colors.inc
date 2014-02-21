@@ -1,5 +1,3 @@
-#include <map>
-static const std::map<std::string, uint32_t> x11_colors = {
 {"snow",                   0xfffffafa},
 {"ghost white",            0xfff8f8ff},
 {"GhostWhite",             0xfff8f8ff},
@@ -754,4 +752,3 @@ static const std::map<std::string, uint32_t> x11_colors = {
 {"light green",            0xff90ee90},
 {"LightGreen",             0xff90ee90},
 {"None",                   0}
-};
