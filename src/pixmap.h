@@ -8,12 +8,6 @@ namespace Chthon { /// @defgroup Pixmap Pixmap
 
 /// @cond INTERNAL
 struct XPMData {
-	unsigned color_count;
-	unsigned row_count;
-	std::vector<std::string> interspaces;
-	std::vector<std::string> colors;
-	std::vector<std::string> values_interspaces;
-	std::vector<std::pair<std::string, std::pair<std::string, std::string> > > colors_interspaces;
 	XPMData();
 };
 /// @endcond
@@ -50,21 +44,25 @@ public:
 	Map<unsigned> pixels;
 	std::vector<Color> palette;
 
-	/// Constructs Pixmap from string which contains loaded XPM data.
-	/// This way constructed Pixmap can be later saved with as few differences as possible.
-	Pixmap(const std::string & xpm_data);
-	/// Constructs Pixmap from XPM lines.
-	Pixmap(const std::vector<std::string> & xpm_lines);
 	/// Constructs pixmap with given size, pallette of one black color, and filled with this color.
-	Pixmap(unsigned w, unsigned h, unsigned palette_size = 1);
+	Pixmap(unsigned w = 1, unsigned h = 1, unsigned palette_size = 1);
 
+	/// Loads Pixmap from string which contains loaded XPM data.
+	/// This way Pixmap can be later saved with as few differences as possible.
+	void load(const std::string & xpm_data);
+	/// Loads Pixmap from XPM lines.
+	/// This way Pixmap can be later saved with as few differences as possible.
+	void load(const std::vector<std::string> & xpm_lines);
 	/// Saves pixmap as an XPM data string.
 	std::string save() const;
 private:
-	XPMData xpm;
-
-	void load_from_xpm_data(const std::string & xpm_data);
-	void load_from_xpm_lines(const std::vector<std::string> & xpm_lines);
+	unsigned color_count;
+	unsigned row_count;
+	std::vector<std::string> interspaces;
+	std::vector<std::string> colors;
+	std::vector<std::string> values_interspaces;
+	std::vector<std::pair<std::string, std::pair<std::string, std::string> > > colors_interspaces;
+	void clear_xpm_data();
 };
 
 /// @}

@@ -69,7 +69,7 @@ public:
 
 	void resize(unsigned new_width, unsigned new_height)
 	{
-		typename std::vector<T> new_pixels(new_width * new_height, 0);
+		typename std::vector<T> new_pixels(new_width * new_height, T());
 		typename std::vector<T>::const_iterator src = cells.begin();
 		typename std::vector<T>::iterator dest = new_pixels.begin();
 		unsigned min_common_width = std::min(w, new_width);
