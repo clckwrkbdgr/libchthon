@@ -12,6 +12,36 @@ static const char data[] =
 	" # #"
 	;
 
+TEST(should_not_move_diagonally_if_not_permitted)
+{
+	Chthon::Map<char> map(4, 4, std::begin(data), std::end(data));
+	Chthon::Pathfinder finder(false);
+	bool ok = finder.lee(Point(1, 1), Point(0, 2),
+			[map](const Point & pos) { return map.valid(pos) && map.cell(pos) == ' '; }
+			);
+	ASSERT(!ok);
+}
+
+TEST(should_move_only_straight_if_diagonal_movement_is_not_permitted)
+{
+	Chthon::Map<char> map(4, 4, std::begin(data), std::end(data));
+	Chthon::Pathfinder finder(false);
+	bool ok = finder.lee(Point(1, 1), Point(3, 0),
+			[map](const Point & pos) { return map.valid(pos) && map.cell(pos) == ' '; }
+			);
+	ASSERT(ok);
+	TEST_CONTAINER(finder.path, pos) {
+		EQUAL(pos, Point(1, 1));
+	} NEXT(pos) {
+		EQUAL(pos, Point(2, 1));
+	} NEXT(pos) {
+		EQUAL(pos, Point(2, 0));
+	} NEXT(pos) {
+		EQUAL(pos, Point(3,  0));
+	} DONE(pos);
+}
+
+
 TEST(should_find_path_between_points)
 {
 	Chthon::Map<char> map(4, 4, std::begin(data), std::end(data));

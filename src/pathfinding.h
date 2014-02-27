@@ -7,14 +7,15 @@
 namespace Chthon { /// @defgroup Pathfinding Pathfinding algorithms
 /// @{
 
+/// @cond INTERNAL
 struct LeeAlgorithmImpl {
 	enum { MAX_WAVE_COUNT = 2000 };
 	typedef std::set<Point> Wave;
 	std::list<Wave> waves;
 	Wave neighs;
-	static const Point shifts[8];
+	const std::vector<Point> shifts;
 
-	LeeAlgorithmImpl(const Point & target);
+	LeeAlgorithmImpl(const Point & target, bool is_diagonal_movement_permitted = true);
 	void new_wave();
 	void add_new_neigh(const Point & neigh);
 	void construct_path(const Point & start, std::list<Point> & path, std::list<Point> & directions);
@@ -40,8 +41,18 @@ struct LeeAlgorithmImpl {
 		return false;
 	}
 };
+/// @endcond
 
-/// Incapsulates pathfinding.
+/** Incapsulates pathfinding.
+ *
+ * Usage:
+ *
+ * @code{.cpp}
+ * Pathfinder finder;
+ * finder.lee(start, taget, is_passable);
+ * // Do smth with finder.path or finder.directions...
+ * @endcode
+ */
 class Pathfinder {
 public:
 	/// Stores found path if exists, empty path otherwise.
@@ -51,6 +62,12 @@ public:
 	 * `(1, 0)-(1-1)`.
 	 */
 	std::list<Point> directions;
+
+	/// Permits/disables diagonal movement.
+	bool diagonal_movement_permitted;
+
+	/// Constructs pathfinder object with specified options.
+	Pathfinder(bool is_diagonal_movement_permitted = true);
 
 	/** Simple Lee pathfinding algorithm.
 	 * Runs pathfinding between points start and target (including them).
@@ -72,7 +89,7 @@ public:
 			return false;
 		}
 
-		LeeAlgorithmImpl impl(target);
+		LeeAlgorithmImpl impl(target, diagonal_movement_permitted);
 		if(!impl.produce_waves(start, is_passable)) {
 			return false;
 		}
