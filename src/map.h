@@ -132,7 +132,8 @@ public:
 	/// starting with (x, y) point.
 	void floodfill(int x, int y, const T & to_what_value)
 	{
-		floodfill(x, y, cell(x, y), to_what_value);
+		T which_value = cell(x, y);
+		floodfill(x, y, which_value, to_what_value);
 	}
 	/// Run floodfill algorithm (overloaded function).
 	/// Replaces all found values of that under pos to to_what_value,
