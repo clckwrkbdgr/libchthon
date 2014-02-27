@@ -3,6 +3,10 @@
 #include <list>
 #include <iostream>
 
+/// @cond INTERNAL
+const char * current_suite_name();
+/// @endcond
+
 namespace Chthon { /// @defgroup UnitTest Unit testing
 /// @{
 
@@ -27,10 +31,6 @@ struct AssertException {
 	std::string what;
 	AssertException(const char * ex_filename, int ex_linenumber, const std::string & message);
 };
-/// @endcond
-
-/// @cond INTERNAL
-const char * current_suite_name();
 /// @endcond
 
 /** Defines test suite.
@@ -95,9 +95,12 @@ const char * current_suite_name();
 
 /// @cond INTERNAL
 template<class A, class B>
+bool are_not_equal(const A & a, const B & b) { return a != b; }
+bool are_not_equal(const char * a, const char * b);
+template<class A, class B>
 void test_equal(const A & a, const B & b, const char * a_string, const char * b_string, const char * file, int line)
 {
-	if(a != b) {
+	if(are_not_equal(a, b)) {
 		throw AssertException(file, line, Chthon::format("{0} ({1}) != {2} ({3})", a_string, a, b_string, b));
 	}
 }
@@ -153,9 +156,9 @@ void test_equal(const A & a, const B & b, const char * a_string, const char * b_
  */
 #define NOTHROW(expression) \
 	try { \
-		do ( (expression); ) while(0); \
+		do { (expression); } while(0); \
 	} catch(...) { \
-		FAIL("Unexpected exception caught in {" #expression "}!"); \
+		FAIL("Unexpected exception caught in { " #expression " }!"); \
 	}
 
 /// @cond INTERNAL

@@ -14,6 +14,11 @@ namespace Colors {
 	const char * BLUE = "\033[34m";
 }
 
+const char * current_suite_name()
+{
+	return "";
+}
+
 namespace Chthon {
 
 /// @cond INTERNAL
@@ -44,9 +49,9 @@ AssertException::AssertException(const char * ex_filename, int ex_linenumber, co
 {
 }
 
-const char * current_suite_name()
+bool are_not_equal(const char * a, const char * b)
 {
-	return "";
+	return strcmp(a, b) != 0;
 }
 
 static const char * current_filename = __FILE__;
