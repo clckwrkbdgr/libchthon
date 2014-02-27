@@ -142,11 +142,20 @@ void test_equal(const A & a, const B & b, const char * a_string, const char * b_
 		throw Chthon::AssertException(__FILE__, __LINE__, "expected exception  was not thrown (" #exception_expression ")"); \
 	} catch(exception_expression)
 
+/** Checks that given expression throws no exception at all.
+ * If exception is raised, test flow is stopped and an error messages is printed.
+ * This is a test assert and should be using in TEST() case only, as it throws specific Exception.
+ *
+ * @code{.cpp}
+ * NOTHROW(1 + 2); // Safe.
+ * NOTHROW(throw std::logic_error("Its a trap!")); // Fails.
+ * @endcode
+ */
 #define NOTHROW(expression) \
 	try { \
 		do ( (expression); ) while(0); \
 	} catch(...) { \
-		FAIL("Exception caught but should not be thrown!"); \
+		FAIL("Unexpected exception caught in {" #expression "}!"); \
 	}
 
 /// @cond INTERNAL
