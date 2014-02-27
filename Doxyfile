@@ -1,6 +1,6 @@
 # Doxyfile 1.8.5
 DOXYFILE_ENCODING      = UTF-8
-PROJECT_NAME           = "libchthon"
+PROJECT_NAME           = "libchthon2"
 PROJECT_NUMBER         =
 PROJECT_BRIEF          = "A compact C++ library (primarily for roguelike development)"
 PROJECT_LOGO           =
