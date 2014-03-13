@@ -399,6 +399,36 @@ SUITE(save_xpm) {
 using Chthon::Pixmap;
 using Chthon::size_of_array;
 
+TEST(should_save_pixmap_using_default_standard_format_when_not_loaded)
+{
+	static const char * xpm_data = 
+		"/* XPM */\n"
+		"static char * xpm[] = {\n"
+		"/* Values */\n"
+		"\"3 2 2 1\",\n"
+		"/* Colors */\n"
+		"\"a c #ff0000\",\n"
+		"\"b c #00ff00\",\n"
+		"/* Pixels */\n"
+		"\"bab\",\n"
+		"\"aba\"\n"
+		"};\n"
+		;
+	Pixmap pixmap(3, 2, 2);
+	pixmap.palette[0] = Chthon::from_rgb(255, 0, 0);
+	pixmap.palette[1] = Chthon::from_rgb(0, 255, 0);
+	int index = 0;
+	for(Chthon::Color & pixel : pixmap.pixels) {
+		if(index++ % 2 == 0) {
+			pixel = 1;
+		}
+	}
+
+	std::string save_data = pixmap.save();
+	EQUAL(save_data, std::string(xpm_data));
+}
+
+
 TEST(should_save_pixmap_exactly_when_intact)
 {
 	static const char * xpm_data = 

@@ -62,7 +62,7 @@ tmp/%.o: %.cpp
 	@echo Compiling $<...
 	@$(CXX) $(CXXFLAGS) -c -fpic $< -o $@
 
-.PHONY: clean Makefile check
+.PHONY: clean Makefile check test
 
 clean:
 	$(RM) -rf tmp/* $(TEST_BIN) $(LIBNAME)* docs/

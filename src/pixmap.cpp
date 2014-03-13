@@ -38,6 +38,9 @@ Color rgb_to_argb(Color color)
 	return color | uint32_t(0xff << 24);
 }
 
+}
+
+namespace Chthon {
 
 void Pixmap::clear_xpm_data()
 {
@@ -239,12 +242,43 @@ void Pixmap::load(const std::vector<std::string> & xpm_lines)
 	}
 }
 
+void recreate_xpm_data(Pixmap * pixmap)
+{
+	pixmap->color_count = 0;
+	pixmap->colors.clear();
+	pixmap->colors_interspaces.clear();
+
+	pixmap->row_count = pixmap->pixels.height();
+
+	std::vector<std::string> tmp_values_interspaces(4, " ");
+	tmp_values_interspaces[0] = "";
+	pixmap->values_interspaces.swap(tmp_values_interspaces);
+
+	std::vector<std::string> tmp_interspaces(1 + pixmap->palette.size() + 1 + pixmap->pixels.height(), ",\n");
+	tmp_interspaces[0] = 
+		"/* XPM */\n"
+		"static char * xpm[] = {\n"
+		"/* Values */\n"
+		;
+	tmp_interspaces[1] = 
+		",\n"
+		"/* Colors */\n"
+		;
+	tmp_interspaces[1 + pixmap->palette.size()] =
+		",\n"
+		"/* Pixels */\n"
+		;
+	tmp_interspaces.back() = "\n};\n";
+	pixmap->interspaces.swap(tmp_interspaces);
+}
+
 std::string Pixmap::save() const
 {
 	std::string result;
 	std::vector<std::string>::const_iterator interspace = interspaces.begin();
 	if(interspace == interspaces.end()) {
-		return result;
+		recreate_xpm_data(const_cast<Pixmap*>(this));
+		interspace = interspaces.begin();
 	}
 	result += *interspace;
 
@@ -270,6 +304,7 @@ std::string Pixmap::save() const
 	std::vector<std::pair<std::string, std::pair<std::string, std::string> > >::const_iterator it_color_interspace = colors_interspaces.begin();
 	char free_color_key = 'a';
 	unsigned current_color_index = 0;
+	std::map<unsigned, std::string> new_color_names;
 	for(std::vector<Color>::const_iterator current_color = palette.begin(); current_color != palette.end(); ++current_color) {
 		std::string color_key;
 		if(it_color_key != colors.end()) {
@@ -277,6 +312,7 @@ std::string Pixmap::save() const
 			++it_color_key;
 		} else {
 			color_key = free_color_key;
+			new_color_names[current_color_index] = color_key;
 			++free_color_key;
 		}
 
@@ -317,10 +353,11 @@ std::string Pixmap::save() const
 		if(row_size == 0) {
 			result += '"';
 		}
-		if(*current_pixel > colors.size()) {
-			return result;
+		if(*current_pixel >= colors.size()) {
+			result += new_color_names[*current_pixel];
+		} else {
+			result += colors[*current_pixel];
 		}
-		result += colors[*current_pixel];
 		++row_size;
 		if(row_size >= pixels.width()) {
 			result += '"';

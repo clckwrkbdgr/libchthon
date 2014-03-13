@@ -63,6 +63,7 @@ private:
 	std::vector<std::string> values_interspaces;
 	std::vector<std::pair<std::string, std::pair<std::string, std::string> > > colors_interspaces;
 	void clear_xpm_data();
+	friend void recreate_xpm_data(Pixmap * pixmap);
 };
 
 /// @}
