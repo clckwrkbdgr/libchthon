@@ -125,6 +125,17 @@ std::string to_string_with_flags(int value, const std::string & flags)
 	return to_string(value);
 }
 
+std::string to_string_with_flags(unsigned value, const std::string & flags)
+{
+	/// Flag `#` commands to convert value to hex.
+	if(flags.find('#') != std::string::npos) {
+		std::ostringstream stream;
+		stream << std::hex << value;
+		return stream.str();
+	}
+	return to_string(value);
+}
+
 void subs_args_from(std::string &, int)
 {
 }

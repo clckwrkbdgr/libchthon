@@ -79,9 +79,15 @@ TEST(should_fill_with_zeroes_when_specified_in_format)
 	EQUAL(result, "<00001>");
 }
 
-TEST(should_convert_to_hex_in_format)
+TEST(should_convert_int_to_hex_in_format)
 {
 	std::string result = Chthon::format("<{0:#}>", 255);
+	EQUAL(result, "<ff>");
+}
+
+TEST(should_convert_unsigned_to_hex_in_format)
+{
+	std::string result = Chthon::format("<{0:#}>", 255u);
 	EQUAL(result, "<ff>");
 }
 

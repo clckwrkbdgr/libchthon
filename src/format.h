@@ -68,6 +68,8 @@ std::string to_string_with_flags(const T & value, const std::string & /*flags*/)
 }
 /// To_string conversion for integer.
 std::string to_string_with_flags(int value, const std::string & flags);
+/// To_string conversion for integer.
+std::string to_string_with_flags(unsigned value, const std::string & flags);
 
 /// Replace placeholder {X} (X is index, i.e. {0}, {1}, ...) with value.
 void subs_arg_str(std::string & result, int index, const std::string & value);
