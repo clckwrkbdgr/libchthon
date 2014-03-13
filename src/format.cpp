@@ -140,7 +140,7 @@ std::string to_string_with_flags(unsigned value, const std::string & flags)
 std::string to_string_with_flags(uint8_t value, const std::string & flags)
 {
 	/// Flag `#` commands to convert value to hex.
-	return int_to_string_with_flags(value, flags);
+	return int_to_string_with_flags((unsigned)value, flags);
 }
 
 void subs_args_from(std::string &, int)

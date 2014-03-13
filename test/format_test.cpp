@@ -91,4 +91,11 @@ TEST(should_convert_unsigned_to_hex_in_format)
 	EQUAL(result, "<ff>");
 }
 
+TEST(should_convert_unsigned_char_to_hex_in_format)
+{
+	uint8_t i = 255;
+	std::string result = Chthon::format("<{0:#}>", i);
+	EQUAL(result, "<ff>");
+}
+
 }
