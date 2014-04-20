@@ -1,6 +1,7 @@
 #include "log.h"
 #include "format.h"
 #include <iostream>
+#include <time.h>
 
 namespace Chthon {
 
