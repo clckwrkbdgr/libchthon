@@ -9,15 +9,14 @@ TEST_BIN = chthon_test
 VERSION = $(shell ./version)
 LIBNAME = lib$(CHTHON).so
 LIBNAME_VERSION = $(LIBNAME).$(VERSION)
-LIBS = -lncurses
 HEADERS = $(wildcard src/*.h)
 SOURCES = $(wildcard src/*.cpp)
 TEST_SOURCES = $(wildcard test/*.cpp)
 OBJ = $(addprefix tmp/,$(SOURCES:.cpp=.o))
 TEST_OBJ = $(addprefix tmp/,$(TEST_SOURCES:.cpp=.o))
-# -Wpadded
-WARNINGS = -pedantic -Werror -Wall -Wextra -Wformat=2 -Wmissing-include-dirs -Wswitch-default -Wswitch-enum -Wuninitialized -Wunused -Wfloat-equal -Wundef -Wno-endif-labels -Wshadow -Wcast-qual -Wcast-align -Wconversion -Wsign-conversion -Wlogical-op -Wmissing-declarations -Wno-multichar -Wredundant-decls -Wunreachable-code -Winline -Winvalid-pch -Wvla -Wdouble-promotion -Wzero-as-null-pointer-constant -Wuseless-cast -Wvarargs -Wsuggest-attribute=pure -Wsuggest-attribute=const -Wsuggest-attribute=noreturn -Wsuggest-attribute=format
-CXXFLAGS = -MD -MP -std=c++0x $(WARNINGS)
+# -Wpadded -Wuseless-cast -Wvarargs 
+WARNINGS = -pedantic -Werror -Wall -Wextra -Wformat=2 -Wmissing-include-dirs -Wswitch-default -Wswitch-enum -Wuninitialized -Wunused -Wfloat-equal -Wundef -Wno-endif-labels -Wshadow -Wcast-qual -Wcast-align -Wconversion -Wsign-conversion -Wlogical-op -Wmissing-declarations -Wno-multichar -Wredundant-decls -Wunreachable-code -Winline -Winvalid-pch -Wvla -Wdouble-promotion -Wzero-as-null-pointer-constant -Wsuggest-attribute=pure -Wsuggest-attribute=const -Wsuggest-attribute=noreturn
+CXXFLAGS = -MD -MP -std=c++0x $(WARNINGS) -Wno-sign-compare
 
 all: lib docs
 

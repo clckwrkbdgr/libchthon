@@ -29,8 +29,8 @@ public:
 
 	iterator begin() { return cells.begin(); }
 	const_iterator begin() const { return cells.begin(); }
-	iterator end() { return cells.begin() + w * h; }
-	const_iterator end() const { return cells.begin() + w * h; }
+	iterator end() { return cells.begin() + int(w * h); }
+	const_iterator end() const { return cells.begin() + int(w * h); }
 
 	unsigned width() const { return w; }
 	unsigned height() const { return h; }
@@ -52,7 +52,7 @@ public:
 	/// If position is invalid, behaviour is undefined;
 	const T & cell(int x, int y) const
 	{
-		return cells[x + y * w];
+		return cells[unsigned(x) + unsigned(y) * w];
 	}
 	/// Returns cell at the specified position.
 	/// If position is invalid, behaviour is undefined;
@@ -61,7 +61,7 @@ public:
 	/// If position is invalid, behaviour is undefined;
 	T & cell(int x, int y)
 	{
-		return cells[x + y * w];
+		return cells[unsigned(x) + unsigned(y) * w];
 	}
 	/// Returns cell at the specified position.
 	/// If position is invalid, behaviour is undefined;
