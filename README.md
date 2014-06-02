@@ -1,5 +1,4 @@
-libchthon
-=========
+# libchthon
 
 A compact C++ library (primarily for roguelike development).
 
@@ -14,6 +13,8 @@ Features roguelike game helper classes:
 * Flexible actions use and a lot of predefined actions.
 * Basic AI (very basic but extendable).
 * Cells, objects, items, monsters with various properties and basic Info class.
+* Field-of-vision classes.
+* Pathfinding algorithms (currently only A\*).
 
 And some utilities:
 
@@ -21,7 +22,12 @@ And some utilities:
 * String formatting routine
 * Engine for serializing C++ objects with unified interface for storing/restoring.
 * Tiny but flexible unit-testing framework (suites, fixtures, various asserts).
-* Object type registry class for simplified work with object meta-types.
 * Point class, foreach macro and some bits of useful utilities.
+* Pixmap class with attention on XPM files.
 
-Documentation and stuff are coming soon (I hope).
+## Installation
+
+Run `make lib` to produce `libchthon2.so` or `libchthon2.dll` (depends on platform). Currently it builds under Linux and Windows (using MinGW).
+Run `make docs` to create documentation. It will be placed in `docs/html` directory. It uses Doxygen.
+Makefile target `make all` runs both `lib` and `docs`.
+Makefile target `make install` installs lib and docs (they needed to be created beforehand) system-wide or locally. Makefile variable `INSTALL_PREFIX` controls destination location. It defaults to `/usr/local`.
