@@ -95,10 +95,52 @@ bool starts_with(const std::string & s, const std::string & start);
 /// Returns true if string ends with specified end pattern, otherwise returns false.
 bool ends_with(const std::string & s, const std::string & end);
 
+/** Collapses all whitespace characters.
+ * Each group of whitespaces are replaced with one space character (0x20).
+ * If whitespace param is empty, than isspace() function is used to determine
+ * what characters to remove.
+ */
+std::string collapse_whitespaces(const std::string & s, const std::string & whitespace = "");
+
+/** Trims string from left.
+ * @param s given string.
+ * @param whitespace symbols to strip.
+ * @return trimmed string.
+ *
+ * If whitespace param is empty, than isspace() function is used to determine
+ * what characters to remove.
+ */
+std::string trim_left(const std::string & s, const std::string & whitespace = "");
+
+/** Trims string from right.
+ * @param s given string.
+ * @param whitespace symbols to strip.
+ * @return trimmed string.
+ *
+ * If whitespace param is empty, than isspace() function is used to determine
+ * what characters to remove.
+ */
+std::string trim_right(const std::string & s, const std::string & whitespace = "");
+
+/** Trims string from both ends.
+ * @param s given string.
+ * @param whitespace symbols to strip.
+ * @return trimmed string.
+ *
+ * Equivalent to trim_left(trim_right(s));
+ * If whitespace param is empty, than isspace() function is used to determine
+ * what characters to remove.
+ */
+std::string trim(const std::string & s, const std::string & whitespace = "");
+
 /// Returns true if string contains specified pattern, otherwise returns false.
 bool contains(const std::string & s, const std::string & pattern);
+/// Returns true if string contains specified character, otherwise returns false.
+bool contains(const std::string & s, char c);
 /// Returns true if string contains specified pattern, otherwise returns false.
 bool contains(const char * s, const char * pattern);
+/// Returns true if string contains specified character, otherwise returns false.
+bool contains(const char * s, const char c);
 /// Returns true if vector contains specified value, otherwise returns false.
 template<class T>
 bool contains(const std::vector<T> & container, const T & value)

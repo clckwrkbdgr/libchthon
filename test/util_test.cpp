@@ -133,6 +133,70 @@ TEST(should_return_false_if_string_does_not_ends_with_pattern)
 	ASSERT(!Chthon::ends_with("foo bar baz", "foo"));
 }
 
+TEST(should_collapse_extra_whitespaces)
+{
+	EQUAL(Chthon::collapse_whitespaces("  Text\nwith    whitespaces\t"),
+			" Text with whitespaces ");
+}
+
+TEST(should_collapse_specified_whitespaces)
+{
+	EQUAL(Chthon::collapse_whitespaces("  Text\nwith    whitespaces\t", " "),
+			" Text\nwith whitespaces\t");
+}
+
+TEST(should_trim_heading_whitespaces)
+{
+	EQUAL(Chthon::trim_left("   \nText\nwith    whitespaces\t"),
+			"Text\nwith    whitespaces\t");
+}
+
+TEST(should_trim_specified_heading_whitespaces)
+{
+	EQUAL(Chthon::trim_left("   \nText\nwith    whitespaces\t", " "),
+			"\nText\nwith    whitespaces\t");
+}
+
+TEST(should_trim_trailing_whitespaces)
+{
+	EQUAL(Chthon::trim_right("  Text\nwith    whitespaces\t  "),
+			"  Text\nwith    whitespaces");
+}
+
+TEST(should_trim_specified_trailing_whitespaces)
+{
+	EQUAL(Chthon::trim_right("  Text\nwith    whitespaces\t  ", " "),
+			"  Text\nwith    whitespaces\t");
+}
+
+TEST(should_trim_extra_whitespaces)
+{
+	std::string strings[] = {
+		"  Text\nwith    whitespaces\t",
+		"  Text\nwith    whitespaces",
+		"Text\nwith    whitespaces\t",
+		"Some text **with bold _and italic_**",
+	};
+
+	EQUAL(Chthon::trim(strings[0]),
+			Chthon::trim_right(Chthon::trim_left(strings[0])));
+	EQUAL(Chthon::trim(strings[1]),
+			Chthon::trim_right(Chthon::trim_left(strings[1])));
+	EQUAL(Chthon::trim(strings[2]),
+			Chthon::trim_right(Chthon::trim_left(strings[2])));
+	EQUAL(Chthon::trim(strings[3]),
+			Chthon::trim_right(Chthon::trim_left(strings[3])));
+}
+
+TEST(should_trim_only_specified_whitespaces)
+{
+	std::string s = "  Text\nwith    whitespaces\t";
+	EQUAL(Chthon::trim(s, "\t"),
+			Chthon::trim_right(Chthon::trim_left(s, "\t"), "\t"));
+	EQUAL(Chthon::trim(s, " "),
+			Chthon::trim_right(Chthon::trim_left(s, " "), " "));
+}
+
 TEST(should_know_if_string_contains_substring)
 {
 	std::string s = "hello world";
@@ -142,10 +206,23 @@ TEST(should_know_if_string_contains_substring)
 	ASSERT(!Chthon::contains(s, w));
 }
 
+TEST(should_know_if_string_contains_character)
+{
+	std::string s = "hello world";
+	ASSERT(Chthon::contains(s, 'h'));
+	ASSERT(!Chthon::contains(s, 'a'));
+}
+
 TEST(should_know_if_c_string_contains_substring)
 {
 	ASSERT(Chthon::contains("hello world", "hell"));
 	ASSERT(!Chthon::contains("hello world", "war"));
+}
+
+TEST(should_know_if_c_string_contains_character)
+{
+	ASSERT(Chthon::contains("hello world", 'h'));
+	ASSERT(!Chthon::contains("hello world", 'a'));
 }
 
 TEST(should_know_if_vector_contains_value)

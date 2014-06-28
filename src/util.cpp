@@ -1,4 +1,5 @@
 #include "util.h"
+#include "log.h"
 #include <sstream>
 #include <unistd.h>
 #include <cstring>
@@ -42,14 +43,103 @@ bool ends_with(const std::string & s, const std::string & end)
 	return s.compare(s.length() - end.length(), end.length(), end) == 0;
 }
 
+struct IsSpace {
+	IsSpace(const std::string & whitespace_string)
+		: ws(whitespace_string), specified(!ws.empty())
+	{}
+	bool operator()(char c) const
+	{
+		return specified ? contains(ws, c) : isspace(c);
+	}
+private:
+	const std::string & ws;
+	bool specified;
+};
+
+std::string collapse_whitespaces(const std::string & s,
+		const std::string & whitespace)
+{
+	if(s.empty()) {
+		return s;
+	}
+	std::string result;
+	IsSpace is_space(whitespace);
+	bool is_space_group = false;
+	for(char c : s) {
+		if(is_space(c)) {
+			if(!is_space_group) {
+				result += ' ';
+				is_space_group = true;
+			}
+		} else {
+			result += c;
+			is_space_group = false;
+		}
+	}
+	return result;
+}
+
+std::string trim_left(const std::string & s, const std::string & whitespace)
+{
+	if(s.empty()) {
+		return s;
+	}
+	IsSpace is_space(whitespace);
+	auto end = std::find_if_not(s.begin(), s.end(), is_space);
+	if(end == s.end()) {
+		return "";
+	}
+	return s.substr(size_t(end - s.begin()));
+}
+
+std::string trim_right(const std::string & s, const std::string & whitespace)
+{
+	if(s.empty()) {
+		return s;
+	}
+	IsSpace is_space(whitespace);
+	auto end = std::find_if_not(s.rbegin(), s.rend(), is_space);
+	if(end == s.rend()) {
+		return "";
+	}
+	size_t index = size_t(end - s.rbegin());
+	return s.substr(0, s.length() - index);
+}
+
+std::string trim(const std::string & s, const std::string & whitespace)
+{
+	if(s.empty()) {
+		return s;
+	}
+	IsSpace is_space(whitespace);
+	auto begin = std::find_if_not(s.begin(), s.end(), is_space);
+	if(begin == s.end()) {
+		return "";
+	}
+	auto end = std::find_if_not(s.rbegin(), s.rend(), is_space);
+	size_t left = size_t(begin - s.begin());
+	size_t right = size_t(end - s.rbegin());
+	return s.substr(left, s.length() - right - left);
+}
+
 bool contains(const std::string & s, const std::string & pattern)
 {
 	return s.find(pattern) != std::string::npos;
 }
 
+bool contains(const std::string & s, char c)
+{
+	return s.find(c) != std::string::npos;
+}
+
 bool contains(const char * s, const char * pattern)
 {
 	return strstr(s, pattern) != nullptr;
+}
+
+bool contains(const char * s, char c)
+{
+	return strchr(s, c) != nullptr;
 }
 
 }
