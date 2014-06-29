@@ -1,9 +1,7 @@
 CHTHON = chthon2
 
-INSTALL_PREFIX = /usr/local
-INSTALL_PREFIX_LIB = $(INSTALL_PREFIX)/lib
-INSTALL_PREFIX_INCLUDE = $(INSTALL_PREFIX)/include
-INSTALL_PREFIX_DOCS = $(INSTALL_PREFIX)/share/doc
+DEB_DIR = tmp/lib$(CHTHON)_$(VERSION)_i386
+DEB_NAME = lib$(CHTHON)_$(VERSION)_i386.deb
 
 ifneq (,$(findstring mingw,$(CXX)))
 FPIC = 
@@ -33,25 +31,34 @@ lib: $(LIBNAME)
 docs: Doxyfile $(HEADERS) $(SOURCES)
 	doxygen
 
+deb: $(DEB_NAME)
+
+$(DEB_NAME): lib docs
+	rm -rf $(DEB_DIR)
+	mkdir -p $(DEB_DIR)
+	install -D $(LIBNAME) $(DEB_DIR)/usr/local/lib/$(LIBNAME_VERSION)
+	mkdir -p $(DEB_DIR)/usr/local/include/$(CHTHON).$(VERSION)
+	install -Dm0644 src/*h $(DEB_DIR)/usr/local/include/$(CHTHON).$(VERSION)
+	mkdir -p $(DEB_DIR)/usr/local/share/doc/
+	cp -R docs/html $(DEB_DIR)/usr/local/share/doc/$(CHTHON).$(VERSION)
+	ln -fs $(LIBNAME_VERSION) $(DEB_DIR)/usr/local/lib/$(LIBNAME)
+	ln -fs $(CHTHON).$(VERSION) $(DEB_DIR)/usr/local/include/$(CHTHON)
+	ln -fs $(CHTHON).$(VERSION) $(DEB_DIR)/usr/local/share/doc/$(CHTHON)
+	mkdir -p $(DEB_DIR)/DEBIAN
+	echo 'Package: lib$(CHTHON)' > $(DEB_DIR)/DEBIAN/control
+	echo 'Version: $(VERSION)' >> $(DEB_DIR)/DEBIAN/control
+	echo 'Architecture: i386' >> $(DEB_DIR)/DEBIAN/control
+	echo 'Maintainer: umi041 <umi0451@gmail.com>' >> $(DEB_DIR)/DEBIAN/control
+	echo 'Description: A compact C++ library (primarily for roguelike development).' >> $(DEB_DIR)/DEBIAN/control
+	echo ' Contains utility classes and functions for game development such as' >> $(DEB_DIR)/DEBIAN/control
+	echo ' FOV and pathfinding algorithms, 2D map class, some utilities for logging,' >> $(DEB_DIR)/DEBIAN/control
+	echo ' formatting, strings, XML reading. Also XPM image utils and unit test framework.' >> $(DEB_DIR)/DEBIAN/control
+	fakeroot dpkg-deb --build $(DEB_DIR)
+	mv tmp/$(DEB_NAME) .
+
 install:
-	@[ -f $(LIBNAME) ] || (echo "./$(LIBNAME) isn't found. Run make all first!"; false)
-	@[ -d docs/html ] || (echo "./docs/html isn't found. Run make all first!"; false)
-	@echo Installing lib...
-	cp $(LIBNAME) $(INSTALL_PREFIX_LIB)/$(LIBNAME_VERSION)
-	chmod 0755 $(INSTALL_PREFIX_LIB)/$(LIBNAME_VERSION)
-	rm -f $(INSTALL_PREFIX_LIB)/$(LIBNAME)
-	ln -s $(INSTALL_PREFIX_LIB)/$(LIBNAME_VERSION) $(INSTALL_PREFIX_LIB)/$(LIBNAME)
-	ldconfig
-	@echo Installing includes...
-	mkdir -p $(INSTALL_PREFIX_INCLUDE)/$(CHTHON).$(VERSION)
-	cp src/*h $(INSTALL_PREFIX_INCLUDE)/$(CHTHON).$(VERSION)
-	rm -f $(INSTALL_PREFIX_INCLUDE)/$(CHTHON)
-	ln -s $(INSTALL_PREFIX_INCLUDE)/$(CHTHON).$(VERSION) $(INSTALL_PREFIX_INCLUDE)/$(CHTHON)
-	@echo Installing docs...
-	mkdir -p $(INSTALL_PREFIX_DOCS)/$(CHTHON).$(VERSION)/
-	cp -R docs/html $(INSTALL_PREFIX_DOCS)/$(CHTHON).$(VERSION)
-	rm -f $(INSTALL_PREFIX_DOCS)/$(CHTHON)
-	ln -s $(INSTALL_PREFIX_DOCS)/$(CHTHON).$(VERSION) $(INSTALL_PREFIX_DOCS)/$(CHTHON)
+	@[ -f $(DEB_NAME) ] || (echo 'First you need to create .deb package: `make deb`'; false)
+	dpkg -i $(DEB_NAME)
 
 check: test
 	cppcheck --enable=all --template='{file}:{line}: {severity}: {message} ({id})' .
@@ -69,7 +76,7 @@ tmp/%.o: %.cpp
 	@echo Compiling $<...
 	@$(CXX) $(CXXFLAGS) -c $(FPIC) $< -o $@
 
-.PHONY: clean Makefile check test
+.PHONY: clean Makefile check test deb
 
 clean:
 	$(RM) -rf tmp/* $(TEST_BIN) $(LIBNAME)* docs/

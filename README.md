@@ -24,6 +24,7 @@ And some utilities:
 * Tiny but flexible unit-testing framework (suites, fixtures, various asserts).
 * Point class, foreach macro and some bits of useful utilities.
 * Pixmap class with attention on XPM files.
+* XML reader class for simple XML file iteration.
 
 ## Installation
 

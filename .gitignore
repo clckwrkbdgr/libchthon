@@ -18,6 +18,7 @@
 *.swp
 
 # Build and run
+*.deb
 docs/
 tmp/
 chthon_test
