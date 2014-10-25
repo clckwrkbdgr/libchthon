@@ -1,5 +1,5 @@
 #include "../src/xmlreader.h"
-#include <chthon2/test.h>
+#include "../src/test.h"
 #include <sstream>
 using Chthon::XMLReader;
 
