@@ -159,5 +159,21 @@ TEST(should_read_quoted_attribute)
 	EQUAL(reader.get_attributes()["attribute"], "hello \"world\"");
 }
 
+TEST(should_convert_entities)
+{
+	std::istringstream stream("foo &gt;&#62; bar&#8230;");
+	XMLReader reader(stream);
+	reader.to_next_tag();
+	EQUAL(reader.get_current_content(), "foo >> bar…");
+}
+
+TEST(should_not_convert_unknown_entities)
+{
+	std::istringstream stream("foo &unknownentity; bar");
+	XMLReader reader(stream);
+	reader.to_next_tag();
+	EQUAL(reader.get_current_content(), "foo &unknownentity; bar");
+}
+
 }
 
