@@ -195,6 +195,15 @@ TEST(should_recognize_trailing_slash_without_space_as_attribute)
 	EQUAL(reader.get_attributes().count("/"), 1);
 }
 
+TEST(should_consider_heading_slash_for_closing_tags_as_a_part_of_a_tag)
+{
+	std::istringstream stream("</Hello>");
+	XMLReader reader(stream);
+	reader.to_next_tag();
+	EQUAL(reader.get_current_tag(), "/Hello");
+	ASSERT(reader.get_attributes().empty());
+}
+
 TEST(should_convert_entities)
 {
 	std::istringstream stream("foo &gt;&#62; bar&#8230;");

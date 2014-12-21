@@ -109,7 +109,7 @@ const std::string & XMLReader::to_next_tag()
 						mode = ATTRIBUTE;
 						attribute.clear();
 					}
-				} else if(ch == '/') {
+				} else if(ch == '/' && !current_tag.empty()) {
 					attributes["/"] = "";
 					mode = ERROR;
 				} else {
