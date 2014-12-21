@@ -159,6 +159,42 @@ TEST(should_read_quoted_attribute)
 	EQUAL(reader.get_attributes()["attribute"], "hello \"world\"");
 }
 
+TEST(should_read_attribute_without_value)
+{
+	std::istringstream stream("<Hello attribute>");
+	XMLReader reader(stream);
+	reader.to_next_tag();
+	EQUAL(reader.get_attributes().count("attribute"), 1);
+	EQUAL(reader.get_attributes()["attribute"], "");
+}
+
+TEST(should_read_attribute_without_value_before_proper_attribute)
+{
+	std::istringstream stream("<Hello attribute other=value>");
+	XMLReader reader(stream);
+	reader.to_next_tag();
+	EQUAL(reader.get_attributes().count("attribute"), 1);
+	EQUAL(reader.get_attributes()["attribute"], "");
+	EQUAL(reader.get_attributes()["other"], "value");
+}
+
+TEST(should_recognize_trailing_slash_as_attribute)
+{
+	std::istringstream stream("<Hello />");
+	XMLReader reader(stream);
+	reader.to_next_tag();
+	EQUAL(reader.get_attributes().count("/"), 1);
+}
+
+TEST(should_recognize_trailing_slash_without_space_as_attribute)
+{
+	std::istringstream stream("<Hello/>");
+	XMLReader reader(stream);
+	reader.to_next_tag();
+	EQUAL(reader.get_current_tag(), "Hello");
+	EQUAL(reader.get_attributes().count("/"), 1);
+}
+
 TEST(should_convert_entities)
 {
 	std::istringstream stream("foo &gt;&#62; bar&#8230;");

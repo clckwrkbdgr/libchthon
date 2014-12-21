@@ -45,7 +45,13 @@ static std::string convert_xml_entity(const std::string & entity)
 		{"ldquo", "“"},
 		{"#8220", "“"},
 		{"#8221", "”"},
+		{"#8211", "–"},
 		{"#8230", "…"},
+		{"#8594", "→"},
+		{"apos", "'"},
+		{"#58", ":"},
+		{"#41", ")"},
+		{"rlm", "@"},
 	};
 	static std::map<std::string, std::string> entities(
 			entities_data.begin(), entities_data.end());
@@ -103,6 +109,9 @@ const std::string & XMLReader::to_next_tag()
 						mode = ATTRIBUTE;
 						attribute.clear();
 					}
+				} else if(ch == '/') {
+					attributes["/"] = "";
+					mode = ERROR;
 				} else {
 					current_tag += ch;
 				}
@@ -129,13 +138,21 @@ const std::string & XMLReader::to_next_tag()
 						mode = ATTRIBUTE;
 						attribute.clear();
 					} else {
-						mode = ERROR;
+						if(!attribute.empty()) {
+							attributes[attribute] = "";
+							attribute.clear();
+						}
+						mode = ATTRIBUTE;
+						attribute = ch;
 					}
 				}
 				break;
 			case ERROR: default: break;
 		}
 		s >> ch;
+	}
+	if(!attribute.empty()) {
+		attributes[attribute] = "";
 	}
 	return current_tag;
 }
