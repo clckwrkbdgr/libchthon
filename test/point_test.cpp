@@ -27,6 +27,17 @@ TEST(should_consider_zero_point_null)
 {
 	Point p(0, 0);
 	ASSERT(p.null());
+	Point p2;
+	ASSERT(p2.null());
+}
+
+TEST(should_assign_one_point_to_another)
+{
+	Point a(2, 3);
+	Point b;
+	b = a;
+	EQUAL(a.x, b.x);
+	EQUAL(a.y, b.y);
 }
 
 TEST(should_make_point_from_point)
