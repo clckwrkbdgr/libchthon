@@ -1,5 +1,6 @@
 #pragma once
 #include "map.h"
+#include "point.h"
 #include "util.h"
 #include <string>
 #include <vector>
@@ -15,7 +16,6 @@ class Monster;
 class MonsterType;
 class Cell;
 class CellType;
-class Point;
 
 /** Represents generic info for classes, like type id, name, sprite, and other basic properties.
  */

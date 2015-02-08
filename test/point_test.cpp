@@ -5,6 +5,11 @@ using Chthon::Point;
 
 SUITE(point) {
 
+TEST(should_consider_two_float_point_number_equal)
+{
+	ASSERT(Chthon::equal(3.1, 3.1));
+}
+
 TEST(should_make_point_from_two_coords)
 {
 	Point p(1, 2);
