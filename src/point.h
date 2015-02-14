@@ -264,7 +264,7 @@ typedef Point2D<int> Point;
 template<class T>
 struct Point3D : BasePoint<T, 3>
 {
-	typedef BasePoint<T, 2> base;
+	typedef BasePoint<T, 3> base;
 	T & x, & y, & z;
 	Point3D(const T & _x, const T & _y, const T & _z)
 		: BasePoint<T, 3>{_x, _y, _z}, x(base::v[0]), y(base::v[1]), z(base::v[2]) {}
