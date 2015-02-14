@@ -230,19 +230,53 @@ BasePoint<T, 3> cross_product(const BasePoint<T, 3> & u, const BasePoint<T, 3> &
 	return BasePoint<T, 3>(u[1]*v[2] - u[2]*v[1], u[2]*v[0] - u[0]*v[2], u[0]*v[1] - u[1]*v[0]);
 }
 
-/** Integer 2D point, subclassing base Point template.
+/** 2D point, subclassing base Point template.
  * Values can be accessed by convinience members `x` and `y`.
  */
-struct Point : BasePoint<int, 2>
+template<class T>
+struct Point2D : BasePoint<T, 2>
 {
-	int & x, & y;
-	Point(int _x, int _y) : BasePoint<int, 2>{_x, _y}, x(v[0]), y(v[1]) {}
-	Point() : BasePoint<int, 2>(), x(v[0]), y(v[1]) {}
-	Point(const Point & other) : BasePoint<int, 2>(other), x(v[0]), y(v[1]) {}
-	Point(const BasePoint<int, 2> & other) : BasePoint<int, 2>(other), x(v[0]), y(v[1]) {}
-	Point & operator=(const Point & other)
+	typedef BasePoint<T, 2> base;
+	T & x, & y;
+	Point2D(const T & _x, const T & _y)
+		: BasePoint<T, 2>{_x, _y}, x(base::v[0]), y(base::v[1]) {}
+	Point2D()
+		: BasePoint<T, 2>(), x(base::v[0]), y(base::v[1]) {}
+	Point2D(const Point2D & other)
+		: BasePoint<T, 2>(other), x(base::v[0]), y(base::v[1]) {}
+	Point2D(const BasePoint<T, 2> & other)
+		: BasePoint<T, 2>(other), x(base::v[0]), y(base::v[1]) {}
+	Point2D & operator=(const Point2D & other)
 	{
-		BasePoint<int, 2>::operator=(other);
+		BasePoint<T, 2>::operator=(other);
+		return *this;
+	}
+};
+
+/** 2-dimensional integer point.
+ * Kept for compatibility and convinience.
+ */
+typedef Point2D<int> Point;
+
+/** 3D point, subclassing base Point template.
+ * Values can be accessed by convinience members `x`, `y`, `z`.
+ */
+template<class T>
+struct Point3D : BasePoint<T, 3>
+{
+	typedef BasePoint<T, 2> base;
+	T & x, & y, & z;
+	Point3D(const T & _x, const T & _y, const T & _z)
+		: BasePoint<T, 3>{_x, _y, _z}, x(base::v[0]), y(base::v[1]), z(base::v[2]) {}
+	Point3D()
+		: BasePoint<T, 3>(), x(base::v[0]), y(base::v[1]), z(base::v[2]) {}
+	Point3D(const Point3D & other)
+		: BasePoint<T, 3>(other), x(base::v[0]), y(base::v[1]), z(base::v[2]) {}
+	Point3D(const BasePoint<T, 3> & other)
+		: BasePoint<T, 3>(other), x(base::v[0]), y(base::v[1]), z(base::v[2]) {}
+	Point3D & operator=(const Point3D & other)
+	{
+		BasePoint<T, 3>::operator=(other);
 		return *this;
 	}
 };
