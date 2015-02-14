@@ -179,17 +179,55 @@ std::string to_string(const BasePoint<T, Size> & value)
 	return result;
 }
 
+/** Calculates length of the vector defined by specified point
+ */
+template<class T, size_t Size>
+T length(const BasePoint<T, Size> & p)
+{
+	BasePoint<T, Size> tmp = p;
+	std::transform(std::begin(tmp.v), std::end(tmp.v), std::begin(tmp.v),
+			[](const T & value) { return value * value; }
+			);
+	return T(std::sqrt(std::accumulate(std::begin(tmp.v), std::end(tmp.v), T())));
+}
+
 /** Calculates distance between two points using Euclid metric.
  * Result is converted to point element type.
  */
 template<class T, size_t Size>
 T distance(const BasePoint<T, Size> & a, const BasePoint<T, Size> & b)
 {
-	BasePoint<T, Size> tmp = a - b;
-	std::transform(std::begin(tmp.v), std::end(tmp.v), std::begin(tmp.v),
-			[](const T & value) { return value * value; }
-			);
-	return T(std::sqrt(std::accumulate(std::begin(tmp.v), std::end(tmp.v), T())));
+	return length(a - b);
+}
+
+/** Calculates dot product of the two given points (vectors).
+ */
+template<class T, size_t Size>
+T dot_product(const BasePoint<T, Size> & a, const BasePoint<T, Size> & b)
+{
+	T result = T();
+	auto a_it = std::begin(a.v);
+	auto b_it = std::begin(b.v);
+	for(; a_it != std::end(a.v); ++a_it, ++b_it) {
+		result += *a_it * *b_it;
+	}
+	return result;
+}
+
+/** Returns normalized value of a given point.
+ */
+template<class T, size_t Size>
+BasePoint<T, Size> normalize(const BasePoint<T, Size> & p)
+{
+	return p / length(p);
+}
+
+/** Calculates cross product of the two given 3D points (vectors).
+ */
+template<class T>
+BasePoint<T, 3> cross_product(const BasePoint<T, 3> & u, const BasePoint<T, 3> & v)
+{
+	return BasePoint<T, 3>(u[1]*v[2] - u[2]*v[1], u[2]*v[0] - u[0]*v[2], u[0]*v[1] - u[1]*v[0]);
 }
 
 /** Integer 2D point, subclassing base Point template.

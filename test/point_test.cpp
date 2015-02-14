@@ -2,6 +2,7 @@
 #include "../src/util.h"
 #include "../src/test.h"
 using Chthon::Point;
+using Chthon::BasePoint;
 
 SUITE(point) {
 
@@ -120,6 +121,37 @@ TEST(should_return_one_for_close_point)
 	Point a(1, 3), b(2, 4);
 	int d = distance(a, b);
 	EQUAL(d, 1);
+}
+
+TEST(should_calculate_dot_product)
+{
+	BasePoint<int, 3> a(1, 3, -5);
+	BasePoint<int, 3> b(4, -2, -1);
+	EQUAL(dot_product(a, b), 3);
+}
+
+TEST(should_calculate_cross_product)
+{
+	BasePoint<int, 3> a(3, 2, -2);
+	BasePoint<int, 3> b(1, 0, -5);
+	BasePoint<int, 3> result(-10, 13, -2);
+	EQUAL(cross_product(a, b), result);
+}
+
+TEST(should_calculate_length_of_a_point)
+{
+	BasePoint<double, 4> p(1.0, 2.0, 3.0, 4.0);
+	ASSERT(std::abs(length(p) - 5.477) < 1e-3 );
+}
+
+TEST(should_normalize_point)
+{
+	BasePoint<double, 4> p(1.0, 2.0, 3.0, 4.0);
+	BasePoint<double, 4> normalized = normalize(p);
+	ASSERT(std::abs(normalized.v[0] - 0.182) < 1e-3 );
+	ASSERT(std::abs(normalized.v[1] - 0.365) < 1e-3 );
+	ASSERT(std::abs(normalized.v[2] - 0.547) < 1e-3 );
+	ASSERT(std::abs(normalized.v[3] - 0.73) < 1e-3 );
 }
 
 }
