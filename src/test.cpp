@@ -54,6 +54,20 @@ bool are_not_equal(const char * a, const char * b)
 	return strcmp(a, b) != 0;
 }
 
+bool are_not_equal(unsigned int a, int b)
+{
+	if(b < 0) {
+		return true;
+	} else {
+		return a != unsigned(b);
+	}
+}
+
+bool are_not_equal(int a, unsigned int b)
+{
+	return are_not_equal(b, a);
+}
+
 static const char * current_filename = __FILE__;
 static int current_line = __LINE__;
 

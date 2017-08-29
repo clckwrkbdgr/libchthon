@@ -97,6 +97,8 @@ struct AssertException {
 template<class A, class B>
 bool are_not_equal(const A & a, const B & b) { return a != b; }
 bool are_not_equal(const char * a, const char * b);
+bool are_not_equal(unsigned int a, int b);
+bool are_not_equal(int a, unsigned int b);
 template<class A, class B>
 void test_equal(const A & a, const B & b, const char * a_string, const char * b_string, const char * file, int line)
 {

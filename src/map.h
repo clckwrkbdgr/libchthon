@@ -110,13 +110,13 @@ public:
 		if(x > 0) {
 			floodfill(x - 1, y, which_value, to_what_value);
 		}
-		if(x < width() - 1) {
+		if(x < (int)width() - 1) {
 			floodfill(x + 1, y, which_value, to_what_value);
 		}
 		if(y > 0) {
 			floodfill(x, y - 1, which_value, to_what_value);
 		}
-		if(y < height() - 1) {
+		if(y < (int)height() - 1) {
 			floodfill(x, y + 1, which_value, to_what_value);
 		}
 	}

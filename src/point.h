@@ -2,6 +2,7 @@
 #include "format.h"
 #include "log.h"
 #include <functional>
+#include <numeric>
 #include <algorithm>
 #include <vector>
 #include <string>
