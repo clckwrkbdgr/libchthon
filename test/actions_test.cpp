@@ -60,7 +60,7 @@ TEST_FIXTURE(GameWithDummyWieldingAndWearing, should_remove_item_from_inventory_
 TEST_FIXTURE(GameWithDummyWieldingAndWearing, should_place_item_on_the_floor_when_dropped)
 {
 	Drop(0).commit(dummy(), game);
-	EQUAL(game.current_level().items.size(), 1);
+	EQUAL(game.current_level().items.size(), 1ul);
 	ASSERT(game.current_level().items[0].type);
 	EQUAL(game.current_level().items[0].type->name, "spear");
 }

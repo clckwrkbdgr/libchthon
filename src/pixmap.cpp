@@ -121,10 +121,10 @@ void Pixmap::load(const std::vector<std::string> & xpm_lines)
 		throw Exception("Value line should be in format '<width> <height> <color_count> <char_per_pixel>'");
 	}
 
-	unsigned w = strtoul(values[0].c_str(), nullptr, 10);
-	unsigned h = strtoul(values[1].c_str(), nullptr, 10);
-	color_count = strtoul(values[2].c_str(), nullptr, 10);
-	unsigned cpp = strtoul(values[3].c_str(), nullptr, 10);
+	unsigned w = static_cast<unsigned>(strtoul(values[0].c_str(), nullptr, 10));
+	unsigned h = static_cast<unsigned>(strtoul(values[1].c_str(), nullptr, 10));
+	color_count = static_cast<unsigned>(strtoul(values[2].c_str(), nullptr, 10));
+	unsigned cpp = static_cast<unsigned>(strtoul(values[3].c_str(), nullptr, 10));
 	if(w == 0 || h == 0 || color_count == 0 || cpp == 0) {
 		throw Exception("Values in value line should be integers and non-zero.");
 	}
@@ -190,7 +190,7 @@ void Pixmap::load(const std::vector<std::string> & xpm_lines)
 			throw Exception("Color <" + color_name + "> was found more than once.");
 		}
 		if(Global::x11_colors.count(value) > 0) {
-			color_names[color_name] = add_to(palette, Global::x11_colors.at(value));
+			color_names[color_name] = static_cast<unsigned>(add_to(palette, Global::x11_colors.at(value)));
 		} else if(value[0] == '#') {
 			std::string number_value = value.substr(1);
 			bool is_zero = true;
@@ -200,11 +200,11 @@ void Pixmap::load(const std::vector<std::string> & xpm_lines)
 					break;
 				}
 			}
-			unsigned color_value = strtoul(number_value.c_str(), nullptr, 16);
+			unsigned color_value = static_cast<unsigned>(strtoul(number_value.c_str(), nullptr, 16));
 			if(color_value == 0 && !is_zero) {
 				throw Exception("Color value <" + value + "> is invalid.");
 			}
-			color_names[color_name] = add_to(palette, rgb_to_argb(color_value));
+			color_names[color_name] = static_cast<unsigned>(add_to(palette, rgb_to_argb(color_value)));
 		} else {
 			throw Exception("Color value <" + value + "> is invalid.");
 		}

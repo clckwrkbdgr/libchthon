@@ -235,7 +235,7 @@ unsigned Inventory::insert(const Item & item)
 		items.resize(items.size() + 1);
 	}
 	items[items.size() - 1] = item;
-	return items.size() - 1;
+	return (unsigned)(items.size() - 1);
 }
 
 const Item & Inventory::quest_item() const

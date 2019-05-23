@@ -128,7 +128,7 @@ std::vector<Point> DungeonBuilder::random_positions(const std::pair<Point, Point
 			}
 		}
 	}
-	for(unsigned i = result.size(); i < count; ++i) {
+	for(size_t i = result.size(); i < count; ++i) {
 		result << room.first;
 	}
 	return result;
