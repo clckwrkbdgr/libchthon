@@ -1,7 +1,8 @@
 CHTHON = chthon2
 
-DEB_DIR = tmp/lib$(CHTHON)_$(VERSION)_i386
-DEB_NAME = lib$(CHTHON)_$(VERSION)_i386.deb
+ARCH = $(shell dpkg --print-architecture)
+DEB_DIR = tmp/lib$(CHTHON)_$(VERSION)_$(ARCH)
+DEB_NAME = lib$(CHTHON)_$(VERSION)_$(ARCH).deb
 
 ifneq (,$(findstring mingw,$(CXX)))
 FPIC = 
@@ -47,7 +48,7 @@ $(DEB_NAME): lib docs
 	mkdir -p $(DEB_DIR)/DEBIAN
 	echo 'Package: lib$(CHTHON)' > $(DEB_DIR)/DEBIAN/control
 	echo 'Version: $(VERSION)' >> $(DEB_DIR)/DEBIAN/control
-	echo 'Architecture: i386' >> $(DEB_DIR)/DEBIAN/control
+	echo 'Architecture: $(ARCH)' >> $(DEB_DIR)/DEBIAN/control
 	echo 'Maintainer: umi041 <umi0451@gmail.com>' >> $(DEB_DIR)/DEBIAN/control
 	echo 'Description: A compact C++ library (primarily for roguelike development).' >> $(DEB_DIR)/DEBIAN/control
 	echo ' Contains utility classes and functions for game development such as' >> $(DEB_DIR)/DEBIAN/control
