@@ -35,7 +35,7 @@ docs: Doxyfile $(HEADERS) $(SOURCES)
 deb: $(DEB_NAME)
 
 $(DEB_NAME): lib docs
-	@./debpackage.py \
+	@debpackage.py \
 		$(CHTHON) \
 		-v $(VERSION) \
 		--maintainer 'umi041 <umi0451@gmail.com>' \
