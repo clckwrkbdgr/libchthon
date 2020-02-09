@@ -1,7 +1,6 @@
 CHTHON = chthon2
 
 ARCH = $(shell dpkg --print-architecture)
-DEB_DIR = tmp/lib$(CHTHON)_$(VERSION)_$(ARCH)
 DEB_NAME = lib$(CHTHON)_$(VERSION)_$(ARCH).deb
 
 ifneq (,$(findstring mingw,$(CXX)))
@@ -42,7 +41,7 @@ $(DEB_NAME): lib docs
 		--lib $(LIBNAME) \
 		--header src/*.h \
 		--doc docs/html \
-		--build-dir $(DEB_DIR) \
+		--build-dir tmp/ \
 		--dest-dir . \
 		--description 'A compact C++ library (primarily for roguelike development). Contains utility classes and functions for game development such as FOV and pathfinding algorithms, 2D map class, some utilities for logging, formatting, strings, XML reading. Also XPM image utils and unit test framework.'
 
