@@ -39,7 +39,8 @@ $(DEB_NAME): lib docs
 		-v $(VERSION) \
 		--maintainer 'umi041 <umi0451@gmail.com>' \
 		--lib $(LIBNAME) \
-		--header src/*.h \
+		--header-root src \
+		$$(find src -name '*.h' | sed 's|^|--header |') \
 		--doc docs/html \
 		--build-dir tmp/ \
 		--dest-dir . \
